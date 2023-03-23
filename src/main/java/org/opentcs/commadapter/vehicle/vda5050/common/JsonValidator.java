@@ -1,0 +1,84 @@
+/**
+ * Copyright (c) The openTCS Authors.
+ *
+ * This program is free software and subject to the MIT license. (For details,
+ * see the licensing information (LICENSE.txt) you should have received with
+ * this copy of the software.)
+ */
+package org.opentcs.commadapter.vehicle.vda5050.common;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Map;
+import static java.util.Objects.requireNonNull;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.ValidationException;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import static org.opentcs.util.Assertions.checkState;
+
+/**
+ * Validates JSON inputs against registered schemas.
+ *
+ * @author Stefan Walter (Fraunhofer IML)
+ */
+public class JsonValidator {
+
+  private final Map<Class<?>, Schema> schemasByClass;
+
+  /**
+   * Creates a new instance.
+   *
+   * @param schemaReadersByClass Readers of JSON schemas, mapped by the JSON binding classes the
+   * schemas belong to.
+   * @throws IllegalArgumentException If there was any problem reading a schema from a given reader.
+   */
+  public JsonValidator(@Nonnull Map<Class<?>, Reader> schemaReadersByClass)
+      throws IllegalArgumentException {
+    requireNonNull(schemaReadersByClass, "schemaReadersByClass");
+
+    schemasByClass = schemaReadersByClass.entrySet().stream()
+        .collect(
+            Collectors.toMap(entry -> entry.getKey(), entry -> createSchema(entry.getValue()))
+        );
+  }
+
+  /**
+   * Validates the given JSON input against a schema registered for the given JSON binding class.
+   *
+   * @param json The JSON input.
+   * @param clazz The JSON binding class.
+   * @throws IllegalStateException If a schema is not registered for the given class.
+   * @throws IllegalArgumentException If the given JSON input is not valid for the schema registered
+   * for the given class.
+   */
+  public void validate(@Nonnull String json, @Nonnull Class<?> clazz)
+      throws IllegalStateException, IllegalArgumentException {
+    requireNonNull(json, "json");
+    requireNonNull(clazz, "clazz");
+
+    Schema schema = schemasByClass.get(clazz);
+    checkState(schema != null, "Schema not registered for class %s", clazz.getName());
+
+    try {
+      schema.validate(new JSONObject(json));
+    }
+    catch (ValidationException | JSONException e) {
+      throw new IllegalArgumentException("Invalid JSON input", e);
+    }
+  }
+
+  private static Schema createSchema(@Nonnull Reader schemaReader)
+      throws IllegalArgumentException {
+    try (schemaReader) {
+      return SchemaLoader.load(new JSONObject(new JSONTokener(schemaReader)));
+    }
+    catch (IOException e) {
+      throw new IllegalArgumentException("Exception reading JSON schema", e);
+    }
+  }
+}

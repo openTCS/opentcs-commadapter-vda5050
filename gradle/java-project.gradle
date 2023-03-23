@@ -1,0 +1,50 @@
+apply plugin: 'java'
+apply plugin: 'org.kordamp.gradle.stats'
+
+archivesBaseName = name.toLowerCase()
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.36'
+
+  compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+  testCompileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+
+  testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.2'
+  testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.9.2'
+  testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.2'
+
+  testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+  testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.11.0'
+  testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
+  testImplementation group: 'com.approvaltests', name: 'approvaltests', version: '18.5.0'
+
+  testRuntimeOnly group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.36'
+}
+
+compileJava {
+  options.release = 13
+  options.compilerArgs << "-Xlint:all"
+  options.compilerArgs << "-Xlint:-serial"
+}
+
+compileTestJava {
+  options.release = 13
+  options.compilerArgs << "-Xlint:all"
+  options.compilerArgs << "-Xlint:-serial"
+}
+
+test {
+  useJUnitPlatform()
+  // ignoreFailures = true
+  systemProperties.put("java.awt.headless", "true")
+}
+
+task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from the source files.') {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}

@@ -1,0 +1,20 @@
+apply from: "${rootDir}/gradle/publishing-common.gradle"
+
+// Enable javadoc and sources JARs to be created.
+java {
+  withJavadocJar()
+  withSourcesJar()
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from(components.java)
+
+      pom {
+        // Override artifactId since project.name is used by default and is mixed-case.
+        artifactId = project.name.toLowerCase()
+      }
+    }
+  }
+}

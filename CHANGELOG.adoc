@@ -1,0 +1,16 @@
+:toc: macro
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+toc::[]
+
+= Changelog
+
+== Version 0.9 (2023-03-23)
+
+* Initial version of the driver with support for VDA5050 1.1.

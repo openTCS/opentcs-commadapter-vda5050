@@ -1,0 +1,51 @@
+/**
+ * Copyright (c) The openTCS Authors.
+ *
+ * This program is free software and subject to the MIT license. (For details,
+ * see the licensing information (LICENSE.txt) you should have received with
+ * this copy of the software.)
+ */
+package org.opentcs.commadapter.vehicle.vda5050.common.mqtt;
+
+/**
+ * An MQTT QoS value.
+ *
+ * @author Stefan Walter (Fraunhofer IML)
+ */
+public enum QualityOfService {
+  /**
+   * Deliver a message at most once (= QoS value of 0).
+   */
+  AT_MOST_ONCE(0),
+  /**
+   * Deliver a message at least once (= QoS value of 1).
+   */
+  AT_LEAST_ONCE(1),
+  /**
+   * Deliver a message exactly once (= QoS value of 2).
+   */
+  EXACTLY_ONCE(2);
+
+  /**
+   * The QoS value as specified by MQTT.
+   */
+  private final int qosValue;
+
+  /**
+   * Creates a new instance.
+   *
+   * @param qosValue The QoS value.
+   */
+  QualityOfService(int qosValue) {
+    this.qosValue = qosValue;
+  }
+
+  /**
+   * Returns the QoS value as specified by MQTT.
+   *
+   * @return The QoS value as specified by MQTT.
+   */
+  public int getQosValue() {
+    return qosValue;
+  }
+}
