@@ -5,8 +5,10 @@
  * see the licensing information (LICENSE.txt) you should have received with
  * this copy of the software.)
  */
-package org.opentcs.commadapter.vehicle.vda5050;
+package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.modeleditor.ModelEditorPropertySuggestions;
+import javax.inject.Singleton;
 import org.opentcs.customizations.plantoverview.PlantOverviewInjectionModule;
 
 public class ModelEditorInjectionModule
@@ -16,11 +18,13 @@ public class ModelEditorInjectionModule
    * Creates a new instance.
    */
   public ModelEditorInjectionModule() {
+
   }
 
   @Override
   protected void configure() {
-    install(new org.opentcs.commadapter.vehicle.vda5050.v1_1.ModelEditorInjectionModule());
-    install(new org.opentcs.commadapter.vehicle.vda5050.v2_0.ModelEditorInjectionModule());
+    propertySuggestionsBinder().addBinding()
+        .to(ModelEditorPropertySuggestions.class)
+        .in(Singleton.class);
   }
 }

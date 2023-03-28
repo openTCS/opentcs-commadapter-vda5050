@@ -47,6 +47,13 @@ public class KernelInjectionModuleImpl
     else {
       LOG.info("VDA5050 1.1 communication adapter disabled by configuration.");
     }
+    if (trimmedEnabledVersions.contains("2.0")) {
+      LOG.info("VDA5050 2.0 communication adapter enabled.");
+      install(new org.opentcs.commadapter.vehicle.vda5050.v2_0.KernelInjectionModuleImpl());
+    }
+    else {
+      LOG.info("VDA5050 2.0 communication adapter disabled by configuration.");
+    }
   }
 
   private void configureMqtt() {
