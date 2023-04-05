@@ -186,7 +186,7 @@ public class MessageResponseMatcherTest {
   private State stateAcceptingInstantAction(InstantActions actions) {
     State state = newState();
     state.getActionStates().addAll(
-        actions.getInstantActions().stream()
+        actions.getActions().stream()
             .map(action
                 -> new ActionState(
                 action.getActionId(),
@@ -210,7 +210,6 @@ public class MessageResponseMatcherTest {
                      new ArrayList<>(),
                      new BatteryState(100.0, false),
                      OperatingMode.AUTOMATIC,
-                     new ArrayList<>(),
                      new ArrayList<>(),
                      new SafetyState(EStop.NONE, false));
   }

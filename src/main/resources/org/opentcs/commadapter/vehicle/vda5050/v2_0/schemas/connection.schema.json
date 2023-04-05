@@ -5,14 +5,13 @@
     "subtopic": "/connection",
     "documentVersion": "5.0.0",
     "type": "object",
+    "additionalProperties": false,
     "properties": {
         "headerId": {
-            "title": "headerId",
             "type": "integer",
-            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
         },
         "timestamp": {
-            "title": "timestamp",
             "type": "string",
             "description": "Timestamp in ISO8601 format.",
             "examples": [
@@ -20,7 +19,6 @@
             ]
         },
         "version": {
-            "title": "Version",
             "type": "string",
             "description": "Version of the protocol [Major].[Minor].[Patch]",
             "examples": [
@@ -29,7 +27,7 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the AGV."
         },
         "serialNumber": {
             "type": "string",
@@ -42,7 +40,7 @@
                 "OFFLINE",
                 "CONNECTIONBROKEN"
             ],
-            "description": "online: connection between AGV and broker is active.\noffline: connection between AGV and broker has gone offline in a coordinated way.\nconnectionBroken: The connection between AGV and broker has unexpectedly ended."
+            "description": "ONLINE: The connection between AGV and broker is active.\nOFFLINE: The connection between AGV and broker has gone offline in a coordinated way.\nCONNECTIONBROKEN: The connection between AGV and broker has unexpectedly ended."
         }
     },
     "required": [

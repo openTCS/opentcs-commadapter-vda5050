@@ -19,7 +19,6 @@
   },
   "operatingMode" : "SEMIAUTOMATIC",
   "errors" : [ ],
-  "informations" : [ ],
   "safetyState" : {
     "eStop" : "AUTOACK",
     "fieldViolation" : false

@@ -146,7 +146,6 @@ public class VehicleSimulator
         new BatteryState(100.0, false),
         OperatingMode.AUTOMATIC,
         new ArrayList<>(),
-        new ArrayList<>(),
         new SafetyState(EStop.NONE, true)
     );
     vehicleState.setAgvPosition(new AgvPosition(0.0, 0.0, 0.0, "map", true));
@@ -207,7 +206,7 @@ public class VehicleSimulator
       try {
         InstantActions instantAction = jsonBinder.fromJson(message.getMessage(),
                                                            InstantActions.class);
-        instantAction.getInstantActions().forEach(action -> newInstantAction(action));
+        instantAction.getActions().forEach(action -> newInstantAction(action));
       }
       catch (IllegalArgumentException ex) {
         LOG.warn("Unable to read instant action: {}", ex);

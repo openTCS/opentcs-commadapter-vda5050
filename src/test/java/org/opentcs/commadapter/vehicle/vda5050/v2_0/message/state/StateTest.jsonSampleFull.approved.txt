@@ -65,15 +65,6 @@
     } ],
     "errorDescription" : "some-error-description"
   } ],
-  "informations" : [ {
-    "infoType" : "some-info",
-    "infoLevel" : "DEBUG",
-    "infoDescription" : "some-info-description",
-    "infoReferences" : [ {
-      "referenceKey" : "some-ref-key",
-      "referenceValue" : "some-ref-value"
-    } ]
-  } ],
   "safetyState" : {
     "eStop" : "AUTOACK",
     "fieldViolation" : false
@@ -112,5 +103,14 @@
     }
   } ],
   "newBaseRequest" : false,
-  "distanceSinceLastNode" : 12.0
+  "distanceSinceLastNode" : 12.0,
+  "information" : [ {
+    "infoType" : "some-info",
+    "infoLevel" : "DEBUG",
+    "infoDescription" : "some-info-description",
+    "infoReferences" : [ {
+      "referenceKey" : "some-ref-key",
+      "referenceValue" : "some-ref-value"
+    } ]
+  } ]
 }

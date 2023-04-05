@@ -184,7 +184,6 @@ public class StateMappingsTest {
                      new BatteryState(100.0, false),
                      OperatingMode.AUTOMATIC,
                      List.of(),
-                     List.of(),
                      new SafetyState(EStop.NONE, false));
   }
 }

@@ -273,7 +273,7 @@ public class CommAdapterImpl
                                           UUID.randomUUID().toString(),
                                           BlockingType.NONE);
     InstantActions instantAction = new InstantActions();
-    instantAction.setInstantActions(Arrays.asList(cancelOrderAction));
+    instantAction.setActions(Arrays.asList(cancelOrderAction));
     messageResponseMatcher.enqueueAction(instantAction);
 
   }
@@ -468,7 +468,7 @@ public class CommAdapterImpl
                                     UUID.randomUUID().toString(),
                                     BlockingType.NONE);
     InstantActions instantAction = new InstantActions();
-    instantAction.setInstantActions(Arrays.asList(pauseAction));
+    instantAction.setActions(Arrays.asList(pauseAction));
     messageResponseMatcher.enqueueAction(instantAction);
   }
 

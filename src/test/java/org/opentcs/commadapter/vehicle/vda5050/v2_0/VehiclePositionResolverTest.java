@@ -86,7 +86,6 @@ public class VehiclePositionResolverTest {
                       new BatteryState(100.0, false),
                       OperatingMode.AUTOMATIC,
                       new ArrayList<>(),
-                      new ArrayList<>(),
                       new SafetyState(EStop.AUTOACK, Boolean.FALSE));
   }
 

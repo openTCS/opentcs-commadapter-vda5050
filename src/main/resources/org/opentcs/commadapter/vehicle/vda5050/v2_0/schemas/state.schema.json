@@ -5,10 +5,11 @@
     "documentVersion": "5.0.0",
     "subtopic": "/state",
     "type": "object",
+    "additionalProperties": false,
     "properties": {
         "headerId": {
             "type": "integer",
-            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
         },
         "timestamp": {
             "type": "string",
@@ -26,7 +27,7 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the AGV."
         },
         "serialNumber": {
             "type": "string",
@@ -34,11 +35,11 @@
         },
         "orderId": {
             "type": "string",
-            "description": "Unique order identification of the current order or the previous finished order. The orderId is kept until a new order is received. Empty string (â€œâ€) if no previous orderId is available. "
+            "description": "Unique order identification of the current order or the previous finished order. The orderId is kept until a new order is received. Empty string (\"\") if no previous orderId is available. "
         },
         "orderUpdateId": {
             "type": "integer",
-            "description": "Order Update Identification to identify that an order update has been accepted by the AGV. â€œ0â€ if no previous orderUpdateId is available."
+            "description": "Order Update Identification to identify that an order update has been accepted by the AGV. \"\" if no previous orderUpdateId is available."
         },
         "zoneSetId": {
             "type": "string",
@@ -46,11 +47,11 @@
         },
         "lastNodeId": {
             "type": "string",
-            "description": "nodeID of last reached node or, if AGV is currently on a node, current node (e. g. â€œnode7â€). Empty string (â€œâ€) if no lastNodeId is available."
+            "description": "nodeID of last reached node or, if AGV is currently on a node, current node (e. g. \"node\"). Empty string (\"\") if no lastNodeId is available."
         },
         "lastNodeSequenceId": {
             "type": "integer",
-            "description": "sequenceId of the last reached node or, if the AGV is currently on a node, sequenceId of current node.\nâ€œ0â€ if no lastNodeSequenceId is available. "
+            "description": "sequenceId of the last reached node or, if the AGV is currently on a node, sequenceId of current node.\n\"\" if no lastNodeSequenceId is available. "
         },
         "driving": {
             "type": "boolean",
@@ -66,7 +67,7 @@
         },
         "distanceSinceLastNode": {
             "type": "number",
-            "description": "Used by line guided vehicles to indicate the distance it has been driving past the â€žlastNodeIdâ€œ.\nDistance is in meters"
+            "description": "Used by line guided vehicles to indicate the distance it has been driving past the \"lastNodeId\".\nDistance is in meters"
         },
         "operatingMode": {
             "type": "string",
@@ -262,7 +263,7 @@
                 },
                 "positionInitialized": {
                     "type": "boolean",
-                    "description": "True if the AGVs position is initialized, false, if position is not initizalized."
+                    "description": "True if the AGVs position is initialized, false, if position is not initialized."
                 },
                 "localizationScore": {
                     "type": "number",
@@ -309,14 +310,14 @@
                 "properties": {
                     "loadId": {
                         "type": "string",
-                        "description": "Unique identification number of the load (e. g. barcode or RFID)\nEmpty field if the AGV can identify the load but didnâ€™t identify the load yet.\nOptional if the AGV has cannot identify the load."
+                        "description": "Unique identification number of the load (e. g. barcode or RFID)\nEmpty field if the AGV can identify the load but didn't identify the load yet.\nOptional if the AGV has cannot identify the load."
                     },
                     "loadType": {
                         "type": "string"
                     },
                     "loadPosition": {
                         "type": "string",
-                        "description": "Indicates which load handling/carrying unit of the AGV is used, e. g. in case the AGV has multiple spots/positions to carry loads.\nFor example: â€œfrontâ€, â€œbackâ€, â€œpositionC1â€, etc.\nOptional for vehicles with only one loadPosition."
+                        "description": "Indicates which load handling/carrying unit of the AGV is used, e. g. in case the AGV has multiple spots/positions to carry loads.\nFor example: \"front\", \"back\", \"positionC1\", etc.\nOptional for vehicles with only one loadPosition."
                     },
                     "boundingBoxReference": {
                         "type": "object",
@@ -344,7 +345,7 @@
                     "loadDimensions": {
                         "type": "object",
                         "title": "loadDimensions",
-                        "description": "Dimensions of the loadâ€™s bounding box in meters. ",
+                        "description": "Dimensions of the load's bounding box in meters. ",
                         "properties": {
                             "length": {
                                 "type": "number",
@@ -368,8 +369,7 @@
                         "type": "number",
                         "description": "Weight of load in kg"
                     }
-                },
-                "required": []
+                }
             }
         },
         "actionStates": {
@@ -401,6 +401,7 @@
                             "WAITING",
                             "INITIALIZING",
                             "RUNNING",
+                            "PAUSED",
                             "FINISHED",
                             "FAILED"
                         ]
@@ -412,7 +413,6 @@
                 },
                 "required": [
                     "actionId",
-                    "actionType",
                     "actionStatus"
                 ]
             }
@@ -487,7 +487,7 @@
                     },
                     "errorLevel": {
                         "type": "string",
-                        "description": "warning: AGV is ready to drive without human intervention \n fatal: AGV is not in running condition.",
+                        "description": "WARNING: AGV is ready to drive without human intervention \n FATAL: AGV is not in running condition.",
                         "enum": [
                             "WARNING",
                             "FATAL"
@@ -500,13 +500,13 @@
                 "errorLevel"
             ]
         },
-        "informations": {
+        "information": {
             "type": "array",
-            "title": "Informations",
+            "title": "Information",
             "description": "Array of information messages. Messages are only for visualization/debugging. There's no specification when these messages are deleted.",
             "items": {
                 "type": "object",
-                "title": "Information",
+                "title": "info",
                 "properties": {
                     "infoType": {
                         "type": "string",
@@ -595,7 +595,6 @@
         "batteryState",
         "operatingMode",
         "errors",
-        "informations",
         "safetyState"
     ]
 }

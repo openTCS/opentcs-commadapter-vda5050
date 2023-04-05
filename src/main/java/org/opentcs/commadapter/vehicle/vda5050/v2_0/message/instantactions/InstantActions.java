@@ -36,7 +36,7 @@ public class InstantActions
    * List of actions to be executed as soon as they arrive and which are not part of a
    * regular order.
    */
-  private List<Action> instantActions;
+  private List<Action> actions;
 
   /**
    * Creates a new instance.
@@ -59,15 +59,15 @@ public class InstantActions
       @Nonnull @JsonProperty(required = true, value = "serialNumber") String serialNumber,
       @Nonnull @JsonProperty(required = true, value = "instantActions") List<Action> actions) {
     super(headerId, timestamp, version, manufacturer, serialNumber);
-    this.instantActions = requireNonNull(actions, "actions");
+    this.actions = requireNonNull(actions, "actions");
   }
 
-  public List<Action> getInstantActions() {
-    return instantActions;
+  public List<Action> getActions() {
+    return actions;
   }
 
-  public InstantActions setInstantActions(List<Action> actions) {
-    this.instantActions = requireNonNull(actions, "actions");
+  public InstantActions setActions(List<Action> actions) {
+    this.actions = requireNonNull(actions, "actions");
     return this;
   }
 
@@ -75,7 +75,7 @@ public class InstantActions
   public String toString() {
     return "InstantActions{"
         + "header=" + super.toString()
-        + ", instantActions=" + instantActions
+        + ", actions=" + actions
         + '}';
   }
 }

@@ -152,7 +152,7 @@ public class State
    * This should only be used for visualization or debugging – it must not be used for logic in
    * master control. An empty list indicates that the AGV has no information.
    */
-  private List<InfoEntry> informations;
+  private List<InfoEntry> information;
   /**
    * Contains all safety-related information.
    */
@@ -183,7 +183,6 @@ public class State
    * @param batteryState Contains all battery-related information.
    * @param operatingMode Current operating mode of the AGV.
    * @param errors List of {@link ErrorEntry} objects.
-   * @param informations List of {@link InfoEntry} objects.
    * @param safetyState Contains all safety-related information.
    */
   public State(@Nonnull String orderId,
@@ -198,11 +197,10 @@ public class State
                @Nonnull BatteryState batteryState,
                @Nonnull OperatingMode operatingMode,
                @Nonnull List<ErrorEntry> errors,
-               @Nonnull List<InfoEntry> informations,
                @Nonnull SafetyState safetyState) {
     this(0L, Instant.EPOCH, "", "", "", orderId, orderUpdateId, lastNodeId, lastNodeSequenceId,
          nodeStates, edgeStates, driving, paused, actionStates, batteryState, operatingMode, errors,
-         informations, safetyState);
+         safetyState);
   }
 
   // CHECKSTYLE:OFF (Long lines because some of these parameter declarations are very long.)
@@ -225,7 +223,6 @@ public class State
       @Nonnull @JsonProperty(required = true, value = "batteryState") BatteryState batteryState,
       @Nonnull @JsonProperty(required = true, value = "operatingMode") OperatingMode operatingMode,
       @Nonnull @JsonProperty(required = true, value = "errors") List<ErrorEntry> errors,
-      @Nonnull @JsonProperty(required = true, value = "informations") List<InfoEntry> informations,
       @Nonnull @JsonProperty(required = true, value = "safetyState") SafetyState safetyState) {
     super(headerId, timestamp, version, manufacturer, serialNumber);
     this.orderId = requireNonNull(orderId, "orderId");
@@ -242,7 +239,6 @@ public class State
     this.batteryState = requireNonNull(batteryState, "batteryState");
     this.operatingMode = requireNonNull(operatingMode, "operatingMode");
     this.errors = requireNonNull(errors, "errors");
-    this.informations = requireNonNull(informations, "informations");
     this.safetyState = requireNonNull(safetyState, "safetyState");
   }
   // CHECKSTYLE:ON
@@ -411,12 +407,12 @@ public class State
     return this;
   }
 
-  public List<InfoEntry> getInformations() {
-    return informations;
+  public List<InfoEntry> getInformation() {
+    return information;
   }
 
-  public State setInformations(List<InfoEntry> informations) {
-    this.informations = requireNonNull(informations, "informations");
+  public State setInformation(List<InfoEntry> information) {
+    this.information = requireNonNull(information, "information");
     return this;
   }
 
@@ -451,7 +447,7 @@ public class State
         + ", batteryState=" + batteryState
         + ", operatingMode=" + operatingMode
         + ", errors=" + errors
-        + ", informations=" + informations
+        + ", information=" + information
         + ", safetyState=" + safetyState
         + '}';
   }

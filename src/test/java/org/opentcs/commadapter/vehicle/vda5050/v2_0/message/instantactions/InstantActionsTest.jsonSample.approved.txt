@@ -4,7 +4,7 @@
   "version" : "version",
   "manufacturer" : "manufacturer",
   "serialNumber" : "serial-number",
-  "instantActions" : [ {
+  "actions" : [ {
     "actionType" : "some-action-type",
     "actionId" : "action1",
     "blockingType" : "NONE",

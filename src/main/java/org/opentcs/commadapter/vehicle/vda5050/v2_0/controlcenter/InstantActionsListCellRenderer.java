@@ -50,8 +50,8 @@ public class InstantActionsListCellRenderer
       InstantActions instantActions = (InstantActions) value;
       JLabel label = (JLabel) component;
 
-      if (!instantActions.getInstantActions().isEmpty()) {
-        Action action = instantActions.getInstantActions().get(0);
+      if (!instantActions.getActions().isEmpty()) {
+        Action action = instantActions.getActions().get(0);
 
         StringBuilder sb = new StringBuilder();
         sb.append("Type: ");

@@ -186,7 +186,7 @@ public class MessageResponseMatcher {
   }
 
   private boolean instantActionsAccepted(InstantActions instantAction, State state) {
-    return instantAction.getInstantActions().stream()
+    return instantAction.getActions().stream()
         .allMatch(action -> actionAccepted(action, state));
   }
 

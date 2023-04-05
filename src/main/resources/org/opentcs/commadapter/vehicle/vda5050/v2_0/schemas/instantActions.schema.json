@@ -5,14 +5,13 @@
     "documentVersion": "5.0.0",
     "subtopic": "/instantActions",
     "type": "object",
+    "additionalProperties": false,
     "properties": {
         "headerId": {
-            "title": "headerId",
             "type": "integer",
-            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
         },
         "timestamp": {
-            "title": "timestamp",
             "type": "string",
             "description": "Timestamp in ISO8601 format.",
             "examples": [
@@ -20,7 +19,6 @@
             ]
         },
         "version": {
-            "title": "Version",
             "type": "string",
             "description": "Version of the protocol [Major].[Minor].[Patch]",
             "examples": [
@@ -29,18 +27,18 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the AGV."
         },
         "serialNumber": {
             "type": "string",
             "description": "Serial number of the AGV."
         },
-        "instantActions": {
+        "actions": {
             "type": "array",
             "items": {
                 "type": "object",
-                "$id": "#instantAction",
-                "title": "instantAction",
+                "$id": "#action",
+                "title": "action",
                 "description": "Action Object",
                 "required": [
                     "actionType",
@@ -51,21 +49,21 @@
                     "actionType": {
                         "type": "string",
                         "title": "actionType",
-                        "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
+                        "description": "Name of the action as described in the first column of \"Actions and Parameters\". Identifies the function of the action."
                     },
                     "actionId": {
                         "type": "string",
                         "title": "actionId",
-                        "description": "ID to distinguish between multiple actions."
+                        "description": "Unique ID to identify the action and map them to the actionState in the state."
                     },
                     "actionDescription": {
                         "type": "string",
-                        "title": "Additional Information on the action"
+                        "description": "Additional information on the action"
                     },
                     "blockingType": {
                         "type": "string",
                         "title": "blockingType",
-                        "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                        "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nNONE: Action can happen in parallel with others, including movement.\nSOFT: Action can happen simultaneously with others, but not while moving.\nHARD: No other actions can be performed while this action is running.",
                         "enum": [
                             "NONE",
                             "SOFT",
@@ -125,6 +123,6 @@
         "version",
         "manufacturer",
         "serialNumber",
-        "instantActions"
+        "actions"
     ]
 }

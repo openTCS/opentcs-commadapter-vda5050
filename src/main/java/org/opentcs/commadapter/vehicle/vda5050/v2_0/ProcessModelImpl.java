@@ -87,7 +87,6 @@ public class ProcessModelImpl
         new BatteryState(100.0, false),
         OperatingMode.AUTOMATIC,
         new ArrayList<>(),
-        new ArrayList<>(),
         new SafetyState(EStop.NONE, true)
     );
     previousState.setTimestamp(Instant.now());
@@ -103,7 +102,6 @@ public class ProcessModelImpl
         new ArrayList<>(),
         new BatteryState(100.0, false),
         OperatingMode.AUTOMATIC,
-        new ArrayList<>(),
         new ArrayList<>(),
         new SafetyState(EStop.NONE, true)
     );

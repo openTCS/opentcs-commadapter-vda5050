@@ -5,14 +5,13 @@
     "subtopic": "/order",
     "documentVersion": "5.0.0",
     "type": "object",
+    "additionalProperties": false,
     "properties": {
         "headerId": {
-            "title": "headerId",
             "type": "integer",
-            "description": "headerId of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
+            "description": "Header ID of the message. The headerId is defined per topic and incremented by 1 with each sent (but not necessarily received) message."
         },
         "timestamp": {
-            "title": "timestamp",
             "type": "string",
             "description": "Timestamp in ISO8601 format.",
             "examples": [
@@ -20,7 +19,6 @@
             ]
         },
         "version": {
-            "title": "Version",
             "type": "string",
             "description": "Version of the protocol [Major].[Minor].[Patch]",
             "examples": [
@@ -29,7 +27,7 @@
         },
         "manufacturer": {
             "type": "string",
-            "description": "Manufacturer of the AGV"
+            "description": "Manufacturer of the AGV."
         },
         "serialNumber": {
             "type": "string",
@@ -37,12 +35,12 @@
         },
         "orderId": {
             "title": "orderId",
-            "description": "Unique order Identification.",
+            "description": "Unique order identification.",
             "type": "string"
         },
         "orderUpdateId": {
             "title": "orderUpdateId",
-            "description": "orderUpdate identification. Is unique per orderId. If an order update is rejected, this field is to be passed in the rejection message.",
+            "description": "Order update identification. Is unique per orderId. If an order update is rejected, this field is to be passed in the rejection message.",
             "type": "integer",
             "minimum": 0,
             "maximum": 4294967296
@@ -85,7 +83,7 @@
                     "nodeDescription": {
                         "title": "nodeDescription",
                         "type": "string",
-                        "description": "Verbose Node Description."
+                        "description": "Verbose node description."
                     },
                     "released": {
                         "type": "boolean",
@@ -137,7 +135,7 @@
                             },
                             "mapDescription": {
                                 "title": "mapDescription",
-                                "description": "Verbose description of the Map",
+                                "description": "Verbose description of the map",
                                 "type": "string"
                             }
                         }
@@ -148,8 +146,9 @@
                         "type": "array",
                         "items": {
                             "type": "object",
-                            "title": "nodeAction",
-                            "description": "nodeAction",
+                            "$id": "#action",
+                            "title": "action",
+                            "description": "Action Object",
                             "required": [
                                 "actionType",
                                 "actionId",
@@ -159,21 +158,21 @@
                                 "actionType": {
                                     "type": "string",
                                     "title": "actionType",
-                                    "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
+                                    "description": "Name of the action as described in the first column of \"Actions and Parameters\". Identifies the function of the action."
                                 },
                                 "actionId": {
                                     "type": "string",
                                     "title": "actionId",
-                                    "description": "ID to distinguish between multiple actions with the same type on the same node."
+                                    "description": "Unique ID to identify the action and map them to the actionState in the state."
                                 },
                                 "actionDescription": {
                                     "type": "string",
-                                    "title": "Additional Information on the action"
+                                    "description": "Additional information on the action"
                                 },
                                 "blockingType": {
                                     "type": "string",
                                     "title": "blockingType",
-                                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nNONE: Action can happen in parallel with others, including movement.\nSOFT: Action can happen simultaneously with others, but not while moving.\nHARD: No other actions can be performed while this action is running.",
                                     "enum": [
                                         "NONE",
                                         "SOFT",
@@ -295,9 +294,18 @@
                     "orientation": {
                         "type": "number",
                         "title": "orientation",
-                        "description": "Orientation of the AGV on the edge relative to the map coordinate origin (for holonomic vehicles with more than one driving direction).\nExample: orientation Pi/2 rad will lead to a rotation of 90 degrees.\nIf AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to “true”.\nIf rotationAllowed is “false\", rotate before entering the edge.\nIf that is not possible, reject the order.\nIf a trajectory with orientation is defined, follow the trajectories orientation. If a trajectory without orientation and the orientation field here is defined, apply the orientation to the tangent of the trajectory.",
+                        "description": "Orientation of the AGV on the edge relative to the map coordinate origin (for holonomic vehicles with more than one driving direction).\nExample: orientation Pi/2 rad will lead to a rotation of 90 degrees.\nIf AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to \"true\".\nIf rotationAllowed is “false\", rotate before entering the edge.\nIf that is not possible, reject the order.\nIf a trajectory with orientation is defined, follow the trajectories orientation. If a trajectory without orientation and the orientation field here is defined, apply the orientation to the tangent of the trajectory.",
                         "minimum": -3.14159265359,
                         "maximum": 3.14159265359
+                    },
+                    "orientationType": {
+                        "type": "string",
+                        "title": "orientationType",
+                        "description": "Defines what the orientation is relative to.",
+                        "enum": [
+                            "GLOBAL",
+                            "TANGENTIAL"
+                        ]
                     },
                     "direction": {
                         "type": "string",
@@ -358,54 +366,58 @@
                                         "weight": {
                                             "type": "number",
                                             "description": "The weight with which this control point pulls no the curve.\nWhen not defined, the default will be 1.0."
-                                        },
-                                        "orientation": {
-                                            "type": "number",
-                                            "description": "Orientation of the AGV on this position of the curve. The orientation is in world coordinates.\nWhen not defined the orientation of the AGV will be tangential to the curve.",
-                                            "minimum": -3.14159265359,
-                                            "maximum": 3.14159265359
                                         }
                                     },
                                     "required": [
                                         "x",
-                                        "y",
-                                        "weight"
+                                        "y"
                                     ]
                                 }
                             }
                         },
                         "required": [
-                            "degree",
                             "knotVector",
                             "controlPoints"
                         ]
                     },
                     "actions": {
-                        "title": "Actions",
-                        "description": "Array of action objects with detailed information.",
+                        "title": "actions",
+                        "description": "Array of actions that are to be executed on the node. Their sequence in the list governs their sequence of execution.",
                         "type": "array",
                         "items": {
                             "type": "object",
-                            "title": "edgeAction",
-                            "description": "edgeAction",
+                            "$id": "#action",
+                            "title": "action",
+                            "description": "Action Object",
                             "required": [
+                                "actionType",
                                 "actionId",
-                                "actionType"
+                                "blockingType"
                             ],
                             "properties": {
                                 "actionType": {
                                     "type": "string",
                                     "title": "actionType",
-                                    "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
+                                    "description": "Name of the action as described in the first column of \"Actions and Parameters\". Identifies the function of the action."
                                 },
                                 "actionId": {
                                     "type": "string",
                                     "title": "actionId",
-                                    "description": "ID to distinguish between multiple actions with the same name on the same node."
+                                    "description": "Unique ID to identify the action and map them to the actionState in the state."
                                 },
                                 "actionDescription": {
                                     "type": "string",
-                                    "title": "Additional Information on the action"
+                                    "description": "Additional information on the action"
+                                },
+                                "blockingType": {
+                                    "type": "string",
+                                    "title": "blockingType",
+                                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nNONE: Action can happen in parallel with others, including movement.\nSOFT: Action can happen simultaneously with others, but not while moving.\nHARD: No other actions can be performed while this action is running.",
+                                    "enum": [
+                                        "NONE",
+                                        "SOFT",
+                                        "HARD"
+                                    ]
                                 },
                                 "actionParameters": {
                                     "type": "array",

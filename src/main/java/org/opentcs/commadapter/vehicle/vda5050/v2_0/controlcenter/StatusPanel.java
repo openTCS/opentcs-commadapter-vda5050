@@ -1485,7 +1485,7 @@ public class StatusPanel
                                       BlockingType.NONE);
 
     InstantActions action = new InstantActions();
-    action.setInstantActions(Arrays.asList(instantAction));
+    action.setActions(Arrays.asList(instantAction));
     return action;
   }
 

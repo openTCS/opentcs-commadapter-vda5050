@@ -678,7 +678,7 @@ public class ControlPanel
     Optional<Action> action = instantActionConfigurationPanel.getAction();
     if (action.isPresent()) {
       InstantActions instantAction = new InstantActions();
-      instantAction.setInstantActions(Arrays.asList(action.get()));
+      instantAction.setActions(Arrays.asList(action.get()));
 
       AdapterCommand command = new SendInstantActions(instantAction);
       sendAdapterCommand(command);
@@ -735,10 +735,10 @@ public class ControlPanel
     if (instantActions == null) {
       return;
     }
-    if (instantActions.getInstantActions().isEmpty()) {
+    if (instantActions.getActions().isEmpty()) {
       return;
     }
-    instantActionConfigurationPanel.setAction(instantActions.getInstantActions().get(0));
+    instantActionConfigurationPanel.setAction(instantActions.getActions().get(0));
   }
 
   private Optional<Action> getLastNodeAction(Order order) {

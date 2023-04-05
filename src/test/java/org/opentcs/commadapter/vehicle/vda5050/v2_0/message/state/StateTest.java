@@ -76,7 +76,6 @@ public class StateTest {
         new BatteryState(50.0, false),
         OperatingMode.SEMIAUTOMATIC,
         List.of(),
-        List.of(),
         new SafetyState(EStop.AUTOACK, false)
     );
   }
@@ -142,15 +141,6 @@ public class StateTest {
                     )
                 )
         ),
-        List.of(
-            new InfoEntry("some-info", InfoLevel.DEBUG)
-                .setInfoDescription("some-info-description")
-                .setInfoReferences(
-                    List.of(
-                        new InfoReference("some-ref-key", "some-ref-value")
-                    )
-                )
-        ),
         new SafetyState(EStop.AUTOACK, false)
     )
         .setZoneSetId("some-zone-set")
@@ -183,6 +173,15 @@ public class StateTest {
                     .setWeight(0L)
             )
         )
+        .setInformation(List.of(
+            new InfoEntry("some-info", InfoLevel.DEBUG)
+                .setInfoDescription("some-info-description")
+                .setInfoReferences(
+                    List.of(
+                        new InfoReference("some-ref-key", "some-ref-value")
+                    )
+                )
+        ))
         .setNewBaseRequest(Boolean.FALSE)
         .setDistanceSinceLastNode(12.0);
   }
