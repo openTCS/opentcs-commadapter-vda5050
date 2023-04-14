@@ -18,13 +18,13 @@ import org.opentcs.data.model.Vehicle;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-public class CommAdapterImplFactoryTest {
+public class CommAdapterFactoryTest {
 
-  private CommAdapterFactoryImpl commAdapterFactory;
+  private CommAdapterFactory commAdapterFactory;
 
   @BeforeEach
   public void setUp() {
-    commAdapterFactory = new CommAdapterFactoryImpl(mock(CommAdapterComponentsFactory.class));
+    commAdapterFactory = new CommAdapterFactory(mock(CommAdapterComponentsFactory.class));
   }
 
   @Test
@@ -34,6 +34,7 @@ public class CommAdapterImplFactoryTest {
             .withProperty(ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME, "openTCS")
             .withProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER, "iml")
             .withProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER, "0001")
+            .withProperty(ObjectProperties.PROPKEY_VEHICLE_VERSION, "2.0")
     ));
   }
 
@@ -43,6 +44,7 @@ public class CommAdapterImplFactoryTest {
         new Vehicle("Some vehicle")
             .withProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER, "iml")
             .withProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER, "0001")
+            .withProperty(ObjectProperties.PROPKEY_VEHICLE_VERSION, "2.0")
     ));
   }
 
@@ -52,6 +54,7 @@ public class CommAdapterImplFactoryTest {
         new Vehicle("Some vehicle")
             .withProperty(ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME, "openTCS")
             .withProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER, "0001")
+            .withProperty(ObjectProperties.PROPKEY_VEHICLE_VERSION, "2.0")
     ));
   }
 
@@ -61,6 +64,17 @@ public class CommAdapterImplFactoryTest {
         new Vehicle("Some vehicle")
             .withProperty(ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME, "openTCS")
             .withProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER, "iml")
+            .withProperty(ObjectProperties.PROPKEY_VEHICLE_VERSION, "2.0")
+    ));
+  }
+
+  @Test
+  public void provideAdapterForVehicleMissingVersion() {
+    assertFalse(commAdapterFactory.providesAdapterFor(
+        new Vehicle("Some vehicle")
+            .withProperty(ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME, "openTCS")
+            .withProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER, "iml")
+            .withProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER, "0001")
     ));
   }
 }

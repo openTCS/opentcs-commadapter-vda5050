@@ -32,6 +32,10 @@ public interface ObjectProperties {
    */
   String PROPKEY_VEHICLE_INTERFACE_NAME = "vda5050:interfaceName";
   /**
+   * The supported protocol version of the vehicle.
+   */
+  String PROPKEY_VEHICLE_VERSION = "vda5050:version";
+  /**
    * Default map id for this vehicle.
    */
   String PROPKEY_VEHICLE_MAP_ID = "vda5050:mapId";

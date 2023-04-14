@@ -9,7 +9,9 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import javax.inject.Singleton;
+import org.opentcs.commadapter.vehicle.vda5050.Vda5050CommAdapterFactory;
 import org.opentcs.customizations.kernel.KernelInjectionModule;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterFactory.V1dot1;
 
 public class KernelInjectionModuleImpl
     extends KernelInjectionModule {
@@ -24,7 +26,10 @@ public class KernelInjectionModuleImpl
   protected void configure() {
     bind(MessageValidator.class).in(Singleton.class);
 
+    bind(Vda5050CommAdapterFactory.class)
+        .annotatedWith(V1dot1.class)
+        .to(CommAdapterFactory.class);
+
     install(new FactoryModuleBuilder().build(CommAdapterComponentsFactory.class));
-    vehicleCommAdaptersBinder().addBinding().to(CommAdapterFactoryImpl.class);
   }
 }

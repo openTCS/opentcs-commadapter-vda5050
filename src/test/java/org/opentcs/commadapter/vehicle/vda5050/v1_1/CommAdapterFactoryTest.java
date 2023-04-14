@@ -18,13 +18,13 @@ import org.opentcs.data.model.Vehicle;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-public class CommAdapterImplFactoryTest {
+public class CommAdapterFactoryTest {
 
-  private CommAdapterFactoryImpl commAdapterFactory;
+  private CommAdapterFactory commAdapterFactory;
 
   @BeforeEach
   public void setUp() {
-    commAdapterFactory = new CommAdapterFactoryImpl(mock(CommAdapterComponentsFactory.class));
+    commAdapterFactory = new CommAdapterFactory(mock(CommAdapterComponentsFactory.class));
   }
 
   @Test

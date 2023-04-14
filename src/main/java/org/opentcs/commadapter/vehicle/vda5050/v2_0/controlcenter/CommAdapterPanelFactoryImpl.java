@@ -13,6 +13,7 @@ import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import org.opentcs.access.KernelServicePortal;
+import org.opentcs.commadapter.vehicle.vda5050.CommAdapterDescriptionImpl;
 import org.opentcs.data.TCSObjectReference;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.VehicleCommAdapterDescription;
