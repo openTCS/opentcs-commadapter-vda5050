@@ -234,6 +234,7 @@ public class CommAdapterImpl
     clientManager.subscribe(topicBase + "/connection", QualityOfService.AT_LEAST_ONCE, this);
     clientManager.subscribe(topicBase + "/state", QualityOfService.AT_MOST_ONCE, this);
     clientManager.subscribe(topicBase + "/visualization", QualityOfService.AT_MOST_ONCE, this);
+    clientManager.subscribe(topicBase + "/factsheet", QualityOfService.AT_LEAST_ONCE, this);
 
     // The client manager may have already been connected to the broker prior to this adapter
     // instance being enabled. Therefore, we have to actively check the broker connection state.
@@ -254,6 +255,7 @@ public class CommAdapterImpl
     clientManager.unsubscribe(topicBase + "/connection", this);
     clientManager.unsubscribe(topicBase + "/state", this);
     clientManager.unsubscribe(topicBase + "/visualization", this);
+    clientManager.unsubscribe(topicBase + "/factsheet", this);
     clientManager.unregisterConnectionEventListener(this);
 
     // With unregistering from the client manager, we will no longer receive any update regarding
@@ -454,6 +456,9 @@ public class CommAdapterImpl
       catch (IllegalArgumentException ex) {
         LOG.warn("Cannot parse visualization message: {}", message.getMessage(), ex);
       }
+    }
+    else if (message.getTopic().endsWith("/factsheet")) {
+      LOG.info("Received factsheet from vehicle, ignoring it.");
     }
     else {
       LOG.warn("Incoming message on unhandled topic '{}': {}",
