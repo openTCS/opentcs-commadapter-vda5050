@@ -81,11 +81,11 @@ public class CommAdapterImpl
   /**
    * Major interface version.
    */
-  private static final int VERSION_MAJOR = 1;
+  private static final int VERSION_MAJOR = 2;
   /**
    * Minor interface version.
    */
-  private static final int VERSION_MINOR = 1;
+  private static final int VERSION_MINOR = 0;
   /**
    * Patch version.
    */

@@ -1,0 +1,35 @@
+:toc: macro
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+toc::[]
+
+= VDA5050 2.0 driver configuration
+
+The driver reads configuration data from properties of the vehicle element in the plant model.
+It reads the properties with the following keys:
+
+`vda5050:version` (required)::
+Must be set to `2.0`.
+`vda5050:interfaceName` (required)::
+The property value contains the interface name to be used as part of the MQTT topic, e.g. `uagv`.
+`vda5050:manufacturer` (required)::
+The property value contains the manufacturer string to be used as part of the MQTT topic, e.g. `Some_Company`.
+`vda5050:serialNumber` (required)::
+The property value contains the vehicle's unique(!) serial number to be used as part of the MQTT topic, e.g. `AGV-XY-1234`.
+`vda5050:rechargeOperation` (optional)::
+The property value contains a string that should be used as the vehicle's recharge operation in the plant model, e.g. `Recharge`.
+(Default value: `Charge`.)
+`vda5050:orderQueueSize` (optional)::
+The property value contains the decimal representation of the vehicle's order queue size, i.e. the maximum number of unfinished orders / order updates that the vehicle can take, e.g. `10`.
+(Default value: `2`.)
+`vda5050:minVisualizationInterval` (optional)::
+The property value contains the decimal representation of the minimum time in milliseconds between visualization updates forwarded to the kernel, e.g. `1000`.
+(Default value: `500`.)
+
+NOTE: If any of the required properties are not set or contain unusable data, the driver may fail to be instantiated for / attached to the vehicle.

@@ -1,0 +1,14 @@
+:toc: macro
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+toc::[]
+
+= General implementation remarks
+
+* The openTCS driver is implemented based on the VDA5050 2.0 PDF document as the definitive specification, not the documents that can be found at https://github.com/vda5050.

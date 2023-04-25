@@ -20,7 +20,7 @@ All of the following entries need to be set to valid values in the kernel applic
 `commadapter.vehicle.vda5050.enabledVersions`::
 Set to a list of VDA5050 specification versions for which to enable the vehicle driver; set to an empty string to disable it.
 When disabled, the kernel will not use the driver at all, even if vehicles are configured for it.
-Valid versions to be used here are: `1.1`.
+Valid versions to be used here are: `1.1`, `2.0`.
 `commadapter.vehicle.vda5050.mqtt.brokerHost`::
 The IP address or host name of the MQTT broker to be used.
 `commadapter.vehicle.vda5050.mqtt.brokerPort`::
@@ -48,7 +48,7 @@ The interval (in ms) for trying to reconnect to the MQTT broker.
 The following example configuration can be used as a template to be pasted into the kernel configuration file and adjusted for the respective plant:
 
 ```
-commadapter.vehicle.vda5050.enabledVersions = 1.1
+commadapter.vehicle.vda5050.enabledVersions = 1.1, 2.0
 commadapter.vehicle.vda5050.mqtt.brokerHost = broker.example.com
 commadapter.vehicle.vda5050.mqtt.brokerPort = 1883
 commadapter.vehicle.vda5050.mqtt.connectionEncrypted = false
