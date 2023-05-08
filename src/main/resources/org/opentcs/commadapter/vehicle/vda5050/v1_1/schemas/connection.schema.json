@@ -5,6 +5,7 @@
     "subtopic": "/connection",
     "documentVersion": "5.0.0",
     "type": "object",
+    "additionalProperties": false,
     "properties": {
         "headerId": {
             "title": "headerId",

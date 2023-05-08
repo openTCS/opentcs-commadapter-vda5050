@@ -5,6 +5,7 @@
     "documentVersion": "5.0.0",
     "subtopic": "/state",
     "type": "object",
+    "additionalProperties": false,
     "properties": {
         "headerId": {
             "type": "integer",
@@ -84,6 +85,7 @@
             "description": "Information about the nodes the AGV still has to drive over. Empty list if idle.",
             "items": {
                 "type": "object",
+                "additionalProperties": false,
                 "title": "nodeState",
                 "properties": {
                     "nodeId": {
@@ -100,6 +102,7 @@
                     },
                     "nodePosition": {
                         "type": "object",
+                        "additionalProperties": false,
                         "title": "nodePosition",
                         "description": "Node position. The object is defined in chapter 5.4 Topic: Order (from master control to AGV).\nOptional:\nMaster control has this information. Can be sent additionally, e. g. for debugging purposes. ",
                         "properties": {
@@ -159,6 +162,7 @@
             "description": "Information about the edges the AGV still has to drive over. Empty list if the AGV is idle.",
             "items": {
                 "type": "object",
+                "additionalProperties": false,
                 "title": "edgeState",
                 "properties": {
                     "edgeId": {
@@ -179,6 +183,7 @@
                     },
                     "trajectory": {
                         "type": "object",
+                        "additionalProperties": false,
                         "description": "The trajectory is to be communicated as a NURBS and is defined in chapter 5.4 Topic: Order (from master control to AGV).\nTrajectory segments are from the point where the AGV starts to enter the edge until the point where it reports that the next node was traversed. ",
                         "properties": {
                             "degree": {
@@ -199,6 +204,7 @@
                                 "description": "List of JSON controlPoint objects defining the control points of the NURBS. This includes the start and end point.",
                                 "items": {
                                     "type": "object",
+                                    "additionalProperties": false,
                                     "title": "controlPoint",
                                     "properties": {
                                         "x": {
@@ -242,6 +248,7 @@
         },
         "agvPosition": {
             "type": "object",
+            "additionalProperties": false,
             "title": "agvPosition",
             "description": "The AGVs position",
             "properties": {
@@ -285,6 +292,7 @@
         },
         "velocity": {
             "type": "object",
+            "additionalProperties": false,
             "title": "velocity",
             "description": "The AGVs velocity in vehicle coordinates",
             "properties": {
@@ -304,6 +312,7 @@
             "description": "Array for information about the loads that an AGV currently carries, if the AGV has any information about them. This array is optional: if an AGV cannot reason about its load state, it shall not send this field. If an empty field is sent, MC is to assume that the AGV can reason about its load state and that the AGV currently does not carry a load.",
             "items": {
                 "type": "object",
+                "additionalProperties": false,
                 "description": "Load object that describes the load if the AGV has information about it.",
                 "title": "load",
                 "properties": {
@@ -320,6 +329,7 @@
                     },
                     "boundingBoxReference": {
                         "type": "object",
+                        "additionalProperties": false,
                         "description": "This point describes the loads position on the AGV in the vehicle coordinates. The boundingBoxReference point is in the middle of the footprint of the load, so length/2 and width/2.",
                         "properties": {
                             "x": {
@@ -343,6 +353,7 @@
                     },
                     "loadDimensions": {
                         "type": "object",
+                        "additionalProperties": false,
                         "title": "loadDimensions",
                         "description": "Dimensions of the loadâ€™s bounding box in meters. ",
                         "properties": {
@@ -377,6 +388,7 @@
             "description": "Contains a list of the current actions and the actions which are yet to be finished. This may include actions from previous nodes that are still in progress\nWhen an action is completed, an updated state message is published with actionStatus set to finished and if applicable with the corresponding resultDescription. The actionStates are kept until a new order is received.",
             "items": {
                 "type": "object",
+                "additionalProperties": false,
                 "title": "actionState",
                 "properties": {
                     "actionId": {
@@ -419,6 +431,7 @@
         },
         "batteryState": {
             "type": "object",
+            "additionalProperties": false,
             "title": "batteryState",
             "description": "All information relating to the battery.",
             "properties": {
@@ -454,6 +467,7 @@
             "description": "Array of errors. Errors are kept until resolution.",
             "items": {
                 "type": "object",
+                "additionalProperties": false,
                 "title": "Error",
                 "properties": {
                     "errorType": {
@@ -465,6 +479,7 @@
                         "title": "errorReferences",
                         "items": {
                             "type": "object",
+                            "additionalProperties": false,
                             "title": "errorReference",
                             "description": "Object that holds the error reference (e.g. orderId, orderUpdateId, actionId...) as key-value pairs.",
                             "properties": {
@@ -506,6 +521,7 @@
             "description": "Array of information messages. Messages are only for visualization/debugging. There's no specification when these messages are deleted.",
             "items": {
                 "type": "object",
+                "additionalProperties": false,
                 "title": "Information",
                 "properties": {
                     "infoType": {
@@ -517,6 +533,7 @@
                         "title": "infoReferences",
                         "items": {
                             "type": "object",
+                            "additionalProperties": false,
                             "title": "infoReference",
                             "description": "Object that holds the info reference (e.g. orderId, orderUpdateId, actionId...) as key-value pairs.",
                             "properties": {
@@ -554,6 +571,7 @@
         },
         "safetyState": {
             "type": "object",
+            "additionalProperties": false,
             "title": "safetyStatus",
             "description": "Object that holds information about the safety status",
             "properties": {

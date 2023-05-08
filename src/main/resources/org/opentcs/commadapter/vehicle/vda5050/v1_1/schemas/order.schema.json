@@ -5,6 +5,7 @@
     "subtopic": "/order",
     "documentVersion": "5.0.0",
     "type": "object",
+    "additionalProperties": false,
     "properties": {
         "headerId": {
             "title": "headerId",
@@ -59,6 +60,7 @@
             "items": {
                 "type": "object",
                 "title": "node",
+                "additionalProperties": false,
                 "required": [
                     "nodeId",
                     "sequenceId",
@@ -96,6 +98,7 @@
                         "title": "nodePosition",
                         "description": "Defines the position on a map in world coordinates. Each floor has its own map. Precision is up to the specific implementation",
                         "type": "object",
+                        "additionalProperties": false,
                         "required": [
                             "x",
                             "y",
@@ -150,6 +153,7 @@
                             "type": "object",
                             "title": "nodeAction",
                             "description": "nodeAction",
+                            "additionalProperties": false,
                             "required": [
                                 "actionType",
                                 "actionId",
@@ -186,6 +190,7 @@
                                     "items": {
                                         "title": "actionParameter",
                                         "type": "object",
+                                        "additionalProperties": false,
                                         "required": [
                                             "key",
                                             "value"
@@ -236,6 +241,7 @@
             "items": {
                 "type": "object",
                 "title": "edge",
+                "additionalProperties": false,
                 "required": [
                     "edgeId",
                     "sequenceId",
@@ -327,6 +333,7 @@
                     },
                     "trajectory": {
                         "type": "object",
+                        "additionalProperties": false,
                         "description": "Trajectory that an AGV has to follow on this edge. The trajectory is to be defined as a NURBS.",
                         "properties": {
                             "degree": {
@@ -347,6 +354,7 @@
                                 "description": "List of JSON controlPoint objects defining the control points of the NURBS. This includes the start and end point.",
                                 "items": {
                                     "type": "object",
+                                    "additionalProperties": false,
                                     "title": "controlPoint",
                                     "properties": {
                                         "x": {
@@ -388,6 +396,7 @@
                             "type": "object",
                             "title": "edgeAction",
                             "description": "edgeAction",
+                            "additionalProperties": false,
                             "required": [
                                 "actionId",
                                 "actionType"
@@ -407,12 +416,23 @@
                                     "type": "string",
                                     "title": "Additional Information on the action"
                                 },
+                                "blockingType": {
+                                    "type": "string",
+                                    "title": "blockingType",
+                                    "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running.",
+                                    "enum": [
+                                        "NONE",
+                                        "SOFT",
+                                        "HARD"
+                                    ]
+                                },
                                 "actionParameters": {
                                     "type": "array",
                                     "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers.",
                                     "items": {
                                         "title": "actionParameter",
                                         "type": "object",
+                                        "additionalProperties": false,
                                         "required": [
                                             "key",
                                             "value"

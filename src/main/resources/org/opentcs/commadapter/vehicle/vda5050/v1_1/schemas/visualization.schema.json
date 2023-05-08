@@ -6,6 +6,7 @@
     "documentVersion": "5.0.0",
     "subtopic": "/visualization",
     "type": "object",
+    "additionalProperties": false,
     "properties": {
         "headerId": {
             "type": "integer",
@@ -35,6 +36,7 @@
         },
         "agvPosition": {
             "type": "object",
+            "additionalProperties": false,
             "title": "agvPosition",
             "$id": "#/position",
             "description": "The AGVs position",
@@ -79,6 +81,7 @@
         },
         "velocity": {
             "type": "object",
+            "additionalProperties": false,
             "title": "velocity",
             "description": "The AGVs velocity in vehicle coordinates",
             "properties": {

@@ -5,6 +5,7 @@
     "documentVersion": "5.0.0",
     "subtopic": "/instantActions",
     "type": "object",
+    "additionalProperties": false,
     "properties": {
         "headerId": {
             "title": "headerId",
@@ -39,6 +40,7 @@
             "type": "array",
             "items": {
                 "type": "object",
+                "additionalProperties": false,
                 "$id": "#instantAction",
                 "title": "instantAction",
                 "description": "Action Object",
@@ -78,6 +80,7 @@
                         "items": {
                             "title": "actionParameter",
                             "type": "object",
+                            "additionalProperties": false,
                             "required": [
                                 "key",
                                 "value"
