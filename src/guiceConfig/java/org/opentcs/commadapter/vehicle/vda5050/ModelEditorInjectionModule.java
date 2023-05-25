@@ -21,5 +21,6 @@ public class ModelEditorInjectionModule
   @Override
   protected void configure() {
     install(new org.opentcs.commadapter.vehicle.vda5050.v1_1.ModelEditorInjectionModule());
+    install(new org.opentcs.commadapter.vehicle.vda5050.v2_0.ModelEditorInjectionModule());
   }
 }

@@ -26,5 +26,6 @@ public class ControlCenterInjectionModuleImpl
   @Override
   protected void configure() {
     install(new org.opentcs.commadapter.vehicle.vda5050.v1_1.ControlCenterInjectionModuleImpl());
+    install(new org.opentcs.commadapter.vehicle.vda5050.v2_0.ControlCenterInjectionModuleImpl());
   }
 }

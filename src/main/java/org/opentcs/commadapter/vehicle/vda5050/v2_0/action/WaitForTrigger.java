@@ -1,0 +1,46 @@
+/**
+ * Copyright (c) The openTCS Authors.
+ *
+ * This program is free software and subject to the MIT license. (For details,
+ * see the licensing information (LICENSE.txt) you should have received with
+ * this copy of the software.)
+ */
+package org.opentcs.commadapter.vehicle.vda5050.v2_0.action;
+
+import java.util.ArrayList;
+import java.util.List;
+import static java.util.Objects.requireNonNull;
+import javax.annotation.Nonnull;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
+
+/**
+ * The VDA5050 {@code waitForTrigger} action.
+ *
+ * @author Leonard Schüngel (Fraunhofer IML)
+ * @author Martin Grzenia (Fraunhofer IML)
+ */
+public class WaitForTrigger
+    extends Action {
+
+  /**
+   * This action's action type.
+   */
+  public static final String ACTION_TYPE = "waitForTrigger";
+  /**
+   * The key of the (VDA5050) {@code triggerType} parameter for this action.
+   */
+  public static final String PARAMKEY_TRIGGER_TYPE = "triggerType";
+
+  public WaitForTrigger(@Nonnull String actionId,
+                        @Nonnull BlockingType blockingType,
+                        @Nonnull String paramValueTriggerType) {
+    super(ACTION_TYPE, actionId, blockingType);
+
+    List<ActionParameter> actionParameters = new ArrayList<>();
+    requireNonNull(paramValueTriggerType, "paramValueTriggerType");
+    actionParameters.add(new ActionParameter(PARAMKEY_TRIGGER_TYPE, paramValueTriggerType));
+    setActionParameters(actionParameters);
+  }
+}

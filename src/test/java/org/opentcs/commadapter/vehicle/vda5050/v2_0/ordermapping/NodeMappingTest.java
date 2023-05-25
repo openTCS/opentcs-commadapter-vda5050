@@ -1,0 +1,128 @@
+/**
+ * Copyright (c) The openTCS Authors.
+ *
+ * This program is free software and subject to the MIT license. (For details,
+ * see the licensing information (LICENSE.txt) you should have received with
+ * this copy of the software.)
+ */
+package org.opentcs.commadapter.vehicle.vda5050.v2_0.ordermapping;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import org.junit.jupiter.api.Test;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.NodePosition;
+import org.opentcs.data.model.Point;
+import org.opentcs.data.model.Triple;
+import org.opentcs.data.model.Vehicle;
+
+/**
+ * Unit tests for {@link NodeMapping}.
+ *
+ * @author Leonard Schüngel (Fraunhofer IML)
+ * @author Stefan Walter (Fraunhfoer IML)
+ */
+public class NodeMappingTest {
+
+  @Test
+  public void setNodePositionPropertiesFromVehicleIfPointDoesntHaveAny() {
+    Point point = new Point("Point-0001");
+    Vehicle vehicle = new Vehicle("vehicle-0001")
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_XY, "0.5")
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA, "45")
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_MAP_ID, "mapid-vehicle");
+
+    NodePosition np = NodeMapping.toNodePosition(point, vehicle, false);
+
+    assertThat(np.getAllowedDeviationXY(), is(closeTo(0.5, 0.001)));
+    assertThat(np.getAllowedDeviationTheta(), is(closeTo(Math.PI / 4, 0.00001)));
+    assertThat(np.getMapId(), is("mapid-vehicle"));
+  }
+
+  @Test
+  public void preferNodePositionPropertiesFromPointOverVehicle() {
+    Vehicle vehicle = new Vehicle("vehicle-0001")
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_XY, "0.5")
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA, "45")
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_MAP_ID, "mapid-vehicle");
+    Point point = new Point("Point-0001")
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_XY, "1.2")
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA, "90")
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_MAP_ID, "mapid-point");
+
+    NodePosition np = NodeMapping.toNodePosition(point, vehicle, false);
+
+    assertThat(np.getAllowedDeviationXY(), is(closeTo(1.2, 0.001)));
+    assertThat(np.getAllowedDeviationTheta(),
+               is(closeTo(Math.PI / 2, 0.00001)));
+    assertThat(np.getMapId(), is("mapid-point"));
+  }
+
+  @Test
+  public void extendDeviationToIncludeVehicle() {
+    Vehicle vehicle = new Vehicle("vehicle-0001")
+        .withPrecisePosition(new Triple(500, 500, 0));
+    Point point = new Point("Point-0001")
+        .withPosition(new Triple(1000, 1000, 0))
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_XY, "1.2")
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA, "90");
+
+    NodePosition np = NodeMapping.toNodePosition(point, vehicle, true);
+    
+    assertThat(np.getAllowedDeviationXY(), is(closeTo(0.71, 0.05)));
+    assertThat(np.getAllowedDeviationTheta(), is(Math.PI));
+  }
+
+  @Test
+  public void setNodePositionDefaultPropertiesIfNeitherPointNorVehicleHaveThem() {
+    Point point = new Point("Point-0001");
+    Vehicle vehicle = new Vehicle("vehicle-0001");
+
+    NodePosition np = NodeMapping.toNodePosition(point, vehicle, false);
+
+    assertThat(np.getAllowedDeviationXY(), is(nullValue()));
+    assertThat(np.getAllowedDeviationTheta(), is(nullValue()));
+    assertThat(np.getMapId(), is(emptyString()));
+  }
+
+  @Test
+  public void setPointPosition() {
+    Vehicle vehicle = new Vehicle("vehicle-0001");
+    Point point = new Point("Point-0001")
+        .withPosition(new Triple(12000, 144000, 0));
+
+    NodePosition np = NodeMapping.toNodePosition(point, vehicle, false);
+
+    assertThat(np.getX(), is(closeTo(12, 0.1)));
+    assertThat(np.getY(), is(closeTo(144, 0.1)));
+    assertThat(np.getMapId(), is(emptyString()));
+  }
+
+  @Test
+  public void setKnownPointOrientation() {
+    Vehicle vehicle = new Vehicle("vehicle-0001");
+    Point point = new Point("Point-0001");
+
+    point = point.withVehicleOrientationAngle(180.0);
+    NodePosition np = NodeMapping.toNodePosition(point, vehicle, false);
+    assertThat(np.getTheta(), closeTo(Math.PI, 0.00001));
+
+    point = point.withVehicleOrientationAngle(270.0);
+    np = NodeMapping.toNodePosition(point, vehicle, false);
+    assertThat(np.getTheta(), closeTo(-Math.PI / 2, 0.00001));
+  }
+
+  @Test
+  public void leaveUnknownPointOrientationUnset() {
+    Vehicle vehicle = new Vehicle("vehicle-0001");
+    Point point = new Point("Point-0001")
+        .withVehicleOrientationAngle(Double.NaN);
+
+    NodePosition np = NodeMapping.toNodePosition(point, vehicle, false);
+
+    assertThat(np.getTheta(), is(nullValue()));
+  }
+}

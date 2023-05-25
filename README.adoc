@@ -11,7 +11,7 @@ toc::[]
 
 = VDA5050 communication adapter for openTCS
 
-This https://www.opentcs.org/[openTCS] vehicle communication adapter implements the VDA5050 protocol specification version 1.1, using JSON messages via MQTT.
+This https://www.opentcs.org/[openTCS] vehicle communication adapter implements the VDA5050 protocol specification versions 1.1 and 2.0, using JSON messages via MQTT.
 (_openTCS vehicle communication adapter_ means it implements the interface on the openTCS side.
 If you are looking for an open-source library that helps you use VDA5050 on the vehicle side, check e.g. https://git.openlogisticsfoundation.org/silicon-economy/libraries/vda5050/libvda5050pp[libVDA5050++], instead.)
 
@@ -40,12 +40,16 @@ To use the driver with specific versions of the VDA5050 specification, the follo
 ** link:./doc/v1.1/configuration.adoc[Configuration]
 ** link:./doc/v1.1/runtime-behaviour.adoc[Runtime behaviour]
 ** link:./doc/v1.1/remarks.adoc[General implementation remarks]
+* VDA5050 2.0:
+** link:./doc/v2.0/configuration.adoc[Configuration]
+** link:./doc/v2.0/runtime-behaviour.adoc[Runtime behaviour]
+** link:./doc/v2.0/remarks.adoc[General implementation remarks]
 
 = Licensing
 
 == Code
 
-All of this software project's source code, including scripts and configuration files, is distributed under the link:LICENSE.txt[MIT License].
+Unless stated otherwise, all of this software project's source code, including scripts and configuration files, is distributed under the link:LICENSE.txt[MIT License].
 
 == Assets
 
