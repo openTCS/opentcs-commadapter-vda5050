@@ -11,7 +11,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.10 (2023-05-26)
 
 * New features and enhancements:
 ** Add initial support for VDA5050 2.0.
