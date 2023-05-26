@@ -13,8 +13,10 @@ toc::[]
 
 == Unreleased
 
-* Add initial support for VDA5050 2.0.
-  (All features supported for 1.1 are also supported for 2.0; information provided by vehicles via factsheet messages is ignored.)
+* New features and enhancements:
+** Add initial support for VDA5050 2.0.
+   (All features supported for 1.1 are also supported for 2.0; information provided by vehicles via factsheet messages is ignored.)
+** Improve JSON validation exception content by including some more information about what caused the validation to fail.
 
 == Version 0.9 (2023-03-23)
 

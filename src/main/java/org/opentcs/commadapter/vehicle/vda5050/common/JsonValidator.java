@@ -67,7 +67,13 @@ public class JsonValidator {
     try {
       schema.validate(new JSONObject(json));
     }
-    catch (ValidationException | JSONException e) {
+    catch (ValidationException e) {
+      throw new IllegalArgumentException(
+          e.getMessage() + '\n' + String.join("\n", e.getAllMessages()),
+          e
+      );
+    }
+    catch (JSONException e) {
       throw new IllegalArgumentException("Invalid JSON input", e);
     }
   }
