@@ -13,7 +13,8 @@ toc::[]
 
 == Unreleased
 
-...
+* New features and enhancements:
+** Log MQTT client ID when connecting to broker.
 
 == Version 0.10 (2023-05-26)
 

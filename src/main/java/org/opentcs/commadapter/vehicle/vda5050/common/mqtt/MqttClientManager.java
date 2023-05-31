@@ -323,8 +323,10 @@ public class MqttClientManager {
       return;
     }
 
-    LOG.info("Initiating connection attempt to {}:{}...",
-             configuration.brokerHost(), configuration.brokerPort());
+    LOG.info("Initiating connection attempt to {}:{} with client ID '{}'...",
+             configuration.brokerHost(),
+             configuration.brokerPort(),
+             configuration.clientId());
     try {
       client.connect(connectOptions, CONNECT_CONTEXT, connectionCallback);
     }
