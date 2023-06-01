@@ -48,6 +48,14 @@ public interface ObjectProperties {
    */
   String PROPKEY_VEHICLE_DEVIATION_THETA = "vda5050:deviationTheta";
   /**
+   * Vehicle length when vehicle does not report any loads.
+   */
+  String PROPKEY_VEHICLE_LENGTH_UNLOADED = "vda5050:vehicleLengthUnloaded";
+  /**
+   * Vehicle length when vehicle reports at least one load.
+   */
+  String PROPKEY_VEHICLE_LENGTH_LOADED = "vda5050:vehicleLengthLoaded";
+  /**
    * The key of the vehicle property containing the vehicle's list of fatal errors.
    */
   String PROPKEY_VEHICLE_ERRORS_FATAL = "vda5050:errors.fatal";

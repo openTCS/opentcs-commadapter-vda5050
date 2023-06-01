@@ -14,7 +14,11 @@ toc::[]
 == Unreleased
 
 * New features and enhancements:
+** When receiving a state message from a vehicle, update the vehicle length with the kernel based on whether loads are reported in the state message or not.
+   Allow configuration of the vehicle length that is set via vehicle properties with keys `vda5050:vehicleLengthLoaded` and `vda5050:vehicleLengthUnloaded`.
 ** Log MQTT client ID when connecting to broker.
+* Other changes:
+** Update openTCS baseline dependency to 5.9.
 
 == Version 0.10 (2023-05-26)
 

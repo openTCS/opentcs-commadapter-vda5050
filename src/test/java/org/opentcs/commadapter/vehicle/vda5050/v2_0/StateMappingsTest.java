@@ -121,6 +121,27 @@ public class StateMappingsTest {
   }
 
   @Test
+  public void returnUnloadedLengthForNullLoads() {
+    state.setLoads(null);
+
+    assertThat(StateMappings.toVehicleLength(state, 1000, 2000), is(1000));
+  }
+
+  @Test
+  public void returnUnloadedLengthForEmptyLoads() {
+    state.setLoads(List.of());
+
+    assertThat(StateMappings.toVehicleLength(state, 1000, 2000), is(1000));
+  }
+
+  @Test
+  public void returnLoadedLengthForLoads() {
+    state.setLoads(List.of(new Load()));
+
+    assertThat(StateMappings.toVehicleLength(state, 1000, 2000), is(2000));
+  }
+
+  @Test
   public void mapEmptyErrorsListToEmptyString() {
     state.setErrors(List.of());
     assertThat(StateMappings.toErrorPropertyValue(state, ErrorLevel.FATAL), is(emptyString()));

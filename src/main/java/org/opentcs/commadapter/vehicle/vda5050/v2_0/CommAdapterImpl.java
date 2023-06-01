@@ -36,8 +36,11 @@ import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.ConnectionEventListen
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.MqttClientManager;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.IncomingMessage;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.QualityOfService;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_LENGTH_LOADED;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_LENGTH_UNLOADED;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MIN_VISU_INTERVAL;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_ORDER_QUEUE_SIZE;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.StateMappings.toVehicleLength;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.ProcessModelImplTO;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.Header;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
@@ -118,6 +121,14 @@ public class CommAdapterImpl
    * The minimum visualizationInterval.
    */
   private final int minVisualizationInterval;
+  /**
+   * The vehicle's length when loaded.
+   */
+  private final int vehicleLengthLoaded;
+  /**
+   * The vehicle's length when unloaded.
+   */
+  private final int vehicleLengthUnloaded;
 
   private final MessageValidator messageValidator;
   /**
@@ -182,6 +193,10 @@ public class CommAdapterImpl
     this.componentsFactory = requireNonNull(componentsFactory, "componentsFactory");
     this.minVisualizationInterval
         = getPropertyInteger(PROPKEY_VEHICLE_MIN_VISU_INTERVAL, vehicle).orElse(500);
+    this.vehicleLengthLoaded
+        = getPropertyInteger(PROPKEY_VEHICLE_LENGTH_LOADED, vehicle).orElse(1000);
+    this.vehicleLengthUnloaded
+        = getPropertyInteger(PROPKEY_VEHICLE_LENGTH_UNLOADED, vehicle).orElse(1000);
     this.movementCommandManager = requireNonNull(movementCommandManager, "movementCommandManager");
     this.clientManager = requireNonNull(clientManager, "clientManager");
     this.messageValidator = requireNonNull(messageValidator, "messageValidator");
@@ -544,6 +559,9 @@ public class CommAdapterImpl
         StateMappings.toErrorPropertyValue(state, ErrorLevel.WARNING)
     );
     getProcessModel().setVehicleState(toVehicleState(state));
+    getProcessModel().setVehicleLength(
+        toVehicleLength(state, vehicleLengthUnloaded, vehicleLengthLoaded)
+    );
 
     movementCommandManager.onStateMessage(state, this::onMovementCommandExecuted);
   }

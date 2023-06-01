@@ -31,5 +31,11 @@ The property value contains the decimal representation of the vehicle's order qu
 `vda5050:minVisualizationInterval` (optional)::
 The property value contains the decimal representation of the minimum time in milliseconds between visualization updates forwarded to the kernel, e.g. `1000`.
 (Default value: `500`.)
+`vda5050:vehicleLengthLoaded` (optional)::
+The property value contains the decimal representation of the vehicle length in mm to be set when the vehicle reports at least one load.
+(Default value: `1000`.)
+`vda5050:vehicleLengthUnloaded` (optional)::
+The property value contains the decimal representation of the vehicle length in mm to be set when the vehicle reports no loads.
+(Default value: `1000`.)
 
 NOTE: If any of the required properties are not set or contain unusable data, the driver may fail to be instantiated for / attached to the vehicle.

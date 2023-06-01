@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static java.util.Objects.requireNonNull;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ActionStatus;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ErrorEntry;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ErrorLevel;
@@ -87,6 +88,25 @@ public class StateMappings {
       }
     }
     return lhds;
+  }
+
+  /**
+   * Returns the length of the vehicle based on the loads reported in the given state.
+   *
+   * @param state The state message.
+   * @param lengthUnloaded The length of the vehicle when unloaded.
+   * @param lengthLoaded The length of the vehicle when loaded.
+   * @return The length of the vehicle based on the loads reported in the given state.
+   */
+  public static int toVehicleLength(@Nonnull State state, int lengthUnloaded, int lengthLoaded) {
+    requireNonNull(state, "state");
+
+    if (state.getLoads() == null || state.getLoads().isEmpty()) {
+      return lengthUnloaded;
+    }
+    else {
+      return lengthLoaded;
+    }
   }
 
   public static String toErrorPropertyValue(State state, ErrorLevel errorLevel) {
