@@ -11,7 +11,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.11 (2023-06-01)
 
 * New features and enhancements:
 ** When receiving a state message from a vehicle, update the vehicle length with the kernel based on whether loads are reported in the state message or not.
