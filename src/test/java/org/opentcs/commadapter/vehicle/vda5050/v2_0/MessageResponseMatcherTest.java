@@ -51,6 +51,8 @@ public class MessageResponseMatcherTest {
   private Consumer<Order> sendOrderCallback;
   private Consumer<InstantActions> sendInstantActionsCallback;
   private Consumer<OrderAssociation> orderAcceptedCallback;
+  private Consumer<OrderAssociation> orderRejectedCallback;
+  private Consumer<InstantActions> actionRejectedCallback;
 
   private MovementCommand dummyCommand;
 
@@ -60,10 +62,13 @@ public class MessageResponseMatcherTest {
     sendOrderCallback = mock(Consumer.class);
     sendInstantActionsCallback = mock(Consumer.class);
     orderAcceptedCallback = mock(Consumer.class);
+    orderRejectedCallback = mock(Consumer.class);
     messageResponseMatcher = new MessageResponseMatcher("test",
                                                         sendOrderCallback,
                                                         sendInstantActionsCallback,
-                                                        orderAcceptedCallback);
+                                                        orderAcceptedCallback,
+                                                        orderRejectedCallback
+    );
     dummyCommand = new DummyMovementCommand();
   }
 

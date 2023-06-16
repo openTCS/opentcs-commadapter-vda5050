@@ -58,6 +58,7 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.ordermapping.OrderMapper;
 import org.opentcs.customizations.kernel.KernelExecutor;
 import org.opentcs.data.model.Triple;
 import org.opentcs.data.model.Vehicle;
+import org.opentcs.data.notification.UserNotification;
 import org.opentcs.data.order.DriveOrder;
 import org.opentcs.data.order.TransportOrder;
 import org.opentcs.drivers.vehicle.BasicVehicleCommAdapter;
@@ -206,9 +207,8 @@ public class CommAdapterImpl
         this.getName(),
         this::sendOrder,
         this::sendInstantAction,
-        orderAssociation -> {
-          movementCommandManager.enqueue(orderAssociation);
-        }
+        this::orderAccepted,
+        this::orderRejected
     );
 
     vehicleSerialNumber = vehicle.getProperty(PROPKEY_VEHICLE_SERIAL_NUMBER);
@@ -630,4 +630,17 @@ public class CommAdapterImpl
     }
   }
 
+  private void orderAccepted(OrderAssociation order) {
+    movementCommandManager.enqueue(order);
+  }
+
+  private void orderRejected(OrderAssociation order) {
+    getProcessModel().publishUserNotification(new UserNotification(
+        getProcessModel().getName(),
+        String.format("Vehicle rejected VDA5050 order (ID: %s, update ID: %s)",
+                      order.getOrder().getOrderId(),
+                      order.getOrder().getOrderUpdateId()),
+        UserNotification.Level.IMPORTANT
+    ));
+  }
 }

@@ -50,6 +50,10 @@ public class MessageResponseMatcher {
    * The callback for when an order is accepted by the vehicle.
    */
   private final Consumer<OrderAssociation> orderAcceptedCallback;
+  /**
+   * The callback for when an order was rejected by the vehicle.
+   */
+  private final Consumer<OrderAssociation> orderRejectedCallback;
 
   /**
    * Creates a new OrderResponseMatcher.
@@ -58,16 +62,19 @@ public class MessageResponseMatcher {
    * @param sendOrderCallback The callback for sending the next order.
    * @param sendInstantActionsCallback The callback for sending instant actions.
    * @param orderAcceptedCallback The callback for when the order is accepted by the vehicle.
+   * @param orderRejectedCallback The callback for when the vehicle rejects an order.
    */
   public MessageResponseMatcher(@Nonnull String commAdapterName,
                                 @Nonnull Consumer<Order> sendOrderCallback,
                                 @Nonnull Consumer<InstantActions> sendInstantActionsCallback,
-                                @Nonnull Consumer<OrderAssociation> orderAcceptedCallback) {
+                                @Nonnull Consumer<OrderAssociation> orderAcceptedCallback,
+                                @Nonnull Consumer<OrderAssociation> orderRejectedCallback) {
     this.commAdapterName = requireNonNull(commAdapterName, "commAdapterName");
     this.sendOrderCallback = requireNonNull(sendOrderCallback, "sendOrderCallback");
     this.sendInstantActionsCallback
         = requireNonNull(sendInstantActionsCallback, "sendInstantActionsCallback");
     this.orderAcceptedCallback = requireNonNull(orderAcceptedCallback, "orderAcceptedCallback");
+    this.orderRejectedCallback = requireNonNull(orderRejectedCallback, "orderRejectedCallback");
   }
 
   public void enqueueCommand(Order order, MovementCommand command) {
@@ -106,9 +113,14 @@ public class MessageResponseMatcher {
       return;
     }
     if (vehicleRejectedOrder(state)) {
+      Object request = requests.peek();
+      if (request instanceof OrderAssociation) {
+        orderRejectedCallback.accept((OrderAssociation) request);
+      }
+
       LOG.warn("{}: Vehicle indicates order rejection. Last request sent to it was: {}",
                commAdapterName,
-               requests.peek());
+               request);
       return;
     }
 
