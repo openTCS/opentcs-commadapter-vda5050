@@ -155,14 +155,14 @@ public class VehiclePositionResolverTest {
     ));
     String newPosition = positionResolver.resolveVehiclePosition("current position", state);
 
-    assertThat(newPosition, is(nullValue()));
+    assertThat(newPosition, is("current position"));
   }
 
   @Test
   public void positionShouldBeNullIfLastNodeIdIsNullAndAgvPositionIsNull() {
     String newPosition = positionResolver.resolveVehiclePosition("current position", state);
 
-    assertThat(newPosition, is(nullValue()));
+    assertThat(newPosition, is("current position"));
   }
 
   @ParameterizedTest

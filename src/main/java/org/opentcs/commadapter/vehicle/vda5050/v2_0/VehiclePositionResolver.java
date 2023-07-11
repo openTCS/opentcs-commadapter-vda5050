@@ -55,7 +55,7 @@ public class VehiclePositionResolver {
   /**
    * Find the correct vehicle position given a state message.
    *
-   * @param currentPosition The current vehicle position.
+   * @param currentPosition The name of the current vehicle position.
    * @param currentState The current vehicle state.
    * @return The vehicle position or null if no position can be found.
    */
@@ -64,21 +64,44 @@ public class VehiclePositionResolver {
                                        @Nonnull State currentState) {
     requireNonNull(currentState, "currentState");
 
+    // Use lastNodeId for the position if it is set.
     if (currentState.getLastNodeId() != null && !currentState.getLastNodeId().isBlank()) {
       return currentState.getLastNodeId();
     }
 
-    if (currentState.getAgvPosition() == null) {
+    // Try to derive the point name from the AGV position.
+    Vehicle vehicle = objectService.fetchObject(Vehicle.class, vehicleReference);
+    String logicalPosition = findVehicleLogicalPosition(
+        currentPosition,
+        currentState.getAgvPosition(),
+        vehicle
+    );
+    if (logicalPosition != null) {
+      return logicalPosition;
+    }
+
+    // Use the last known position.
+    return currentPosition;
+  }
+
+  private String findVehicleLogicalPosition(@Nullable String currentPosition,
+                                            @Nullable AgvPosition position,
+                                            @Nonnull Vehicle vehicle) {
+    if (position == null) {
       return null;
     }
 
-    Vehicle vehicle = objectService.fetchObject(Vehicle.class, vehicleReference);
-
-    if (isCurrentLogicalPositionCorrect(currentPosition, currentState.getAgvPosition(), vehicle)) {
+    if (isCurrentLogicalPositionCorrect(currentPosition, position, vehicle)) {
       return currentPosition;
     }
 
-    return findVehicleLogicalPosition(currentState.getAgvPosition(), vehicle);
+    for (Point p : objectService.fetchObjects(Point.class)) {
+      if (isWithinDeviationXY(p, position, vehicle)
+          && isWithinDeviationTheta(p, position, vehicle)) {
+        return p.getName();
+      }
+    }
+    return null;
   }
 
   private boolean isCurrentLogicalPositionCorrect(@Nullable String currentPosition,
@@ -121,14 +144,4 @@ public class VehiclePositionResolver {
     return t;
   }
 
-  private String findVehicleLogicalPosition(@Nonnull AgvPosition position,
-                                            @Nonnull Vehicle vehicle) {
-    for (Point p : objectService.fetchObjects(Point.class)) {
-      if (isWithinDeviationXY(p, position, vehicle)
-          && isWithinDeviationTheta(p, position, vehicle)) {
-        return p.getName();
-      }
-    }
-    return null;
-  }
 }

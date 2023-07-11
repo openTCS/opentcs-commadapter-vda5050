@@ -12,7 +12,8 @@ toc::[]
 = Changelog
 
 == Unreleased
-
+* New features and enhancements:
+** Fall back to the last known position when other methods of determining the vehicle position fail.
 ...
 
 == Version 0.11 (2023-06-01)
