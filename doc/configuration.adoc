@@ -38,11 +38,11 @@ May be set to an arbitrary value in case no authentication is required with the 
 `commadapter.vehicle.vda5050.mqtt.clientId`::
 The client ID to use for the connection to the MQTT broker.
 This should be unique among all clients connecting to the broker.
-`commadapter.vehicle.vda5050.keepAliveInterval`::
+`commadapter.vehicle.vda5050.mqtt.keepAliveInterval`::
 The keep-alive interval (in ms) for the connection to the MQTT broker.
 Can be set to zero to disable the keep-alive mechanism.
 Will be rounded down to seconds if non-zero.
-`commadapter.vehicle.vda5050.reconnectInterval`::
+`commadapter.vehicle.vda5050.mqtt.reconnectInterval`::
 The interval (in ms) for trying to reconnect to the MQTT broker.
 
 The following example configuration can be used as a template to be pasted into the kernel configuration file and adjusted for the respective plant:

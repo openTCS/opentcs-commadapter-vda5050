@@ -12,7 +12,9 @@ toc::[]
 = Changelog
 
 == Unreleased
+
 * New features and enhancements:
+** Publish a user notification to the kernel when the vehicle rejects an order.
 ** Fall back to the last known position when other methods of determining the vehicle position fail.
 ...
 
