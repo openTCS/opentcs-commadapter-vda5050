@@ -58,5 +58,5 @@ public enum OperatingMode {
    * mapping is done by a master control.
    */
   @JsonProperty(value = "TEACHIN")
-  TEACHING;
+  TEACHIN;
 }
