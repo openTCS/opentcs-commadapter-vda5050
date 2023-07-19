@@ -21,6 +21,19 @@ All of the following entries need to be set to valid values in the kernel applic
 Set to a list of VDA5050 specification versions for which to enable the vehicle driver; set to an empty string to disable it.
 When disabled, the kernel will not use the driver at all, even if vehicles are configured for it.
 Valid versions to be used here are: `1.1`, `2.0`.
+`commadapter.vehicle.vda5050.onOpModeChangeDoUpdateIntegrationLevel`::
+Set to a map of VDA5050 operating mode names to openTCS integration level names.
+Whenever the vehicle's reported operating mode changes to a value given in the map, the vehicle's integration level in openTCS will be changed to the one given for that operating mode.
+Valid values for operating mode names are `TEACHIN`, `SERVICE`, `MANUAL`, `SEMIAUTOMATIC` and `AUTOMATIC`.
+Valid values for integration level names are `TO_BE_UTILIZED`, `TO_BE_RESPECTED`, `TO_BE_NOTICED`, `TO_BE_IGNORED`; the value `LEAVE_UNCHANGED`, which is the default for every operating mode, can be used to explicitly state that the integration level should not be changed. +
++
+Note that for setting a vehicle's integration level to `TO_BE_NOTICED` or `TO_BE_IGNORED`, openTCS requires the vehicle to not be processing any transport order, so it usually makes sense to also configure the driver to explicitly withdraw any transport order in these cases.
+(See below.)
+`commadapter.vehicle.vda5050.onOpModeChangeDoWithdrawOrder`::
+Set to a map of VDA5050 operating mode names to boolean values.
+Whenever the vehicle's reported operating mode changes to a value given in the map, the vehicle's transport order may be withdrawn; if it is withdrawn, this happens forcibly.
+Valid values for operating mode names are `TEACHIN`, `SERVICE`, `MANUAL`, `SEMIAUTOMATIC` and `AUTOMATIC`.
+Valid assignment values are `true` (do withdraw the transport order forcibly) and `false` (do not withdraw the transport order), with `false` being the default for every operating mode.
 `commadapter.vehicle.vda5050.mqtt.brokerHost`::
 The IP address or host name of the MQTT broker to be used.
 `commadapter.vehicle.vda5050.mqtt.brokerPort`::
@@ -49,6 +62,8 @@ The following example configuration can be used as a template to be pasted into 
 
 ```
 commadapter.vehicle.vda5050.enabledVersions = 1.1, 2.0
+commadapter.vehicle.vda5050.onOpModeChangeDoUpdateIntegrationLevel = AUTOMATIC=TO_BE_UTILIZED, SEMIAUTOMATIC=TO_BE_UTILIZED, SERVICE=TO_BE_RESPECTED, MANUAL=TO_BE_IGNORED, TEACHIN=TO_BE_IGNORED
+commadapter.vehicle.vda5050.onOpModeChangeDoWithdrawOrder = AUTOMATIC=false, SEMIAUTOMATIC=false, SERVICE=true, MANUAL=true, TEACHIN=true
 commadapter.vehicle.vda5050.mqtt.brokerHost = broker.example.com
 commadapter.vehicle.vda5050.mqtt.brokerPort = 1883
 commadapter.vehicle.vda5050.mqtt.connectionEncrypted = false

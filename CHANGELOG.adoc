@@ -16,7 +16,7 @@ toc::[]
 * New features and enhancements:
 ** Publish a user notification to the kernel when the vehicle rejects an order.
 ** Fall back to the last known position when other methods of determining the vehicle position fail.
-...
+** When the vehicle's reported operating mode changes, optionally withdraw its transport order and/or update its integration level.
 
 == Version 0.11 (2023-06-01)
 

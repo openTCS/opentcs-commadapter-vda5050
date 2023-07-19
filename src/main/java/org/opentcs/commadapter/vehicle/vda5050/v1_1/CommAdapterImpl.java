@@ -21,6 +21,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration;
+import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration.ConfigIntegrationLevel;
+import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration.ConfigOperatingMode;
 import org.opentcs.commadapter.vehicle.vda5050.common.JsonBinder;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyInteger;
@@ -51,10 +54,12 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.connection.Connectio
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Order;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ErrorLevel;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.OperatingMode;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.State;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.visualization.Visualization;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.ExecutableActionsTagsPredicate;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.OrderMapper;
+import org.opentcs.components.kernel.services.VehicleService;
 import org.opentcs.customizations.kernel.KernelExecutor;
 import org.opentcs.data.model.Triple;
 import org.opentcs.data.model.Vehicle;
@@ -164,6 +169,14 @@ public class CommAdapterImpl
    * Predicate to test if an action is executable by the vehicle.
    */
   private final ExecutableActionsTagsPredicate isActionExecutable;
+  /**
+   * Vehicle service to interact with the vehicle.
+   */
+  private final VehicleService vehicleService;
+  /**
+   * The comm adapter configuration.
+   */
+  private final CommAdapterConfiguration configuration;
 
   /**
    * Creates a new instance.
@@ -175,6 +188,8 @@ public class CommAdapterImpl
    * @param clientManager The MQTT client manager to use.
    * @param messageValidator Validates messages against JSON schemas.
    * @param jsonBinder Binds JSON strings to objects and vice versa.
+   * @param vehicleService The vehicle service to use.
+   * @param configuration The adapter configuration.
    */
   @Inject
   public CommAdapterImpl(@Assisted Vehicle vehicle,
@@ -183,7 +198,9 @@ public class CommAdapterImpl
                          MovementCommandManager movementCommandManager,
                          MqttClientManager clientManager,
                          MessageValidator messageValidator,
-                         JsonBinder jsonBinder) {
+                         JsonBinder jsonBinder,
+                         VehicleService vehicleService,
+                         CommAdapterConfiguration configuration) {
     super(new ProcessModelImpl(vehicle),
           getPropertyInteger(PROPKEY_VEHICLE_ORDER_QUEUE_SIZE, vehicle).orElse(2) + 1,
           getPropertyInteger(PROPKEY_VEHICLE_ORDER_QUEUE_SIZE, vehicle).orElse(2),
@@ -202,6 +219,8 @@ public class CommAdapterImpl
     this.clientManager = requireNonNull(clientManager, "clientManager");
     this.messageValidator = requireNonNull(messageValidator, "messageValidator");
     this.jsonBinder = requireNonNull(jsonBinder, "jsonBinder");
+    this.vehicleService = requireNonNull(vehicleService, "vehicleService");
+    this.configuration = requireNonNull(configuration, "configuration");
 
     messageResponseMatcher = new MessageResponseMatcher(
         this.getName(),
@@ -558,6 +577,8 @@ public class CommAdapterImpl
         toVehicleLength(state, vehicleLengthUnloaded, vehicleLengthLoaded)
     );
 
+    processVehicleOperatingMode(state);
+
     movementCommandManager.onStateMessage(state, this::onMovementCommandExecuted);
   }
 
@@ -571,6 +592,62 @@ public class CommAdapterImpl
     }
     else {
       LOG.warn("Not oldest movement command: {} != {}", finishedCommand, oldestCommand);
+    }
+  }
+
+  private void onMovementCommandFailed(@Nonnull MovementCommand failedCommand) {
+    requireNonNull(failedCommand, "failedCommand");
+
+    MovementCommand oldestCommand = getSentQueue().peek();
+    if (Objects.equals(failedCommand, oldestCommand)) {
+      getSentQueue().poll();
+      getProcessModel().commandFailed(failedCommand);
+    }
+    else {
+      LOG.warn("Not oldest movement command: {} != {}", failedCommand, oldestCommand);
+    }
+  }
+
+  private void processVehicleOperatingMode(State state) {
+    if (getProcessModel().getPreviousState().getOperatingMode() == state.getOperatingMode()) {
+      return;
+    }
+
+    if (configuration.onOpModeChangeDoWithdrawOrder()
+        .getOrDefault(mapToConfigOperatingMode(state.getOperatingMode()), Boolean.FALSE)) {
+      movementCommandManager.failCurrentCommand(this::onMovementCommandFailed);
+    }
+
+    configuration.onOpModeChangeDoUpdateIntegrationLevel()
+        .getOrDefault(
+            mapToConfigOperatingMode(state.getOperatingMode()),
+            ConfigIntegrationLevel.LEAVE_UNCHANGED
+        )
+        .toIntegrationLevel()
+        .ifPresent((integrationLevel) -> {
+          getExecutor().execute(() -> {
+            vehicleService.updateVehicleIntegrationLevel(
+                getProcessModel().getVehicleReference(),
+                integrationLevel
+            );
+          });
+        });
+  }
+
+  private ConfigOperatingMode mapToConfigOperatingMode(OperatingMode opMode) {
+    switch (opMode) {
+      case AUTOMATIC:
+        return ConfigOperatingMode.AUTOMATIC;
+      case SEMIAUTOMATIC:
+        return ConfigOperatingMode.SEMIAUTOMATIC;
+      case MANUAL:
+        return ConfigOperatingMode.MANUAL;
+      case SERVICE:
+        return ConfigOperatingMode.SERVICE;
+      case TEACHIN:
+        return ConfigOperatingMode.TEACHIN;
+      default:
+        throw new IllegalArgumentException("Unmapped operating mode " + opMode.name());
     }
   }
 
