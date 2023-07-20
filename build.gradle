@@ -20,7 +20,6 @@ apply from: "${rootDir}/gradle/dependency-versions.gradle"
 apply from: "${rootDir}/gradle/common.gradle"
 apply from: "${rootDir}/gradle/java-project.gradle"
 apply from: "${rootDir}/gradle/java-codequality.gradle"
-apply from: "${rootDir}/gradle/license-headers.gradle"
 apply from: "${rootDir}/gradle/guice-library.gradle"
 apply from: "${rootDir}/gradle/publishing-java.gradle"
 
@@ -38,7 +37,7 @@ dependencies {
   implementation group: 'com.github.erosb', name: 'everit-json-schema', version: '1.14.2'
 
   implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
-  
+
   runtimeOnly group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.36'
 }
 
@@ -84,7 +83,7 @@ task distSrcZip(type: Zip) {
   includes << '*.gradle'
   includes << 'gradlew'
   includes << 'gradlew.bat'
-  
+
   excludes << '.gitlab'
   excludes << '.gradle'
   excludes << 'build'
