@@ -92,7 +92,7 @@ The vehicle driver will set two properties on the kernel's vehicle element, cont
 With every `state` message received, the vehicle driver will report one of the following states to the kernel (with precedence in the given order):
 
 . `ERROR`: Set if the vehicle reports at least one `error` with an `errorLevel` of `FATAL`.
-. `UNAVAILABLE`: Set if the vehicle reports an `operatingMode` other than `AUTOMATIC`.
+. `UNAVAILABLE`: Set if the vehicle reports an `operatingMode` other than `AUTOMATIC` or `SEMIAUTOMATIC`.
 . `CHARGING`: Set if the vehicle reports `charging = true`.
 . `EXECUTING`: Set if the vehicle reports `driving = true`, or if it reports at least one `nodeState` or `edgeState`, or if it reports at least one `actionState` with an `actionStatus` that is neither `FINISHED` nor `FAILED`.
 . `IDLE`: In all other cases.

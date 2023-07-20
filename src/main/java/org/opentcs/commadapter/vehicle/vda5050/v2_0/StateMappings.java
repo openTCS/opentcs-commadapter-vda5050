@@ -50,7 +50,8 @@ public class StateMappings {
       }
     }
 
-    if (state.getOperatingMode() != OperatingMode.AUTOMATIC) {
+    if (state.getOperatingMode() != OperatingMode.AUTOMATIC
+        && state.getOperatingMode() != OperatingMode.SEMIAUTOMATIC) {
       return Vehicle.State.UNAVAILABLE;
     }
 

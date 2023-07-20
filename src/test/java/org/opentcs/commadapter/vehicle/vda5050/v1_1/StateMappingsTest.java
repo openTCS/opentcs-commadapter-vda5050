@@ -67,6 +67,9 @@ public class StateMappingsTest {
     state.setBatteryState(new BatteryState(100.0, true));
     assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.CHARGING));
 
+    state.setOperatingMode(OperatingMode.SEMIAUTOMATIC);
+    assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.CHARGING));
+
     state.setOperatingMode(OperatingMode.MANUAL);
     assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.UNAVAILABLE));
 
