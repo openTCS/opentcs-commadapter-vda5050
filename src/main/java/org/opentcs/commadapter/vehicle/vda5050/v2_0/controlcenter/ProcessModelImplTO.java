@@ -82,6 +82,10 @@ public class ProcessModelImplTO
    */
   private boolean brokerConnected;
   /**
+   * The prefix used for MQTT topic names.
+   */
+  private String topicPrefix;
+  /**
    * The current/most recent reported connection message.
    */
   private Connection currentConnection;
@@ -361,6 +365,26 @@ public class ProcessModelImplTO
    */
   public ProcessModelImplTO setBrokerConnected(boolean brokerConnected) {
     this.brokerConnected = brokerConnected;
+    return this;
+  }
+
+  /**
+   * Returns the prefix used for MQTT topic names.
+   *
+   * @return The prefix used for MQTT topic names.
+   */
+  public String getTopicPrefix() {
+    return topicPrefix;
+  }
+
+  /**
+   * Sets the prefix used for MQTT topic names.
+   *
+   * @param topicPrefix The prefix used for MQTT topic names.
+   * @return This
+   */
+  public ProcessModelImplTO setTopicPrefix(String topicPrefix) {
+    this.topicPrefix = topicPrefix;
     return this;
   }
 

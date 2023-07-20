@@ -82,13 +82,17 @@ public class ProcessModelImplTO
    */
   private boolean brokerConnected;
   /**
+   * The prefix used for MQTT topic names.
+   */
+  private String topicPrefix;
+  /**
    * The current/most recent reported connection message.
    */
   private Connection currentConnection;
   /**
    * The current/most recent reported visualization message.
    */
-  private Visualization currentVisualisation;
+  private Visualization currentVisualization;
 
   /**
    * Creates a new instance.
@@ -365,6 +369,26 @@ public class ProcessModelImplTO
   }
 
   /**
+   * Returns the prefix used for MQTT topic names.
+   *
+   * @return The prefix used for MQTT topic names.
+   */
+  public String getTopicPrefix() {
+    return topicPrefix;
+  }
+
+  /**
+   * Sets the prefix used for MQTT topic names.
+   *
+   * @param topicPrefix The prefix used for MQTT topic names.
+   * @return This
+   */
+  public ProcessModelImplTO setTopicPrefix(String topicPrefix) {
+    this.topicPrefix = topicPrefix;
+    return this;
+  }
+
+  /**
    * Return the current connection message.
    *
    * @return the current connection message.
@@ -390,7 +414,7 @@ public class ProcessModelImplTO
    * @return the current visualization message.
    */
   public Visualization getCurrentVisualization() {
-    return currentVisualisation;
+    return currentVisualization;
   }
 
   /**
@@ -400,7 +424,7 @@ public class ProcessModelImplTO
    * @return This
    */
   public ProcessModelImplTO setCurrentVisualization(Visualization visualization) {
-    currentVisualisation = visualization;
+    currentVisualization = visualization;
     return this;
   }
 

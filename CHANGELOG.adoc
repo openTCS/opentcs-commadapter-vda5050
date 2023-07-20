@@ -17,6 +17,7 @@ toc::[]
 ** Publish a user notification to the kernel when the vehicle rejects an order.
 ** Fall back to the last known position when other methods of determining the vehicle position fail.
 ** When the vehicle's reported operating mode changes, optionally withdraw its transport order and/or update its integration level.
+** Show the MQTT topic name prefix used for communicating with the vehicle in the driver's KCC control panel.
 * Fixes:
 ** Stop setting a vehicle's state to `UNAVAILABLE` when it reports `SEMIAUTOMATIC` as its operating mode.
    This allows vehicles in operating mode `SEMIAUTOMATIC` to process transport orders.

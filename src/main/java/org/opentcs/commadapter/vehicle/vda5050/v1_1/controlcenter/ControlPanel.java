@@ -116,36 +116,6 @@ public class ControlPanel
     initGuiContent();
   }
 
-  /**
-   * Initializes combo boxes for destinations and actions.
-   */
-  private void initComboBoxes() {
-    try {
-      pathComboBox.removeAllItems();
-      callWrapper.call(() -> vehicleService.fetchObjects(Path.class)).stream()
-          .sorted(Comparators.objectsByName())
-          .forEach(path -> {
-            pathComboBox.addItem(path);
-          });
-    }
-    catch (Exception ex) {
-      LOG.warn("Error fetching points", ex);
-    }
-  }
-
-  /**
-   * Updates all fields showing an attribute of the process model to the current state.
-   */
-  private void initGuiContent() {
-    // Trigger an update for all attributes once first.
-    for (VehicleProcessModel.Attribute attribute : VehicleProcessModel.Attribute.values()) {
-      processModelChange(attribute.name(), processModel);
-    }
-    for (ProcessModelImpl.Attribute attribute : ProcessModelImpl.Attribute.values()) {
-      processModelChange(attribute.name(), processModel);
-    }
-  }
-
   @Override
   public void processModelChange(String attributeChanged, VehicleProcessModelTO newProcessModel) {
     if (!(newProcessModel instanceof ProcessModelImplTO)) {
@@ -174,6 +144,40 @@ public class ControlPanel
     else if (Objects.equals(attributeChanged,
                             ProcessModelImpl.Attribute.BROKER_CONNECTED.name())) {
       updateCommAdapterConnectedToBroker(processModel.isBrokerConnected());
+    }
+    else if (Objects.equals(attributeChanged,
+                            ProcessModelImpl.Attribute.TOPIC_PREFIX.name())) {
+      updateTopicPrefix(processModel.getTopicPrefix());
+    }
+  }
+
+  /**
+   * Initializes combo boxes for destinations and actions.
+   */
+  private void initComboBoxes() {
+    try {
+      pathComboBox.removeAllItems();
+      callWrapper.call(() -> vehicleService.fetchObjects(Path.class)).stream()
+          .sorted(Comparators.objectsByName())
+          .forEach(path -> {
+            pathComboBox.addItem(path);
+          });
+    }
+    catch (Exception ex) {
+      LOG.warn("Error fetching points", ex);
+    }
+  }
+
+  /**
+   * Updates all fields showing an attribute of the process model to the current state.
+   */
+  private void initGuiContent() {
+    // Trigger an update for all attributes once first.
+    for (VehicleProcessModel.Attribute attribute : VehicleProcessModel.Attribute.values()) {
+      processModelChange(attribute.name(), processModel);
+    }
+    for (ProcessModelImpl.Attribute attribute : ProcessModelImpl.Attribute.values()) {
+      processModelChange(attribute.name(), processModel);
     }
   }
 
@@ -211,6 +215,12 @@ public class ControlPanel
   private void updateCommAdapterConnectedToBroker(boolean connected) {
     SwingUtilities.invokeLater(() -> {
       brokerConnectedButton.setSelected(connected);
+    });
+  }
+
+  private void updateTopicPrefix(String topicPrefix) {
+    SwingUtilities.invokeLater(() -> {
+      topicPrefixTextField.setText(topicPrefix);
     });
   }
 
@@ -318,6 +328,8 @@ public class ControlPanel
     brokerConnectedButton = new javax.swing.JButton();
     vehicleConnectedButton = new javax.swing.JButton();
     connectionSettingsPanelFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
+    topicPrefixLabel = new javax.swing.JLabel();
+    topicPrefixTextField = new javax.swing.JTextField();
     orderPanel = new javax.swing.JPanel();
     pathLabel = new javax.swing.JLabel();
     pathComboBox = new javax.swing.JComboBox<>();
@@ -381,10 +393,29 @@ public class ControlPanel
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 0;
-    gridBagConstraints.gridheight = 3;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 1.0;
     connectionSettingsPanel.add(connectionSettingsPanelFiller, gridBagConstraints);
+
+    topicPrefixLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+    topicPrefixLabel.setText(bundle.getString("controlPanel.panel_connectionSettings.label_topicPrefix.text")); // NOI18N
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 0, 0);
+    connectionSettingsPanel.add(topicPrefixLabel, gridBagConstraints);
+
+    topicPrefixTextField.setEditable(false);
+    topicPrefixTextField.setText("interface/v1/manufacturer/serialno");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridwidth = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.insets = new java.awt.Insets(3, 3, 0, 0);
+    connectionSettingsPanel.add(topicPrefixTextField, gridBagConstraints);
 
     orderPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, bundle.getString("controlPanel.panel_sendOrder.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
     orderPanel.setLayout(new java.awt.GridBagLayout());
@@ -574,12 +605,12 @@ public class ControlPanel
     scrollPaneContainerPanelLayout.setHorizontalGroup(
       scrollPaneContainerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(scrollPaneContainerPanelLayout.createSequentialGroup()
-        .addGroup(scrollPaneContainerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(scrollPaneContainerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+          .addComponent(connectionSettingsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addGroup(scrollPaneContainerPanelLayout.createSequentialGroup()
             .addComponent(orderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(instantActionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addComponent(connectionSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(instantActionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)))
         .addGap(0, 0, Short.MAX_VALUE))
     );
     scrollPaneContainerPanelLayout.setVerticalGroup(
@@ -778,6 +809,8 @@ public class ControlPanel
   private javax.swing.JPanel scrollPaneContainerPanel;
   private javax.swing.JButton sendInstantActionButton;
   private javax.swing.JButton sendOrderButton;
+  private javax.swing.JLabel topicPrefixLabel;
+  private javax.swing.JTextField topicPrefixTextField;
   private javax.swing.JButton vehicleConnectedButton;
   // End of variables declaration//GEN-END:variables
   // CHECKSTYLE:ON

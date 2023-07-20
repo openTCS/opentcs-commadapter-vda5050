@@ -59,13 +59,17 @@ public class ProcessModelImpl
    */
   private boolean brokerConnected;
   /**
+   * The prefix used for MQTT topic names.
+   */
+  private String topicPrefix = "";
+  /**
    * The current/most recent reported connection message.
    */
   private Connection currentConnection;
   /**
    * The current/most recent reported visualization message.
    */
-  private Visualization currentVisualisation;
+  private Visualization currentVisualization;
 
   /**
    * Creates a new instance.
@@ -114,7 +118,7 @@ public class ProcessModelImpl
         "",
         ConnectionState.OFFLINE
     );
-    currentVisualisation = new Visualization(
+    currentVisualization = new Visualization(
         0L,
         Instant.now(),
         "",
@@ -240,6 +244,30 @@ public class ProcessModelImpl
   }
 
   /**
+   * Returns the prefix used for MQTT topic names.
+   *
+   * @return The prefix used for MQTT topic names.
+   */
+  @Nonnull
+  public String getTopicPrefix() {
+    return topicPrefix;
+  }
+
+  /**
+   * Sets the prefix used for MQTT topic names.
+   *
+   * @param topicPrefix The prefix used for MQTT topic names.
+   */
+  public void setTopicPrefix(@Nonnull String topicPrefix) {
+    String oldValue = this.topicPrefix;
+    this.topicPrefix = requireNonNull(topicPrefix, "topicPrefix");
+
+    getPropertyChangeSupport().firePropertyChange(Attribute.TOPIC_PREFIX.name(),
+                                                  oldValue,
+                                                  topicPrefix);
+  }
+
+  /**
    * Return the current connection message.
    *
    * @return the current connection message.
@@ -268,7 +296,7 @@ public class ProcessModelImpl
    * @return the current visualization message.
    */
   public Visualization getCurrentVisualization() {
-    return currentVisualisation;
+    return currentVisualization;
   }
 
   /**
@@ -277,8 +305,8 @@ public class ProcessModelImpl
    * @param visualization the current visualization message.
    */
   public void setCurrentVisualization(Visualization visualization) {
-    Visualization oldValue = currentVisualisation;
-    currentVisualisation = visualization;
+    Visualization oldValue = currentVisualization;
+    currentVisualization = visualization;
 
     getPropertyChangeSupport().firePropertyChange(Attribute.VISUALIZATION_MESSAGE.name(),
                                                   oldValue,
@@ -306,22 +334,6 @@ public class ProcessModelImpl
      */
     LAST_INSTANT_ACTIONS,
     /**
-     * The interface version.
-     */
-    INTERFACE_VERSION,
-    /**
-     * The vehicle's manufacturer.
-     */
-    VEHICLE_MANUFACTURER,
-    /**
-     * The vehicle's serial number.
-     */
-    VEHICLE_SERIALNUMBER,
-    /**
-     * The vehicle's topic base.
-     */
-    VEHICLE_TOPIC_BASE,
-    /**
      * The vehicle's idle flag.
      */
     VEHICLE_IDLE,
@@ -329,6 +341,10 @@ public class ProcessModelImpl
      * Whether the comm adapter is connected to the MQTT broker.
      */
     BROKER_CONNECTED,
+    /**
+     * The prefix used for MQTT topic names.
+     */
+    TOPIC_PREFIX,
     /**
      * The last connection message received.
      */

@@ -158,10 +158,6 @@ public class CommAdapterImpl
    */
   private final String vehicleInterfaceName;
   /**
-   * Topic base used by mqtt.
-   */
-  private final String topicBase;
-  /**
    * Timestamp of the last visualization message.
    */
   private long lastVisualizationMessageTimestamp;
@@ -233,10 +229,13 @@ public class CommAdapterImpl
     vehicleSerialNumber = vehicle.getProperty(PROPKEY_VEHICLE_SERIAL_NUMBER);
     vehicleManufacturer = vehicle.getProperty(PROPKEY_VEHICLE_MANUFACTURER);
     vehicleInterfaceName = vehicle.getProperty(PROPKEY_VEHICLE_INTERFACE_NAME);
-    topicBase = vehicleInterfaceName
+
+    getProcessModel().setTopicPrefix(
+        vehicleInterfaceName
         + "/" + "v" + VERSION_MAJOR
         + "/" + vehicleManufacturer
-        + "/" + vehicleSerialNumber;
+        + "/" + vehicleSerialNumber
+    );
 
     this.isActionExecutable = new ExecutableActionsTagsPredicate(vehicle);
   }
@@ -265,9 +264,15 @@ public class CommAdapterImpl
     super.enable();
 
     clientManager.registerConnectionEventListener(this);
-    clientManager.subscribe(topicBase + "/connection", QualityOfService.AT_LEAST_ONCE, this);
-    clientManager.subscribe(topicBase + "/state", QualityOfService.AT_MOST_ONCE, this);
-    clientManager.subscribe(topicBase + "/visualization", QualityOfService.AT_MOST_ONCE, this);
+    clientManager.subscribe(
+        getProcessModel().getTopicPrefix() + "/connection", QualityOfService.AT_LEAST_ONCE, this
+    );
+    clientManager.subscribe(
+        getProcessModel().getTopicPrefix() + "/state", QualityOfService.AT_MOST_ONCE, this
+    );
+    clientManager.subscribe(
+        getProcessModel().getTopicPrefix() + "/visualization", QualityOfService.AT_MOST_ONCE, this
+    );
 
     // The client manager may have already been connected to the broker prior to this adapter
     // instance being enabled. Therefore, we have to actively check the broker connection state.
@@ -285,9 +290,9 @@ public class CommAdapterImpl
       return;
     }
 
-    clientManager.unsubscribe(topicBase + "/connection", this);
-    clientManager.unsubscribe(topicBase + "/state", this);
-    clientManager.unsubscribe(topicBase + "/visualization", this);
+    clientManager.unsubscribe(getProcessModel().getTopicPrefix() + "/connection", this);
+    clientManager.unsubscribe(getProcessModel().getTopicPrefix() + "/state", this);
+    clientManager.unsubscribe(getProcessModel().getTopicPrefix() + "/visualization", this);
     clientManager.unregisterConnectionEventListener(this);
 
     // With unregistering from the client manager, we will no longer receive any update regarding
@@ -350,6 +355,7 @@ public class CommAdapterImpl
         .setLastInstantActionsSent(getProcessModel().getLastInstantActionsSent())
         .setVehicleIdle(getProcessModel().isVehicleIdle())
         .setBrokerConnected(getProcessModel().isBrokerConnected())
+        .setTopicPrefix(getProcessModel().getTopicPrefix())
         .setCurrentConnection(getProcessModel().getCurrentConnection())
         .setCurrentVisualization(getProcessModel().getCurrentVisualization());
   }
@@ -695,7 +701,12 @@ public class CommAdapterImpl
       String message = jsonBinder.toJson(messageObject);
       messageValidator.validate(message, messageObject.getClass());
       LOG.debug("{}: Sending message to '{}': {}", getName(), topic, message);
-      clientManager.publish(topicBase + "/" + topic, QualityOfService.AT_MOST_ONCE, message, false);
+      clientManager.publish(
+          getProcessModel().getTopicPrefix() + "/" + topic,
+          QualityOfService.AT_MOST_ONCE,
+          message,
+          false
+      );
     }
     catch (IllegalArgumentException exc) {
       LOG.error("{}: Failed to convert to JSON {}", getName(), messageObject, exc);
