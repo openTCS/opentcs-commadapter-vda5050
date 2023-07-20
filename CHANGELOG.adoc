@@ -21,6 +21,11 @@ toc::[]
 * Fixes:
 ** Stop setting a vehicle's state to `UNAVAILABLE` when it reports `SEMIAUTOMATIC` as its operating mode.
    This allows vehicles in operating mode `SEMIAUTOMATIC` to process transport orders.
+* Other changes:
+** Update Jackson to 2.15.2.
+** Update everit-json-schema to 1.14.2.
+** Update JUnit 5 to 5.9.3.
+** Update ApprovalTests to 18.7.1.
 
 == Version 0.11 (2023-06-01)
 
