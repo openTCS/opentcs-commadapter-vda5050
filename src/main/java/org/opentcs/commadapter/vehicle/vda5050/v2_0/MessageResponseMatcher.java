@@ -17,6 +17,7 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Order;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.ErrorEntry;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.OperatingMode;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.State;
 import org.opentcs.drivers.vehicle.MovementCommand;
 import org.slf4j.Logger;
@@ -54,6 +55,11 @@ public class MessageResponseMatcher {
    * The callback for when an order was rejected by the vehicle.
    */
   private final Consumer<OrderAssociation> orderRejectedCallback;
+  /**
+   * Flag indicating whether this comm adapter may currently send requests to the vehicle.
+   * If false, all enqueued requests will stay in the queue until the flag becomes true.
+   */
+  private boolean sendingAllowed;
 
   /**
    * Creates a new OrderResponseMatcher.
@@ -89,6 +95,7 @@ public class MessageResponseMatcher {
 
   private void enqueueRequest(Object request) {
     requests.add(request);
+
     if (requests.size() > 1) {
       LOG.debug("{}: Not sending enqueued request yet, due to unacknowledged previous request.",
                 commAdapterName);
@@ -109,34 +116,35 @@ public class MessageResponseMatcher {
   public void onStateMessage(@Nonnull State state) {
     requireNonNull(state, "state");
 
-    if (requests.isEmpty()) {
-      return;
-    }
-    if (vehicleRejectedOrder(state)) {
-      Object request = requests.peek();
-      if (request instanceof OrderAssociation) {
-        orderRejectedCallback.accept((OrderAssociation) request);
+    Object currentRequest = requests.peek();
+    if (currentRequest != null) {
+      if (vehicleRejectedOrder(state)) {
+        if (currentRequest instanceof OrderAssociation) {
+          orderRejectedCallback.accept((OrderAssociation) currentRequest);
+        }
+
+        LOG.warn("{}: Vehicle indicates order rejection. Last request sent to it was: {}",
+                 commAdapterName,
+                 currentRequest);
+        return;
       }
 
-      LOG.warn("{}: Vehicle indicates order rejection. Last request sent to it was: {}",
-               commAdapterName,
-               request);
-      return;
+      if (requestAccepted(currentRequest, state)) {
+        requests.poll();
+        if (currentRequest instanceof OrderAssociation) {
+          OrderAssociation order = (OrderAssociation) currentRequest;
+          LOG.debug("{}: Vehicle acknowledged order: {}", commAdapterName, order);
+          orderAcceptedCallback.accept(order);
+        }
+        else if (currentRequest instanceof InstantActions) {
+          InstantActions actions = (InstantActions) currentRequest;
+          LOG.debug("{}: Vehicle acknowledged instant actions: {}", commAdapterName, actions);
+        }
+      }
     }
 
-    Object request = requests.peek();
-    if (requestAccepted(request, state)) {
-      requests.poll();
-      if (request instanceof OrderAssociation) {
-        OrderAssociation order = (OrderAssociation) request;
-        LOG.debug("{}: Vehicle acknowledged order: {}", commAdapterName, order);
-        orderAcceptedCallback.accept(order);
-      }
-      else if (request instanceof InstantActions) {
-        InstantActions actions = (InstantActions) request;
-        LOG.debug("{}: Vehicle acknowledged instant actions: {}", commAdapterName, actions);
-      }
-    }
+    sendingAllowed = state.getOperatingMode() == OperatingMode.AUTOMATIC
+        || state.getOperatingMode() == OperatingMode.SEMIAUTOMATIC;
 
     sendNextOrder();
   }
@@ -172,13 +180,20 @@ public class MessageResponseMatcher {
     }
   }
 
+  /**
+   * Send the first request in the queue to the vehicle.
+   */
   private void sendNextOrder() {
+    if (!sendingAllowed) {
+      return;
+    }
+
     if (requests.isEmpty()) {
       return;
     }
 
-    LOG.debug("{}: Sending order to comm adapter: {}", commAdapterName, requests.peek());
     Object request = requests.peek();
+    LOG.debug("{}: Sending order to comm adapter: {}", commAdapterName, request);
     if (request instanceof OrderAssociation) {
       sendOrderCallback.accept(((OrderAssociation) request).getOrder());
     }

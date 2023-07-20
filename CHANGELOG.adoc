@@ -19,6 +19,8 @@ toc::[]
 ** When the vehicle's reported operating mode changes, optionally withdraw its transport order and/or update its integration level.
 ** Show the MQTT topic name prefix used for communicating with the vehicle in the driver's KCC control panel.
 * Fixes:
+** Send order and instant action messages to the vehicle only as long as its reported operating mode is `AUTOMATIC` or `SEMIAUTOMATIC`.
+   For other operating modes, keep the messages to be sent later.
 ** Stop setting a vehicle's state to `UNAVAILABLE` when it reports `SEMIAUTOMATIC` as its operating mode.
    This allows vehicles in operating mode `SEMIAUTOMATIC` to process transport orders.
 * Other changes:

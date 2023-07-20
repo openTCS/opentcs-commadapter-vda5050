@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.ArgumentMatchers.any;
@@ -69,6 +70,7 @@ public class MessageResponseMatcherTest {
                                                         orderAcceptedCallback,
                                                         orderRejectedCallback
     );
+    messageResponseMatcher.onStateMessage(newState());
     dummyCommand = new DummyMovementCommand();
   }
 
@@ -179,6 +181,47 @@ public class MessageResponseMatcherTest {
     verify(sendInstantActionsCallback, times(1)).accept(action1);
     verify(sendInstantActionsCallback, times(1)).accept(action2);
     verify(sendInstantActionsCallback, times(1)).accept(action3);
+  }
+
+  @ParameterizedTest
+  @EnumSource(value = OperatingMode.class, names = {"TEACHIN", "MANUAL", "SERVICE"})
+  public void shouldNotSendWhenNotInAutomaticModes(OperatingMode mode) {
+    messageResponseMatcher.onStateMessage(stateWithOperatingMode(mode));
+
+    Order order1 = new Order("order1", 0L, List.of(), List.of());
+    messageResponseMatcher.enqueueCommand(order1, dummyCommand);
+
+    verify(sendOrderCallback, never()).accept(any());
+  }
+
+  @ParameterizedTest
+  @EnumSource(value = OperatingMode.class, names = {"AUTOMATIC", "SEMIAUTOMATIC"})
+  public void shouldSendWhenInAutomaticModes(OperatingMode mode) {
+    messageResponseMatcher.onStateMessage(stateWithOperatingMode(mode));
+
+    Order order1 = new Order("order1", 0L, List.of(), List.of());
+    messageResponseMatcher.enqueueCommand(order1, dummyCommand);
+
+    verify(sendOrderCallback, times(1)).accept(order1);
+  }
+
+  @Test
+  public void sendOrderWhenOperatingModeChanges() {
+    messageResponseMatcher.onStateMessage(stateWithOperatingMode(OperatingMode.MANUAL));
+
+    Order order1 = new Order("order1", 0L, List.of(), List.of());
+    messageResponseMatcher.enqueueCommand(order1, dummyCommand);
+
+    verify(sendOrderCallback, never()).accept(any());
+
+    messageResponseMatcher.onStateMessage(stateWithOperatingMode(OperatingMode.AUTOMATIC));
+    verify(sendOrderCallback, times(1)).accept(order1);
+  }
+
+  private State stateWithOperatingMode(OperatingMode mode) {
+    State state = newState();
+    state.setOperatingMode(mode);
+    return state;
   }
 
   private State stateAcceptingOrder(Order order) {
