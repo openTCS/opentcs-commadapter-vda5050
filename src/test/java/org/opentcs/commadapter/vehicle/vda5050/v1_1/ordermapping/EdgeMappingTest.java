@@ -26,9 +26,6 @@ import org.opentcs.data.order.Route.Step;
 
 /**
  * Tests the edge mapping functions.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhfoer IML)
  */
 public class EdgeMappingTest {
 

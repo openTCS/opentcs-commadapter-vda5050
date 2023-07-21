@@ -18,8 +18,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.visualization.Visual
 
 /**
  * A {@link JsonValidator} for VDA5050 1.1 messages.
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class MessageValidator
     extends JsonValidator {

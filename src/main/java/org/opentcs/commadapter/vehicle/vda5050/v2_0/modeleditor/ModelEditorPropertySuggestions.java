@@ -33,8 +33,6 @@ import org.opentcs.components.plantoverview.PropertySuggestions;
 
 /**
  * Property suggestions for the Model Editor application specific to the VDA5050 adapter.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class ModelEditorPropertySuggestions
     implements PropertySuggestions {

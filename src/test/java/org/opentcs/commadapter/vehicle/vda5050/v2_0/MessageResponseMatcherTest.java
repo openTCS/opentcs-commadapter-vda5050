@@ -42,8 +42,6 @@ import org.opentcs.data.order.Route;
 import org.opentcs.drivers.vehicle.MovementCommand;
 
 /**
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class MessageResponseMatcherTest {
 

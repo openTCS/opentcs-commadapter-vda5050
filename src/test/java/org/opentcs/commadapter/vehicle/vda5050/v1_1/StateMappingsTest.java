@@ -33,8 +33,6 @@ import org.opentcs.drivers.vehicle.LoadHandlingDevice;
 
 /**
  * Tests for state mapping utility methods.
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class StateMappingsTest {
 

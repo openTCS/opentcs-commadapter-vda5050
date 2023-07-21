@@ -17,8 +17,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.NodePosition;
 
 /**
  * Information about a node the AGV still has to traverse.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class NodeState

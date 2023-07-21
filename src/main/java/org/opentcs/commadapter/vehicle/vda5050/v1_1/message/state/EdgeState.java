@@ -17,8 +17,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Trajectory;
 
 /**
  * Information about an edge the AGV still has to traverse.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EdgeState

@@ -15,9 +15,6 @@ import org.opentcs.data.model.Vehicle;
 
 /**
  * Tests the executable actions predicate.
- *
- * @author Martin Grzenia (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class ExecutableActionsTagsPredicateTest {
 

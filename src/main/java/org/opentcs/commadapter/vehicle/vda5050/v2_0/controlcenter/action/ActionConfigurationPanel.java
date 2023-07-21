@@ -27,8 +27,6 @@ import org.opentcs.util.gui.StringListCellRenderer;
 
 /**
  * A panel for configuring an action.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class ActionConfigurationPanel
     extends javax.swing.JPanel {

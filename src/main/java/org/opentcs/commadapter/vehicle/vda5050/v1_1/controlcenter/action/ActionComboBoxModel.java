@@ -30,8 +30,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
 /**
  * A {@link ComboBoxModel} for {@link Action}s that provides a selection of predefined actions as
  * templates.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class ActionComboBoxModel
     extends DefaultComboBoxModel<Action> {

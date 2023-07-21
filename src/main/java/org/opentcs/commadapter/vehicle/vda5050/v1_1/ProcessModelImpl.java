@@ -28,8 +28,6 @@ import org.opentcs.drivers.vehicle.VehicleProcessModel;
 /**
  * A custom model for the {@link CommAdapterImpl} which holds additional information
  * about the connected vehicle.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 public class ProcessModelImpl
     extends VehicleProcessModel {

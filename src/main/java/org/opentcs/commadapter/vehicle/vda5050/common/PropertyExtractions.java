@@ -18,9 +18,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Utility methods for extracting key-value properties from {@link TCSObject}s and
  * {@link MovementCommand}s.
- *
- * @author Stefan Walter (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class PropertyExtractions {
 

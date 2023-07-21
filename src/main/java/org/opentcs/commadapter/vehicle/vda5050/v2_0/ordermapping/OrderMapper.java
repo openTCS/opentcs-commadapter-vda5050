@@ -32,10 +32,6 @@ import static org.opentcs.util.Assertions.checkArgument;
 
 /**
  * Maps {@link MovementCommand}s from openTCS to an {@link Order} message understood by the vehicle.
- *
- * @author Martin Grzenia (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class OrderMapper {
 

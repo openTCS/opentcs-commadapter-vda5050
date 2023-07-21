@@ -11,8 +11,6 @@ import org.opentcs.customizations.controlcenter.ControlCenterInjectionModule;
 
 /**
  * A custom Guice module for project-specific configuration.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class ControlCenterInjectionModuleImpl
     extends ControlCenterInjectionModule {

@@ -19,8 +19,6 @@ import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInR
  * Defines the position on a map in world coordinates.
  * <p>
  * Each floor has its own map. All maps must use the same project specific global origin.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class NodePosition

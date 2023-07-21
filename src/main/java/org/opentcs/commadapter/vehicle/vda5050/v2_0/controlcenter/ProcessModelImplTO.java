@@ -21,9 +21,6 @@ import org.opentcs.drivers.vehicle.management.VehicleProcessModelTO;
  * A serializable representation of a {@link ProcessModelImpl}.
  * This TO can be sent to other applications responsible for displaying the state of the vehicle,
  * like the control center or the plant overview.
- *
- * @author Martin Grzenia (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class ProcessModelImplTO
     extends VehicleProcessModelTO {

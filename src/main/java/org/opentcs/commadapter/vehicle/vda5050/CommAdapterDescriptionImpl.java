@@ -12,8 +12,6 @@ import org.opentcs.drivers.vehicle.VehicleCommAdapterDescription;
 
 /**
  * The example adapter's {@link VehicleCommAdapterDescription}.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class CommAdapterDescriptionImpl
     extends VehicleCommAdapterDescription {

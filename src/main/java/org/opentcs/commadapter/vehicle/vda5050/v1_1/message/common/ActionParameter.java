@@ -15,8 +15,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Additional parameters for an {@link Action}.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class ActionParameter
     implements Serializable {

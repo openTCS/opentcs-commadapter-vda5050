@@ -33,8 +33,6 @@ import org.opentcs.drivers.vehicle.LoadHandlingDevice;
 
 /**
  * Tests for state mapping utility methods.
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class StateMappingsTest {
 
@@ -66,7 +64,7 @@ public class StateMappingsTest {
 
     state.setBatteryState(new BatteryState(100.0, true));
     assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.CHARGING));
-    
+
     state.setOperatingMode(OperatingMode.SEMIAUTOMATIC);
     assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.CHARGING));
 

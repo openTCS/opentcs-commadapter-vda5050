@@ -23,9 +23,6 @@ import org.opentcs.drivers.vehicle.LoadHandlingDevice;
 
 /**
  * Utility methods for mapping vehicle state information.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class StateMappings {
 

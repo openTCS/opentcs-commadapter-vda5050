@@ -25,8 +25,6 @@ import org.opentcs.data.order.Route;
 
 /**
  * Functions to map a {@link Route.Step} from openTCS movement commands to a VDA5050 edge.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class EdgeMapping {
 

@@ -17,8 +17,6 @@ import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInR
 
 /**
  * Defines the control points of NURBS.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ControlPoint

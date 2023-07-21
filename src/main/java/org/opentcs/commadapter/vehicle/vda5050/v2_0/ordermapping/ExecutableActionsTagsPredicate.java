@@ -19,8 +19,6 @@ import org.opentcs.drivers.vehicle.MovementCommand;
 
 /**
  * A predicate to test if an action is executable by a specific vehicle.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class ExecutableActionsTagsPredicate
     implements Predicate<String> {

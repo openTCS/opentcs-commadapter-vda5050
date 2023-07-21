@@ -9,8 +9,6 @@ package org.opentcs.commadapter.vehicle.vda5050.common;
 
 /**
  * Limits somehow related to VDA5050.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public interface Limits {
 

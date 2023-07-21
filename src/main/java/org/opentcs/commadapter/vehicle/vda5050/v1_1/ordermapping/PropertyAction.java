@@ -16,8 +16,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
 
 /**
  * Represents an action that was defined in the properties of a TCS resource or a movement command.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class PropertyAction {
 

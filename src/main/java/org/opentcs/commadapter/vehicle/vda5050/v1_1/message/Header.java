@@ -18,8 +18,6 @@ import static org.opentcs.util.Assertions.checkInRange;
 
 /**
  * Defines basic information contained in all VDA5050 messages.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 public abstract class Header
     implements Serializable {

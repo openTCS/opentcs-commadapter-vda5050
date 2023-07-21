@@ -20,8 +20,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.NodePosition;
 
 /**
  * A node to be traversed for fulfilling an order.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(Include.NON_NULL)
 public class Node

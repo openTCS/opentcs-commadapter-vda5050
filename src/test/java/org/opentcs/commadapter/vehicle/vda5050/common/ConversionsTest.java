@@ -14,8 +14,6 @@ import static org.opentcs.commadapter.vehicle.vda5050.common.Conversions.toRelat
 
 /**
  * Conversion tests.
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class ConversionsTest {
 

@@ -11,9 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Defines the operating modes of an AGV.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public enum OperatingMode {
 

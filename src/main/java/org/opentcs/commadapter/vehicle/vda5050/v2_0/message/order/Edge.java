@@ -19,8 +19,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Trajectory;
 
 /**
  * A directional connection between two {@link Node}s.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Edge

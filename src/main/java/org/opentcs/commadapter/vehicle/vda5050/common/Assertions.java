@@ -9,8 +9,6 @@ package org.opentcs.commadapter.vehicle.vda5050.common;
 
 /**
  * Utility methods for checking preconditions, postconditions etc..
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class Assertions {
 
@@ -19,7 +17,7 @@ public class Assertions {
    */
   private Assertions() {
   }
-  
+
   /**
    * Ensures that {@code value} is not smaller than {@code minimum} and not greater than
    * {@code maximum}.

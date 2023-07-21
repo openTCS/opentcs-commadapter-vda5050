@@ -19,8 +19,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A non-modal dialog that shows the JSON representation of {@link State} message.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class StateMessageDialog
     extends JDialog {

@@ -18,9 +18,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Velocity;
 
 /**
  * Unit tests for {@link Visualization}.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class VisualizationTest {
 

@@ -11,8 +11,6 @@ import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.MqttConfiguration;
 
 /**
  * An implementation of the configuration for vehicle simulation.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class ConfigurationImpl
     implements MqttConfiguration {

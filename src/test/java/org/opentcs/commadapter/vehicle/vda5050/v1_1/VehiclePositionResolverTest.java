@@ -39,8 +39,6 @@ import org.opentcs.data.model.Vehicle;
 
 /**
  * Tests the vehicle position resolver.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class VehiclePositionResolverTest {
 

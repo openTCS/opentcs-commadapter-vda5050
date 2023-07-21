@@ -23,8 +23,6 @@ import static org.opentcs.util.Assertions.checkState;
 
 /**
  * Validates JSON inputs against registered schemas.
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class JsonValidator {
 

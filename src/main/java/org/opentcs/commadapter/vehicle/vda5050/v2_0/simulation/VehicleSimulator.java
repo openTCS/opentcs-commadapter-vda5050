@@ -52,9 +52,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A standalone application to simulate communication between the {@link CommAdapterImpl} and a
  * vehicle.
- *
- * @author Martin Grzenia (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class VehicleSimulator
     implements ConnectionEventListener {

@@ -42,9 +42,6 @@ import org.opentcs.drivers.vehicle.MovementCommand;
 
 /**
  * Unit tests for {@link MovementCommandManager}.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class MovementCommandManagerTest {
 

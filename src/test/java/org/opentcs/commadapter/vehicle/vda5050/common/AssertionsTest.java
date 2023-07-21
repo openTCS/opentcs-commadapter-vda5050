@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInRange;
 
 /**
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class AssertionsTest {
 

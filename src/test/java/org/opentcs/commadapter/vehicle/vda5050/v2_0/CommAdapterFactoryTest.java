@@ -15,8 +15,6 @@ import static org.mockito.Mockito.mock;
 import org.opentcs.data.model.Vehicle;
 
 /**
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class CommAdapterFactoryTest {
 

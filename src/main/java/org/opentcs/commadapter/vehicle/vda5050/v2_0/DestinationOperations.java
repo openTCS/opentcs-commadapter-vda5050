@@ -9,8 +9,6 @@ package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
 /**
  * Defines vehicle operation strings that can be used in the plant model.
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public interface DestinationOperations {
 

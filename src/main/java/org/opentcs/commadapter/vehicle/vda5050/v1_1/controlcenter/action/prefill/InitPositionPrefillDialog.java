@@ -31,8 +31,6 @@ import org.opentcs.util.gui.StringListCellRenderer;
 
 /**
  * A prefill dialog for InitPosition actions.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class InitPositionPrefillDialog
     extends ActionPrefillDialog {

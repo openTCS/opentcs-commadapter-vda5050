@@ -15,8 +15,6 @@ import static org.opentcs.util.Assertions.checkInRange;
 
 /**
  * Load object that describes the load if the AGV has information about it.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Load

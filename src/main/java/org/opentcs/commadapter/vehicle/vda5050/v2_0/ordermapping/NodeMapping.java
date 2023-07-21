@@ -25,8 +25,6 @@ import org.opentcs.data.model.Vehicle;
 
 /**
  * Function to map {@link Point}s from openTCS movement commands to a VDA5050 node.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class NodeMapping {
 

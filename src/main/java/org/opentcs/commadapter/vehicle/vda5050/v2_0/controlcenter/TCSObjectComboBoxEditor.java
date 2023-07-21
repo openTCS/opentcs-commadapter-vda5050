@@ -13,8 +13,6 @@ import org.opentcs.data.TCSObject;
 
 /**
  * This class extends the BasicComboBoxEditor to display TCSObjects in editable JComboBoxs.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class TCSObjectComboBoxEditor
     extends BasicComboBoxEditor {

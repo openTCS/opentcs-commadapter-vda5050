@@ -18,8 +18,6 @@ import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInR
 
 /**
  * The trajectory of an AGV described as NURBS.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Trajectory

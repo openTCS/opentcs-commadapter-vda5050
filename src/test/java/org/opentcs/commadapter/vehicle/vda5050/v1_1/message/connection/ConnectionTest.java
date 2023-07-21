@@ -16,9 +16,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.MessageValidator;
 
 /**
  * Unit tests for {@link Connection}.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class ConnectionTest {
 

@@ -28,8 +28,6 @@ import org.opentcs.drivers.vehicle.MovementCommand;
 
 /**
  * Tracks the progress of movement commands and reports back finished ones.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class MovementCommandManager {
 

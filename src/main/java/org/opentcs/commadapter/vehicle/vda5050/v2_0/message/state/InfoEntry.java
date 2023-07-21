@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
  * Represents information messages.
  * <p>
  * Information messages are only for visualization/debugging.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InfoEntry

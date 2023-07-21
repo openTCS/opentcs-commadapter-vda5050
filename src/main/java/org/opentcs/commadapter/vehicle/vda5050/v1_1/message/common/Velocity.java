@@ -12,8 +12,6 @@ import java.io.Serializable;
 
 /**
  * The AGV's velocity in vehicle coordinates.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Velocity

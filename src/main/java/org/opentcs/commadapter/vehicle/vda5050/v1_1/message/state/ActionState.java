@@ -17,8 +17,6 @@ import javax.annotation.Nonnull;
 /**
  * Describes the state of an action already processed, currently being process or to be processed
  * by an AGV.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ActionState

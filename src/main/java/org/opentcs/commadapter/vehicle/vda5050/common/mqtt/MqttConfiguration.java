@@ -12,9 +12,6 @@ import org.opentcs.configuration.ConfigurationPrefix;
 
 /**
  * Provides methods to configure common parts of a communication adapter.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhofer IML)
  */
 @ConfigurationPrefix(MqttConfiguration.PREFIX)
 public interface MqttConfiguration {

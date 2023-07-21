@@ -12,8 +12,6 @@ import org.opentcs.drivers.vehicle.VehicleCommAdapter;
 
 /**
  * An interface for creating a comm adapter for a specific version of the VDA5050 protocol.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 public interface Vda5050CommAdapterFactory {
 

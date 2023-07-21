@@ -19,8 +19,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.Header;
  * Describes the state of the connection between the AGV and the message broker.
  * <p>
  * Also used as a last will message in case the AGV abruply disconnects from the message broker.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Connection

@@ -11,8 +11,6 @@ import java.awt.Component;
 
 /**
  * A factory for creating prefill dialog panels.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public interface PrefillDialogFactory {
 

@@ -11,12 +11,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Defines various error levels.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public enum ErrorLevel {
-  
+
   /**
    * AGV is ready to start. (E.g. maintenance cycle expiration warning.)
    */

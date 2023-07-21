@@ -23,8 +23,6 @@ import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.VehicleCommAdapter;
 
 /**
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 public class CommAdapterFactory
     implements Vda5050CommAdapterFactory {

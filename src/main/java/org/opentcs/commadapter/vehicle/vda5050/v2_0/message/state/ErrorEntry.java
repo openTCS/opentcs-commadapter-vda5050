@@ -16,8 +16,6 @@ import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 
 /**
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorEntry

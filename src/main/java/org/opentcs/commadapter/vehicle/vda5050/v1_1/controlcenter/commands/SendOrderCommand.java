@@ -15,8 +15,6 @@ import org.opentcs.drivers.vehicle.VehicleCommAdapter;
 
 /**
  * A command for sending a {@link Order} to a vehicle.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class SendOrderCommand
     implements AdapterCommand {

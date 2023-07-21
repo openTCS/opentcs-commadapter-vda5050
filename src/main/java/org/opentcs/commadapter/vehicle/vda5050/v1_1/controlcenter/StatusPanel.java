@@ -39,9 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- * @author Martin Grzenia (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class StatusPanel
     extends VehicleCommAdapterPanel {

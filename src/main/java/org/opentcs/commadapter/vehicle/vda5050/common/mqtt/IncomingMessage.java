@@ -12,9 +12,6 @@ import javax.annotation.Nonnull;
 
 /**
  * A message received via a topic.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class IncomingMessage {
 

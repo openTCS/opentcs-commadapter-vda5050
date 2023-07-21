@@ -20,8 +20,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Velocity;
  * <p>
  * Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the
  * update rate, all fields are optional.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Visualization

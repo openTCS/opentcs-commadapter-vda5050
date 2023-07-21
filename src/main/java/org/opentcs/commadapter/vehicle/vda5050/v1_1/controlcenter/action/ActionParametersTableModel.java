@@ -14,8 +14,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.ActionParamet
 
 /**
  * A model for a table of action parameters.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class ActionParametersTableModel
     extends AbstractTableModel {

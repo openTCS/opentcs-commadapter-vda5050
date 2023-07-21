@@ -9,8 +9,6 @@ package org.opentcs.commadapter.vehicle.vda5050.common;
 
 /**
  * Provides helper functions for conversions.
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class Conversions {
 

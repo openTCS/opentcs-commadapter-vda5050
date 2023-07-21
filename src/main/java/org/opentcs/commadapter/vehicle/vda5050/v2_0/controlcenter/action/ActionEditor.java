@@ -20,8 +20,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
  * action type}. When a value is entered into an editable combo box with this editor, a new
  * {@link Action} instance is created with the entered value used as the action's action type. The
  * created instance is then set as the combo box's selected item.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class ActionEditor
     extends BasicComboBoxEditor {

@@ -9,8 +9,6 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping;
 
 /**
  * When an action should be executed at a point.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public enum ActionTrigger {
   /**

@@ -11,8 +11,6 @@ import javax.annotation.Nonnull;
 
 /**
  * A listener for events concerning an established connection.
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public interface ConnectionEventListener {
 

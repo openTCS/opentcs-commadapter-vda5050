@@ -11,9 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Defines the different state of an {@link ActionState}.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public enum ActionStatus {
 

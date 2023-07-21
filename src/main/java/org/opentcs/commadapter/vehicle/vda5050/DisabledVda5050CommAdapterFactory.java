@@ -12,8 +12,6 @@ import org.opentcs.drivers.vehicle.VehicleCommAdapter;
 
 /**
  * A {@link Vda5050CommAdapterFactory} that does not provide any adapters.
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class DisabledVda5050CommAdapterFactory
     implements Vda5050CommAdapterFactory {

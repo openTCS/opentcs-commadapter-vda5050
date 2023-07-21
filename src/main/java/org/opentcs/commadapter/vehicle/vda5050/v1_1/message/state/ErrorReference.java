@@ -15,8 +15,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Describes a reference to an error.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 public class ErrorReference
     implements Serializable {

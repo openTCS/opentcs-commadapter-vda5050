@@ -29,9 +29,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Manages an MQTT client and its connection to a server/broker.
- *
- * @author Martin Grzenia (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class MqttClientManager {
 

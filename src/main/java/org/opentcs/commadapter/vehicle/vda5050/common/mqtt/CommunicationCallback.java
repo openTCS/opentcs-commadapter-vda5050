@@ -19,9 +19,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A callback for publishing messages to/receiving messages for a topic.
- *
- * @author Martin Grzenia (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 class CommunicationCallback
     implements MqttCallback {

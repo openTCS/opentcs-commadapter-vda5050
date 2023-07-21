@@ -17,8 +17,6 @@ import static org.opentcs.commadapter.vehicle.vda5050.v2_0.I18nCommAdapter.BUNDL
 
 /**
  * Defines methods for an action prefill dialog.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public abstract class ActionPrefillDialog
     extends JDialog {

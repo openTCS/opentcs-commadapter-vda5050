@@ -15,8 +15,6 @@ import org.opentcs.drivers.vehicle.VehicleCommAdapter;
 /**
  *
  * Adapter command for sending an instant action.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class SendInstantActions
     implements AdapterCommand {

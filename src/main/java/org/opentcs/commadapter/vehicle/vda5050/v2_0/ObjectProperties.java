@@ -13,9 +13,6 @@ import org.opentcs.drivers.vehicle.MovementCommand;
 /**
  * Constants and utility methods for working with properties on {@link TCSObject}s and
  * {@link MovementCommand}s.
- *
- * @author Stefan Walter (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public interface ObjectProperties {
 

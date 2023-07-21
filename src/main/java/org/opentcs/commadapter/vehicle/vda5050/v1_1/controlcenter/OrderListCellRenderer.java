@@ -18,8 +18,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Order;
 
 /**
  * Renders orders when displayed in a list.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class OrderListCellRenderer
     extends DefaultListCellRenderer {

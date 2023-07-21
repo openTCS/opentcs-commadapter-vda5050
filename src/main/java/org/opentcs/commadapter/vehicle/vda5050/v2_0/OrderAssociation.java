@@ -15,8 +15,6 @@ import org.opentcs.drivers.vehicle.MovementCommand;
  * An order is associated with a movement command.
  * A movement command consists of a movement to a position and a set of actions to perform.
  * The set of actions may be empty.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 public class OrderAssociation {
 

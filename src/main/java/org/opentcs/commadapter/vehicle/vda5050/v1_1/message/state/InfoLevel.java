@@ -10,9 +10,6 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- *
- * @author Leonard Schuengel (Fraunhofer IML)
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public enum InfoLevel {
 

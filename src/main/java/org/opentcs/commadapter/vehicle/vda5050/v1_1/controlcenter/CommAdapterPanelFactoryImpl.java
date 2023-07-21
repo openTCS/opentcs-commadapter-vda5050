@@ -25,8 +25,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A factory for creating project specific comm adapter panel instances.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class CommAdapterPanelFactoryImpl
     implements VehicleCommAdapterPanelFactory {

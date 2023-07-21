@@ -16,9 +16,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.Insta
 
 /**
  * Renders orders when displayed in a list.
- *
- * @author Martin Grzenia (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class InstantActionsListCellRenderer
     extends DefaultListCellRenderer {

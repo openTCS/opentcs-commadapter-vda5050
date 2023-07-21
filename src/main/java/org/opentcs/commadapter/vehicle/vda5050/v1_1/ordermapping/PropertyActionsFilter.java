@@ -14,8 +14,6 @@ import java.util.function.Predicate;
 
 /**
  * Filters property actions based on whether the vehicle can execute them.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class PropertyActionsFilter
     implements Predicate<PropertyAction> {

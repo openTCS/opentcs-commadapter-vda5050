@@ -25,8 +25,6 @@ import org.opentcs.data.model.Vehicle;
 
 /**
  * Resolves the vehicle position from a VDA5050 state message to an openTCS point.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class VehiclePositionResolver {
 

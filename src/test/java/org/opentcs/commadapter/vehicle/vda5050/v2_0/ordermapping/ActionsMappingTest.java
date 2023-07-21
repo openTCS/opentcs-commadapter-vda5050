@@ -44,8 +44,6 @@ import org.opentcs.drivers.vehicle.MovementCommand;
 
 /**
  * Unit tests for {@link ActionsMapping}.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class ActionsMappingTest {
 

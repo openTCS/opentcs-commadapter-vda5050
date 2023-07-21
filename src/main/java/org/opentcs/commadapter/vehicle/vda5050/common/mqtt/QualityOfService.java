@@ -9,8 +9,6 @@ package org.opentcs.commadapter.vehicle.vda5050.common.mqtt;
 
 /**
  * An MQTT QoS value.
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public enum QualityOfService {
   /**

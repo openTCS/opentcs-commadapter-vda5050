@@ -23,8 +23,6 @@ import org.opentcs.drivers.vehicle.MovementCommand;
 
 /**
  * Tests for object properties-related utility methods.
- *
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class PropertyExtractionsTest {
 

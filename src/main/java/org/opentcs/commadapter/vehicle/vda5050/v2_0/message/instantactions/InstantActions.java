@@ -20,8 +20,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 
 /**
  * Defines actions that an AGV is to execute as soon as they arrive.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InstantActions

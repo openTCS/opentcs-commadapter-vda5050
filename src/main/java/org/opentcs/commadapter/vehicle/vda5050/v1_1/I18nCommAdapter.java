@@ -9,8 +9,6 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
 /**
  * Defines constants regarding internationalization.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public interface I18nCommAdapter {
 

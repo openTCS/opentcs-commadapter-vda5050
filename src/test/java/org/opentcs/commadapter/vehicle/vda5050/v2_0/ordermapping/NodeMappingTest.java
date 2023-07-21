@@ -21,9 +21,6 @@ import org.opentcs.data.model.Vehicle;
 
 /**
  * Unit tests for {@link NodeMapping}.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhfoer IML)
  */
 public class NodeMappingTest {
 
@@ -71,7 +68,7 @@ public class NodeMappingTest {
         .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA, "90");
 
     NodePosition np = NodeMapping.toNodePosition(point, vehicle, true);
-    
+
     assertThat(np.getAllowedDeviationXY(), is(closeTo(0.71, 0.05)));
     assertThat(np.getAllowedDeviationTheta(), is(Math.PI));
   }

@@ -25,8 +25,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Matches a state messages with sent order messages to confirm their delivery.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class MessageResponseMatcher {
 

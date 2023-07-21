@@ -20,8 +20,6 @@ import static org.opentcs.util.Assertions.checkInRange;
 
 /**
  * Defines an order sent from master control to the AGV.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Order

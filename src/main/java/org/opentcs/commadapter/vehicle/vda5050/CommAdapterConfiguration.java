@@ -16,9 +16,6 @@ import org.opentcs.data.model.Vehicle.IntegrationLevel;
 
 /**
  * Provides methods to configure the version 1.1 communication adapter.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhofer IML)
  */
 @ConfigurationPrefix(CommAdapterConfiguration.PREFIX)
 public interface CommAdapterConfiguration {

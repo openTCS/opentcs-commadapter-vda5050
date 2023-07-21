@@ -18,8 +18,6 @@ import static org.opentcs.util.Assertions.checkInRange;
 
 /**
  * Describes an AGVs battery state.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BatteryState

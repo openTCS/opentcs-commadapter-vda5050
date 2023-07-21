@@ -22,9 +22,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Velocity;
 
 /**
  * Unit tests for {@link State}.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class StateTest {
 

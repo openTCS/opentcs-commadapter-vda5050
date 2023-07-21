@@ -17,9 +17,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
 
 /**
  * The VDA5050 {@code finePositioning} action.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class FinePositioning
     extends Action {

@@ -19,9 +19,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A callback for connecting/disconnecting to a server.
- *
- * @author Martin Grzenia (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class ConnectionCallback
     implements IMqttActionListener {

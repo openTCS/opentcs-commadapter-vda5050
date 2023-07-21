@@ -24,8 +24,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterFactory.V1dot1;
 
 /**
  * A Factory for creating a vda5050 capable comm adapter.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 public class CommAdapterFactoryImpl
     implements VehicleCommAdapterFactory {

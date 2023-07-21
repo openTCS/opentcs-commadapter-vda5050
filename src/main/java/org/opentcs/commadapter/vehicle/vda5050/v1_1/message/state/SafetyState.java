@@ -16,8 +16,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Holds information about the safety status.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SafetyState

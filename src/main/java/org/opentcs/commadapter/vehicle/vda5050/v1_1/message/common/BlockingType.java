@@ -12,12 +12,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Regulates if an {@link Action} is allowed to be executed during movement and/or parallel to other
  * actions.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public enum BlockingType {
-    
+
   /**
    * Action can be executed in parallel with other actions and while the vehicle is driving.
    */

@@ -44,9 +44,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Implements the gui of the vehicle control and visualizes the status of protocol data.
- *
- * @author Martin Grzenia (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class ControlPanel
     extends VehicleCommAdapterPanel {

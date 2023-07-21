@@ -41,9 +41,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Functions to map a movement command operation or custom actions to vda5050 actions.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class ActionsMapping {
 

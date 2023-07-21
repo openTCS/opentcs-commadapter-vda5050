@@ -76,9 +76,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The communication adapter implementation for VDA5050.
- *
- * @author Martin Grzenia (Fraunhofer IML)
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class CommAdapterImpl
     extends BasicVehicleCommAdapter

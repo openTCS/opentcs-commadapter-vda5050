@@ -20,9 +20,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
 
 /**
  * Unit tests for {@link InstantActions}.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhofer IML)
  */
 public class InstantActionsTest {
 

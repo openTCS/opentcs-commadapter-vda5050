@@ -24,8 +24,6 @@ import org.opentcs.data.model.Point;
 
 /**
  * Unit tests for {@link PropertyActionsFilter}.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 public class PropertyActionsFilterTest {
 

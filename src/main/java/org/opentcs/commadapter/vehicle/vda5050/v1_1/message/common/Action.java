@@ -17,8 +17,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Action that is to be executed on a node or edge.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Action

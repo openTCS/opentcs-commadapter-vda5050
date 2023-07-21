@@ -16,8 +16,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Dimensions of the load's bounding box.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoadDimensions

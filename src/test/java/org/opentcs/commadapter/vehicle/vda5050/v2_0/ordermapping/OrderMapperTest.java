@@ -42,9 +42,6 @@ import org.opentcs.drivers.vehicle.MovementCommand;
 
 /**
  * Unit tests for {@link OrderMapper}.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
- * @author Stefan Walter (Fraunhfoer IML)
  */
 public class OrderMapperTest {
 

@@ -11,9 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Defines the different state of a connection between an AGV and a message broker.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public enum ConnectionState {
 

@@ -14,8 +14,6 @@ import org.opentcs.data.model.Vehicle;
 
 /**
  * A factory for various instances specific to {@link CommAdapterImpl}.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public interface CommAdapterComponentsFactory {
 

@@ -16,8 +16,6 @@ import javax.annotation.Nonnull;
 
 /**
  * Holds the information reference (e.g. orderId, orderUpdateId, actionId) as key-value pairs.
- *
- * @author Leonard Schüngel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InfoReference

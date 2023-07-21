@@ -19,8 +19,6 @@ import org.opentcs.util.gui.StringListCellRenderer;
  * <p>
  * Extends {@link StringListCellRenderer} by additionally setting a tool tip text to account for
  * long path names.
- *
- * @author Martin Grzenia (Fraunhofer IML)
  */
 public class PathRenderer
     extends StringListCellRenderer<Path> {

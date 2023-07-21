@@ -19,8 +19,6 @@ import javax.annotation.Nonnull;
  * <p>
  * The point of reference is always the center of the bounding box's bottom surface (at height = 0)
  * and is described in coordinates of the AGV's coordinate system.
- *
- * @author Leonard Schuengel (Fraunhofer IML)
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BoundingBoxReference
