@@ -11,7 +11,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.12 (2023-07-24)
 
 * New features and enhancements:
 ** Publish a user notification to the kernel when the vehicle rejects an order.
