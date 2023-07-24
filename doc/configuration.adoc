@@ -34,6 +34,11 @@ Set to a map of VDA5050 operating mode names to boolean values.
 Whenever the vehicle's reported operating mode changes to a value given in the map, the vehicle's transport order may be withdrawn; if it is withdrawn, this happens forcibly.
 Valid values for operating mode names are `TEACHIN`, `SERVICE`, `MANUAL`, `SEMIAUTOMATIC` and `AUTOMATIC`.
 Valid assignment values are `true` (do withdraw the transport order forcibly) and `false` (do not withdraw the transport order), with `false` being the default for every operating mode.
+`commadapter.vehicle.vda5050.onOpModeChangeDoResetPosition`::
+Set to a map of VDA5050 operating mode names to boolean values.
+Whenever the vehicle's reported operating mode changes to a value given in the map, the vehicle's last known position may be reset.
+Valid values for operating mode names are `TEACHIN`, `SERVICE`, `MANUAL`, `SEMIAUTOMATIC` and `AUTOMATIC`.
+Valid assignment values are 'true' (do reset the last known position) and 'false' (do not reset the last known position), with 'false' being the default for every operating mode.
 `commadapter.vehicle.vda5050.mqtt.brokerHost`::
 The IP address or host name of the MQTT broker to be used.
 `commadapter.vehicle.vda5050.mqtt.brokerPort`::
@@ -64,6 +69,7 @@ The following example configuration can be used as a template to be pasted into 
 commadapter.vehicle.vda5050.enabledVersions = 1.1, 2.0
 commadapter.vehicle.vda5050.onOpModeChangeDoUpdateIntegrationLevel = AUTOMATIC=TO_BE_UTILIZED, SEMIAUTOMATIC=TO_BE_UTILIZED, SERVICE=TO_BE_RESPECTED, MANUAL=TO_BE_IGNORED, TEACHIN=TO_BE_IGNORED
 commadapter.vehicle.vda5050.onOpModeChangeDoWithdrawOrder = AUTOMATIC=false, SEMIAUTOMATIC=false, SERVICE=true, MANUAL=true, TEACHIN=true
+commadapter.vehicle.vda5050.onOpModeChangeDoResetPosition = AUTOMATIC=false, SEMIAUTOMATIC=false, SERVICE=true, MANUAL=true, TEACHIN=true
 commadapter.vehicle.vda5050.mqtt.brokerHost = broker.example.com
 commadapter.vehicle.vda5050.mqtt.brokerPort = 1883
 commadapter.vehicle.vda5050.mqtt.connectionEncrypted = false

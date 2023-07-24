@@ -33,15 +33,21 @@ public interface CommAdapterConfiguration {
 
   @ConfigurationEntry(
       type = "Map of operating modes to the integration level",
-      description = "See doc",
-      orderKey = "0_changeLevel")
+      description = "See driver documentation.",
+      orderKey = "1_1_changeLevel")
   Map<ConfigOperatingMode, ConfigIntegrationLevel> onOpModeChangeDoUpdateIntegrationLevel();
 
   @ConfigurationEntry(
       type = "Map of operating modes to a boolean",
-      description = "See doc",
-      orderKey = "0_changeLevel")
+      description = "See driver documentation.",
+      orderKey = "1_2_withdrawOrder")
   Map<ConfigOperatingMode, Boolean> onOpModeChangeDoWithdrawOrder();
+
+  @ConfigurationEntry(
+      type = "Map of operating modes to a boolean",
+      description = "See driver documentation.",
+      orderKey = "1_3_resetPosition")
+  Map<ConfigOperatingMode, Boolean> onOpModeChangeDoResetPosition();
 
   /**
    * Vehicle operating modes.

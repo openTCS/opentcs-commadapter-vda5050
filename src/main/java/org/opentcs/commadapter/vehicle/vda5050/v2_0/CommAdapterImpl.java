@@ -629,6 +629,14 @@ public class CommAdapterImpl
       movementCommandManager.failCurrentCommand(this::onMovementCommandFailed);
     }
 
+    if (configuration.onOpModeChangeDoResetPosition()
+        .getOrDefault(mapToConfigOperatingMode(state.getOperatingMode()), Boolean.FALSE)) {
+      LOG.debug("{}: Resetting last known vehicle position due to op mode change to {}...",
+                getName(),
+                state.getOperatingMode());
+      getProcessModel().setVehiclePosition(null);
+    }
+
     configuration.onOpModeChangeDoUpdateIntegrationLevel()
         .getOrDefault(
             mapToConfigOperatingMode(state.getOperatingMode()),

@@ -16,7 +16,7 @@ toc::[]
 * New features and enhancements:
 ** Publish a user notification to the kernel when the vehicle rejects an order.
 ** Fall back to the last known position when other methods of determining the vehicle position fail.
-** When the vehicle's reported operating mode changes, optionally withdraw its transport order and/or update its integration level.
+** When the vehicle's reported operating mode changes, optionally withdraw its transport order and/or update its integration level and/or reset its last known position.
 ** Show the MQTT topic name prefix used for communicating with the vehicle in the driver's KCC control panel.
 * Fixes:
 ** Send order and instant action messages to the vehicle only as long as its reported operating mode is `AUTOMATIC` or `SEMIAUTOMATIC`.
