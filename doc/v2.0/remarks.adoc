@@ -12,3 +12,9 @@ toc::[]
 = General implementation remarks
 
 * The openTCS driver is implemented based on the VDA5050 2.0 PDF document as the definitive specification, not the documents that can be found at https://github.com/vda5050.
+* In case the vehicle rejects an order, the openTCS driver does not send further messages to it.
+  Before any new messages can be sent to the vehicle, it is necessary to (forcibly) withdraw the vehicle's current transport order in openTCS.
+  For details regarding order rejection, see the 'order' topic reference in xref:runtime-behaviour.adoc#topic-order[].
+* The vehicle is expected to reflect every instant action in its `actionStates` list.
+  Not doing so effectively leads to the driver repeating the instant action message infinitely, blocking all other order or instant action messages.
+  For details regarding instant actions, see the 'instantActions' topic reference in xref:runtime-behaviour.adoc#topic-instantactions[].

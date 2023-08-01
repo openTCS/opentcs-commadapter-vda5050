@@ -107,6 +107,7 @@ With every `state` message received, the vehicle driver will report one of the f
 Upon receiving a message on the `visualization` topic, the vehicle driver will update the vehicle's precise position and orientation angle in openTCS with the data in the `agvPosition` structure.
 Velocity data is not forwarded to openTCS.
 
+[#topic-order]
 = Topic `order`
 
 The general behaviour with sending order messages is the following:
@@ -118,6 +119,7 @@ The general behaviour with sending order messages is the following:
 * The vehicle driver sends the next order message (for the next step on the vehicle's route) only after a state message from the vehicle indicates that it has received the previous order message (by reflecting the order message's `orderId` and `orderUpdateId`.)
 ** In case the vehicle driver has sent an order message and receives a state message from the vehicle _not_ indicating that the vehicle has received the order message, the vehicle driver repeats the order message.
 ** In case the vehicle driver receives a state message from the vehicle indicating that the vehicle rejects an order, it does not repeat the order message or send further ones.
+   Before any new messages can be sent to the vehicle, it is necessary to (forcibly) withdraw the vehicle's current transport order in openTCS.
    An order rejection is indicated by an error with `errorType` being one of the following:
 *** `validationError`
 *** `noRouteError`
@@ -300,6 +302,7 @@ In the first order message sent for a new VDA5050 order, the vehicle driver will
 
 NOTE: Angles in the plant model are expected to be in degrees, with an angle of 0 degrees being at the 3 o'clock position and a positive value indicating a counter-clockwise rotation.
 
+[#topic-instantactions]
 = Topic `instantActions`
 
 The vehicle driver sends only a few types of instant actions in specific situations described in the following sections.
