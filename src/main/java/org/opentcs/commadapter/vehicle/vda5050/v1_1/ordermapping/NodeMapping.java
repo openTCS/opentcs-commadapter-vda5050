@@ -101,7 +101,7 @@ public class NodeMapping {
     position.setAllowedDeviationTheta(
         extendDeviationToIncludeVehicle
             ? extendedDeviationTheta()
-            : regulardDeviationTheta(point, vehicle)
+            : regularDeviationTheta(point, vehicle)
     );
 
     return position;
@@ -111,7 +111,7 @@ public class NodeMapping {
     return getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_XY, point, vehicle).orElse(null);
   }
 
-  private static Double regulardDeviationTheta(Point point, Vehicle vehicle) {
+  private static Double regularDeviationTheta(Point point, Vehicle vehicle) {
     // XXX Ensure the angle is (positive and) within 0 and 180 degrees.
     return getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_THETA, point, vehicle)
         .map(value -> toRadians(value))
