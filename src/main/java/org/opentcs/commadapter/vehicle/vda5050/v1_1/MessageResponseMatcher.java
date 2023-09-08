@@ -7,7 +7,7 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 import java.util.Queue;
@@ -36,7 +36,7 @@ public class MessageResponseMatcher {
   /**
    * Queue for requests that need to be send to the vehicle.
    */
-  private final Queue<Object> requests = new LinkedList<>();
+  private final Queue<Object> requests = new ArrayDeque<>();
   /**
    * The callback for sending the next order.
    */

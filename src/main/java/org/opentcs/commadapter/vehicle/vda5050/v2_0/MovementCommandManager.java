@@ -7,11 +7,12 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import static java.util.Objects.requireNonNull;
+import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
@@ -34,7 +35,7 @@ public class MovementCommandManager {
   /**
    * A list of currently tracked orders.
    */
-  private final List<OrderAssociation> trackedOrders = new ArrayList<>();
+  private final Queue<OrderAssociation> trackedOrders = new ArrayDeque<>();
 
   /**
    * Construct a new MovementCommandManager.
@@ -89,8 +90,7 @@ public class MovementCommandManager {
    */
   public void failCurrentCommand(@Nonnull Consumer<MovementCommand> callback) {
     if (!trackedOrders.isEmpty()) {
-      callback.accept(trackedOrders.get(0).getCommand());
-      trackedOrders.remove(0);
+      callback.accept(trackedOrders.poll().getCommand());
     }
   }
 
