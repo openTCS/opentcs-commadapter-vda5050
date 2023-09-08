@@ -35,16 +35,17 @@ public class EdgeMapping {
   }
 
   /**
-   * Maps a route step to an edge.
+   * Maps a route step to a base edge.
+   * The edge has the release flag set to true.
    *
    * @param step The step to map.
    * @param vehicle the vehicle to map the for.
    * @param actions The actions for this edge.
    * @return The mapped edge
    */
-  public static Edge toEdge(Route.Step step,
-                            Vehicle vehicle,
-                            List<Action> actions) {
+  public static Edge toBaseEdge(Route.Step step,
+                                Vehicle vehicle,
+                                List<Action> actions) {
     requireNonNull(step, "step");
     requireNonNull(vehicle, "vehicle");
     requireNonNull(actions, "actions");
@@ -53,6 +54,33 @@ public class EdgeMapping {
         step.getPath().getName(),
         step.getRouteIndex() * 2L + 1,
         true,
+        step.getSourcePoint().getName(),
+        step.getDestinationPoint().getName(),
+        actions
+    );
+
+    edge.setMaxSpeed(maxSpeed(step));
+    edge.setOrientation(edgeOrientation(step));
+    edge.setRotationAllowed(rotationAllowed(step));
+
+    return edge;
+  }
+
+  /**
+   * Maps a route step to a horizon edge.
+   * The edge has the release flag set to false.
+   *
+   * @param step The step to map.
+   * @param actions The actions for this edge.
+   * @return The mapped edge
+   */
+  public static Edge toHorizonEdge(Route.Step step, List<Action> actions) {
+    requireNonNull(step, "step");
+
+    Edge edge = new Edge(
+        step.getPath().getName(),
+        step.getRouteIndex() * 2L + 1,
+        false,
         step.getSourcePoint().getName(),
         step.getDestinationPoint().getName(),
         actions

@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyInteger;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Edge;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Node;
@@ -26,14 +28,22 @@ import org.opentcs.components.kernel.services.TCSObjectService;
 import org.opentcs.data.TCSObjectReference;
 import org.opentcs.data.model.LocationType;
 import org.opentcs.data.model.Vehicle;
+import org.opentcs.data.order.Route.Step;
 import org.opentcs.data.order.TransportOrder;
 import org.opentcs.drivers.vehicle.MovementCommand;
 import static org.opentcs.util.Assertions.checkArgument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Maps {@link MovementCommand}s from openTCS to an {@link Order} message understood by the vehicle.
  */
 public class OrderMapper {
+
+  /**
+   * This class's logger.
+   */
+  private static final Logger LOG = LoggerFactory.getLogger(OrderMapper.class);
 
   /**
    * A reference to the attached vehicle.
@@ -114,6 +124,9 @@ public class OrderMapper {
         vehicle
     ));
 
+    // Add rest of the route as the horizon.
+    mapHorizon(order, command, vehicle);
+
     return order;
   }
 
@@ -156,7 +169,7 @@ public class OrderMapper {
                                     actionString -> true,
                                     EnumSet.of(ActionTrigger.ORDER_START));
 
-    return NodeMapping.toNode(
+    return NodeMapping.toBaseNode(
         command.getStep().getSourcePoint(),
         0,
         vehicle,
@@ -171,7 +184,7 @@ public class OrderMapper {
   private Node mapDestNode(@Nonnull MovementCommand command,
                            long sequenceId,
                            @Nonnull Vehicle vehicle) {
-    return NodeMapping.toNode(
+    return NodeMapping.toBaseNode(
         command.getStep().getDestinationPoint(),
         sequenceId,
         vehicle,
@@ -235,7 +248,7 @@ public class OrderMapper {
         EnumSet.allOf(ActionTrigger.class)
     );
 
-    return EdgeMapping.toEdge(
+    return EdgeMapping.toBaseEdge(
         command.getStep(),
         vehicle,
         ActionsMapping.mapPropertyActions(command.getStep().getPath()).stream()
@@ -284,5 +297,110 @@ public class OrderMapper {
     }
 
     return result;
+  }
+
+  private void mapHorizon(Order order, MovementCommand command, Vehicle vehicle) {
+    int maxRouteIndex = Math.max(
+        command.getStep().getRouteIndex()
+        + getPropertyInteger(ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_HORIZON, vehicle)
+            .orElse(command.getRoute().getSteps().size()),
+        command.getRoute().getSteps().size()
+    );
+
+    for (int i = command.getStep().getRouteIndex() + 1; i < maxRouteIndex; i++) {
+      Step step = command.getRoute().getSteps().get(i);
+
+      order.getEdges().add(mapHorizonEdge(command, step, vehicle));
+
+      order.getNodes().add(mapHorizonNode(
+          command,
+          step,
+          command.getStep().getRouteIndex() * 2 + 2,
+          vehicle
+      ));
+    }
+  }
+
+  private Edge mapHorizonEdge(MovementCommand command,
+                              Step step,
+                              Vehicle vehicle) {
+    PropertyActionsFilter actionFilter = new PropertyActionsFilter(
+        vehicleActionsFilter,
+        new ExecutableActionsTagsPredicate(command),
+        actionString -> true,
+        EnumSet.allOf(ActionTrigger.class)
+    );
+
+    return EdgeMapping.toHorizonEdge(
+        step,
+        ActionsMapping.mapPropertyActions(step.getPath()).stream()
+            .filter(actionFilter)
+            .map(propertyAction -> ActionsMapping.fromPropertyAction(vehicle, propertyAction))
+            .collect(Collectors.toList())
+    );
+  }
+
+  private Node mapHorizonNode(@Nonnull MovementCommand command,
+                              Step step,
+                              long sequenceId,
+                              @Nonnull Vehicle vehicle) {
+    return NodeMapping.toHorizonNode(
+        step.getDestinationPoint(),
+        sequenceId,
+        vehicle,
+        horizonActionsForVehicle(
+            command,
+            vehicle,
+            step,
+            step.getRouteIndex() == command.getRoute().getSteps().size() - 1
+        )
+    );
+  }
+
+  private List<Action> horizonActionsForVehicle(@Nonnull MovementCommand command,
+                                                @Nonnull Vehicle vehicle,
+                                                Step step,
+                                                boolean isLastStep) {
+    Predicate<PropertyAction> propActionFilter = new PropertyActionsFilter(
+        vehicleActionsFilter,
+        new ExecutableActionsTagsPredicate(command),
+        involvesActualMovement(command)
+        ? new ExecutableActionsTagsPredicate(step.getPath())
+        : actionString -> true,
+        isLastStep ? EnumSet.of(ActionTrigger.ORDER_END) : EnumSet.of(ActionTrigger.PASSING)
+    );
+
+    List<PropertyAction> propertyActions
+        = ActionsMapping.mapPropertyActions(step.getDestinationPoint());
+    if (isLastStep) {
+      propertyActions.addAll(
+          ActionsMapping.mapPropertyActions(command.getFinalDestinationLocation())
+      );
+      horizonMovementCommandPropAction(command, vehicle)
+          .ifPresent(action -> propertyActions.add(action));
+    }
+
+    return propertyActions.stream()
+        .filter(propActionFilter)
+        .map(propertyAction -> ActionsMapping.fromPropertyAction(vehicle, propertyAction))
+        .collect(Collectors.toList());
+  }
+
+  private Optional<PropertyAction> horizonMovementCommandPropAction(
+      @Nonnull MovementCommand command,
+      @Nonnull Vehicle vehicle) {
+    if (command.getFinalOperation().equals(MovementCommand.NO_OPERATION)) {
+      return Optional.empty();
+    }
+
+    return ActionsMapping.fromMovementCommand(
+        vehicle,
+        command,
+        command.getFinalDestinationLocation(),
+        objectService.fetchObject(
+            LocationType.class,
+            command.getFinalDestinationLocation().getType()
+        )
+    );
   }
 }

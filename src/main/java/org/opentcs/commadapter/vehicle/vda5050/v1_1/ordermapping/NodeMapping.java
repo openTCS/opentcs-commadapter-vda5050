@@ -35,21 +35,22 @@ public class NodeMapping {
   }
 
   /**
-   * Maps a {@link Point} to a VDA5050 node.
+   * Maps a {@link Point} to a VDA5050 base node.
+   * The node has the release flag set to true.
    *
    * @param point The point to map.
    * @param sequenceId The sequence ID for the node to be created.
-   * @param vehicle The vehicle to mape the point for.
+   * @param vehicle The vehicle to map the point for.
    * @param actions The actions for this node.
    * @param extendDeviationToIncludeVehicle Whether the node's deviation should be extended to
    * include the vehicle's position.
    * @return A mapped Node.
    */
-  public static Node toNode(Point point,
-                            long sequenceId,
-                            Vehicle vehicle,
-                            List<Action> actions,
-                            boolean extendDeviationToIncludeVehicle) {
+  public static Node toBaseNode(Point point,
+                                long sequenceId,
+                                Vehicle vehicle,
+                                List<Action> actions,
+                                boolean extendDeviationToIncludeVehicle) {
     requireNonNull(point, "point");
     requireNonNull(vehicle, "vehicle");
     requireNonNull(actions, "actions");
@@ -61,6 +62,34 @@ public class NodeMapping {
         actions
     );
     node.setNodePosition(toNodePosition(point, vehicle, extendDeviationToIncludeVehicle));
+    return node;
+  }
+
+  /**
+   * Maps a {@link Point} to a VDA5050 horizon node.
+   * The node has the release flag set to false.
+   *
+   * @param point The point to map.
+   * @param sequenceId The sequence ID for the node to be created.
+   * @param vehicle The vehicle to map the point for.
+   * @param actions The actions for this node.
+   * include the vehicle's position.
+   * @return A mapped Node.
+   */
+  public static Node toHorizonNode(Point point,
+                                   long sequenceId,
+                                   Vehicle vehicle,
+                                   List<Action> actions) {
+    requireNonNull(point, "point");
+    requireNonNull(vehicle, "vehicle");
+
+    Node node = new Node(
+        point.getName(),
+        sequenceId,
+        false,
+        actions
+    );
+    node.setNodePosition(toNodePosition(point, vehicle, false));
     return node;
   }
 

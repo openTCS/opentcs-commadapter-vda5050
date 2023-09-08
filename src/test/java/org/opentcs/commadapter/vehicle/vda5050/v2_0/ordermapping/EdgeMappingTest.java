@@ -52,7 +52,7 @@ public class EdgeMappingTest {
         0
     );
 
-    Edge edge = EdgeMapping.toEdge(step, vehicle, List.of());
+    Edge edge = EdgeMapping.toBaseEdge(step, vehicle, List.of());
 
     assertThat(edge.getEdgeId(), is(path.getName()));
     assertThat(edge.getSequenceId(), is(1L));
@@ -79,7 +79,7 @@ public class EdgeMappingTest {
         0
     );
 
-    Edge edge = EdgeMapping.toEdge(step, vehicle, List.of());
+    Edge edge = EdgeMapping.toBaseEdge(step, vehicle, List.of());
     assertThat(edge.getMaxSpeed(), is(0.7));
     assertThat(edge.getOrientation(), is(Math.toRadians(12.34)));
     assertThat(edge.getRotationAllowed(), is(true));
@@ -102,9 +102,28 @@ public class EdgeMappingTest {
         0
     );
 
-    Edge edge = EdgeMapping.toEdge(step, vehicle, List.of());
+    Edge edge = EdgeMapping.toBaseEdge(step, vehicle, List.of());
     assertThat(edge.getMaxSpeed(), is(0.35));
     assertThat(edge.getOrientation(), is(Math.toRadians(12.34)));
     assertThat(edge.getRotationAllowed(), is(true));
+  }
+
+  @Test
+  public void shouldGenerateHorizonAsUnreleased() {
+    Step step = new Route.Step(
+        path,
+        source,
+        dest,
+        Vehicle.Orientation.FORWARD,
+        0
+    );
+
+    Edge edge = EdgeMapping.toHorizonEdge(step, List.of());
+
+    assertThat(edge.getEdgeId(), is(path.getName()));
+    assertThat(edge.getSequenceId(), is(1L));
+    assertThat(edge.getReleased(), is(false));
+    assertThat(edge.getStartNodeId(), is(source.getName()));
+    assertThat(edge.getEndNodeId(), is(dest.getName()));
   }
 }

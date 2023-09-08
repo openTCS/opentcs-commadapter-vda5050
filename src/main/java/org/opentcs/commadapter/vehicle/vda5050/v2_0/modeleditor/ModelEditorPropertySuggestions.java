@@ -21,8 +21,9 @@ import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROP
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MAP_ID;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_BASE;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_HORIZON;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MIN_VISU_INTERVAL;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_ORDER_QUEUE_SIZE;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_RECHARGE_OPERATION;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.Drop;
@@ -58,8 +59,9 @@ public class ModelEditorPropertySuggestions
     keySuggestions.add(PROPKEY_VEHICLE_INTERFACE_NAME);
     keySuggestions.add(PROPKEY_VEHICLE_MANUFACTURER);
     keySuggestions.add(PROPKEY_VEHICLE_MAP_ID);
+    keySuggestions.add(PROPKEY_VEHICLE_MAX_STEPS_BASE);
+    keySuggestions.add(PROPKEY_VEHICLE_MAX_STEPS_HORIZON);
     keySuggestions.add(PROPKEY_VEHICLE_MIN_VISU_INTERVAL);
-    keySuggestions.add(PROPKEY_VEHICLE_ORDER_QUEUE_SIZE);
     keySuggestions.add(PROPKEY_VEHICLE_RECHARGE_OPERATION);
     keySuggestions.add(PROPKEY_VEHICLE_SERIAL_NUMBER);
     keySuggestions.add(PROPKEY_PATH_ORIENTATION_FORWARD);

@@ -41,8 +41,8 @@ import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.IncomingMessage;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.QualityOfService;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_LENGTH_LOADED;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_LENGTH_UNLOADED;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_BASE;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MIN_VISU_INTERVAL;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_ORDER_QUEUE_SIZE;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.StateMappings.toVehicleLength;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.ProcessModelImplTO;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.Header;
@@ -195,8 +195,8 @@ public class CommAdapterImpl
                          VehicleService vehicleService,
                          CommAdapterConfiguration configuration) {
     super(new ProcessModelImpl(vehicle),
-          getPropertyInteger(PROPKEY_VEHICLE_ORDER_QUEUE_SIZE, vehicle).orElse(2) + 1,
-          getPropertyInteger(PROPKEY_VEHICLE_ORDER_QUEUE_SIZE, vehicle).orElse(2),
+          getPropertyInteger(PROPKEY_VEHICLE_MAX_STEPS_BASE, vehicle).orElse(2) + 1,
+          getPropertyInteger(PROPKEY_VEHICLE_MAX_STEPS_BASE, vehicle).orElse(2),
           getProperty(PROPKEY_VEHICLE_RECHARGE_OPERATION, vehicle)
               .orElse(DestinationOperations.CHARGE),
           kernelExecutor

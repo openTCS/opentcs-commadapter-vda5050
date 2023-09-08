@@ -7,6 +7,7 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -395,10 +396,40 @@ public class OrderMapperTest {
     assertThat(sourceNode.getNodePosition().getAllowedDeviationTheta(), is(greaterThan(1.234)));
   }
 
+  @Test
+  public void includeRouteAsHorizon() {
+    Point p1 = new Point("Point-0001");
+    Point p2 = new Point("Point-0002");
+    Point p3 = new Point("Point-0003");
+
+    Path l1 = new Path("path-0001", p1.getReference(), p2.getReference());
+    Step s1 = new Step(l1, p1, p2, Orientation.FORWARD, 0);
+    Path l2 = new Path("path-0002", p2.getReference(), p3.getReference());
+    Step s2 = new Step(l2, p2, p3, Orientation.FORWARD, 1);
+
+    DummyMovementCommand command = new DummyMovementCommand(new Route(Arrays.asList(s1, s2), 0), 0);
+    command.finalOperation = MovementCommand.NO_OPERATION;
+    command.finalDestinationLocation = new Location(
+        "Location-0001",
+        new LocationType("loc-type").getReference()
+    );
+
+    Order order = mapper.toOrder(command);
+    assertThat(order.getNodes().size(), is(3));
+    assertThat(order.getEdges().size(), is(2));
+    assertThat(order.getNodes().get(0).isReleased(), is(true));
+    assertThat(order.getNodes().get(1).isReleased(), is(true));
+    assertThat(order.getNodes().get(2).isReleased(), is(false));
+    assertThat(order.getEdges().get(0).getReleased(), is(true));
+    assertThat(order.getEdges().get(1).getReleased(), is(false));
+  }
+
   private class DummyMovementCommand
       implements MovementCommand {
 
     private final Route.Step dummyStep;
+
+    private final Route dummyRoute;
 
     private String operation;
 
@@ -408,8 +439,18 @@ public class OrderMapperTest {
 
     private boolean isFinalMovment;
 
+    private Location finalDestinationLocation;
+
+    private String finalOperation;
+
     DummyMovementCommand(Step step) {
       dummyStep = step;
+      dummyRoute = new Route(Arrays.asList(dummyStep), 0);
+    }
+
+    DummyMovementCommand(Route route, int currentIndex) {
+      dummyRoute = route;
+      dummyStep = route.getSteps().get(currentIndex);
     }
 
     DummyMovementCommand(Point source, Point dest) {
@@ -445,11 +486,12 @@ public class OrderMapperTest {
           Orientation.FORWARD,
           routeIndex
       );
+      dummyRoute = new Route(Arrays.asList(dummyStep), 0);
     }
 
     @Override
     public Route getRoute() {
-      throw new UnsupportedOperationException("Not supported yet.");
+      return dummyRoute;
     }
 
     @Override
@@ -492,12 +534,12 @@ public class OrderMapperTest {
 
     @Override
     public Location getFinalDestinationLocation() {
-      throw new UnsupportedOperationException("Not supported yet.");
+      return finalDestinationLocation;
     }
 
     @Override
     public String getFinalOperation() {
-      throw new UnsupportedOperationException("Not supported yet.");
+      return finalOperation;
     }
 
     @Override

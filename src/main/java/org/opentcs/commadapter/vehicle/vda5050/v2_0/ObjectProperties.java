@@ -65,9 +65,13 @@ public interface ObjectProperties {
    */
   String PROPKEY_VEHICLE_RECHARGE_OPERATION = "vda5050:rechargeOperation";
   /**
-   * The key of the vehicle property containing the vehicle's order queue size.
+   * The key of the vehicle property containing the vehicle's maximum number of base steps.
    */
-  String PROPKEY_VEHICLE_ORDER_QUEUE_SIZE = "vda5050:orderQueueSize";
+  String PROPKEY_VEHICLE_MAX_STEPS_BASE = "vda5050:maxStepsBase";
+  /**
+   * The key of the vehicle property containing the vehicle's maximum number of horizon steps.
+   */
+  String PROPKEY_VEHICLE_MAX_STEPS_HORIZON = "vda5050:maxStepsHorizon";
   /**
    * The key of the vehicle property containing the minimum visualization interval.
    */

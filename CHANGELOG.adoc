@@ -13,7 +13,10 @@ toc::[]
 
 == Unreleased
 
-...
+* New features and enhancements:
+** A vehicle's prospective route is included as the horizon in every order message.
+   How many route steps are added to the horizon can be configured using the new vehicle property `vda5050:maxStepsHorizon`.
+   For consistent naming, the existing property `vda5050:orderQueueSize` has been renamed to `vda5050:maxStepsBase`.
 
 == Version 0.12 (2023-07-24)
 
