@@ -18,6 +18,7 @@ toc::[]
    How many route steps are added to the horizon can be configured using the new vehicle property `vda5050:maxStepsHorizon`.
    For consistent naming, the existing property `vda5050:orderQueueSize` has been renamed to `vda5050:maxStepsBase`.
 * Other changes:
+** Update Gradle wrapper to 7.6.2.
 ** Update JUnit to 5.10.0.
 ** Update Mockito to 5.5.0.
 ** Update ApprovalTests to 19.0.0.
