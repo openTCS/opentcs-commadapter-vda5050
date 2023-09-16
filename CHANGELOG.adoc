@@ -21,6 +21,7 @@ toc::[]
 ** Update JUnit to 5.10.0.
 ** Update Mockito to 5.5.0.
 ** Update ApprovalTests to 19.0.0.
+** Update Checkstyle to 10.12.3.
 
 == Version 0.12 (2023-07-24)
 
