@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'org.kordamp.gradle.stats'
 
-archivesBaseName = name.toLowerCase()
+base.archivesName = name.toLowerCase()
 
 repositories {
   mavenLocal()
@@ -45,6 +45,6 @@ test {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from the source files.') {
-  classifier = 'sources'
+  archiveClassifier = 'sources'
   from sourceSets.main.allSource
 }

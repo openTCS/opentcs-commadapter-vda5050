@@ -12,7 +12,7 @@ buildscript {
     // Stats plugin
     classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.2'
     // JaCoCo log plugin
-    classpath 'gradle.plugin.org.barfuin.gradle.jacocolog:gradle-jacoco-log:2.0.0'
+    classpath 'org.barfuin.gradle.jacocolog:gradle-jacoco-log:3.1.0'
   }
 }
 
@@ -57,15 +57,13 @@ distributions {
 
 distZip {
   dependsOn javadoc
-  baseName = baseName.toLowerCase()
-  classifier = 'bin'
+  archiveClassifier = 'bin'
 }
 
 distTar {
+  enabled = false
   dependsOn javadoc
-  baseName = baseName.toLowerCase()
-  classifier = 'bin'
-  compression = Compression.GZIP
+  archiveClassifier = 'bin'
 }
 
 build {
@@ -73,7 +71,7 @@ build {
 }
 
 task distSrcZip(type: Zip) {
-  classifier = 'src'
+  archiveClassifier = 'src'
   from "${rootDir}"
 
   includes << 'config/**'
