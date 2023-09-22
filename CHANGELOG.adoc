@@ -17,6 +17,7 @@ toc::[]
 ** A vehicle's prospective route is included as the horizon in every order message.
    How many route steps are added to the horizon can be configured using the new vehicle property `vda5050:maxStepsHorizon`.
    For consistent naming, the existing property `vda5050:orderQueueSize` has been renamed to `vda5050:maxStepsBase`.
+** Improve logging related to communication with vehicles.
 * Other changes:
 ** Update Gradle wrapper to 8.3.
 ** Update JUnit to 5.10.0.

@@ -47,4 +47,12 @@ public class OrderAssociation {
   public MovementCommand getCommand() {
     return command;
   }
+
+  @Override
+  public String toString() {
+    return "OrderAssociation{"
+        + "order=" + order
+        + ", command=" + command
+        + "}";
+  }
 }
