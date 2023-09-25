@@ -13,7 +13,8 @@ toc::[]
 
 == Unreleased
 
-...
+* Fixes:
+** Fix transport order withdrawal after order rejections.
 
 == Version 0.13 (2023-09-25)
 
