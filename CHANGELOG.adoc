@@ -11,7 +11,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.13 (2023-09-25)
 
 * New features and enhancements:
 ** A vehicle's prospective route is included as the horizon in every order message.
