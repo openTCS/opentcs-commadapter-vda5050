@@ -118,11 +118,15 @@ public class MovementCommandManager {
   }
 
   private boolean edgesComplete(Order order, State state) {
-    return order.getEdges().stream().allMatch(edge -> edgeComplete(edge, state.getEdgeStates()));
+    return order.getEdges().stream()
+        .filter(edge -> edge.getReleased())
+        .allMatch(edge -> edgeComplete(edge, state.getEdgeStates()));
   }
 
   private boolean nodesComplete(Order order, State state) {
-    return order.getNodes().stream().allMatch(node -> nodeComplete(node, state.getNodeStates()));
+    return order.getNodes().stream()
+        .filter(node -> node.isReleased())
+        .allMatch(node -> nodeComplete(node, state.getNodeStates()));
   }
 
   private boolean edgeComplete(Edge edge, List<EdgeState> edgeStates) {

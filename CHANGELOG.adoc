@@ -15,6 +15,9 @@ toc::[]
 
 * Fixes:
 ** Fix transport order withdrawal after order rejections.
+** Avoid NullPointerExceptions in a couple of places.
+** Correctly compute the sequence ID for horizon elements.
+** When checking whether all nodes and edges of an order have been completed, ignore the horizon.
 
 == Version 0.13 (2023-09-25)
 

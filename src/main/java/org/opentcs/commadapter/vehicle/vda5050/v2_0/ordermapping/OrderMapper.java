@@ -300,7 +300,7 @@ public class OrderMapper {
   }
 
   private void mapHorizon(Order order, MovementCommand command, Vehicle vehicle) {
-    int maxRouteIndex = Math.max(
+    int maxRouteIndex = Math.min(
         command.getStep().getRouteIndex()
         + getPropertyInteger(ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_HORIZON, vehicle)
             .orElse(command.getRoute().getSteps().size()),
@@ -315,7 +315,7 @@ public class OrderMapper {
       order.getNodes().add(mapHorizonNode(
           command,
           step,
-          command.getStep().getRouteIndex() * 2 + 2,
+          step.getRouteIndex() * 2 + 2,
           vehicle
       ));
     }
@@ -373,9 +373,11 @@ public class OrderMapper {
     List<PropertyAction> propertyActions
         = ActionsMapping.mapPropertyActions(step.getDestinationPoint());
     if (isLastStep) {
-      propertyActions.addAll(
-          ActionsMapping.mapPropertyActions(command.getFinalDestinationLocation())
-      );
+      if (command.getFinalDestinationLocation() != null) {
+        propertyActions.addAll(
+            ActionsMapping.mapPropertyActions(command.getFinalDestinationLocation())
+        );
+      }
       horizonMovementCommandPropAction(command, vehicle)
           .ifPresent(action -> propertyActions.add(action));
     }
@@ -390,6 +392,9 @@ public class OrderMapper {
       @Nonnull MovementCommand command,
       @Nonnull Vehicle vehicle) {
     if (command.getFinalOperation().equals(MovementCommand.NO_OPERATION)) {
+      return Optional.empty();
+    }
+    if (command.getFinalDestinationLocation() == null) {
       return Optional.empty();
     }
 
