@@ -322,12 +322,12 @@ public class VehicleSimulator
     });
     vehicleState.getEdgeStates().clear();
     order.getEdges().forEach(edge -> {
-      if (!edge.getReleased()) {
+      if (!edge.isReleased()) {
         return;
       }
       vehicleState.getEdgeStates().add(new EdgeState(edge.getEdgeId(),
                                                      edge.getSequenceId(),
-                                                     edge.getReleased()));
+                                                     edge.isReleased()));
       edge.getActions().forEach(action -> {
         vehicleState.getActionStates().add(new ActionState(action.getActionId(),
                                                            action.getActionType(),
@@ -366,12 +366,12 @@ public class VehicleSimulator
       });
     });
     order.getEdges().forEach(edge -> {
-      if (!edge.getReleased()) {
+      if (!edge.isReleased()) {
         return;
       }
       vehicleState.getEdgeStates().add(new EdgeState(edge.getEdgeId(),
                                                      edge.getSequenceId(),
-                                                     edge.getReleased()));
+                                                     edge.isReleased()));
       edge.getActions().forEach(action -> {
         vehicleState.getActionStates().add(new ActionState(action.getActionId(),
                                                            action.getActionType(),

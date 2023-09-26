@@ -420,8 +420,8 @@ public class OrderMapperTest {
     assertThat(order.getNodes().get(0).isReleased(), is(true));
     assertThat(order.getNodes().get(1).isReleased(), is(true));
     assertThat(order.getNodes().get(2).isReleased(), is(false));
-    assertThat(order.getEdges().get(0).getReleased(), is(true));
-    assertThat(order.getEdges().get(1).getReleased(), is(false));
+    assertThat(order.getEdges().get(0).isReleased(), is(true));
+    assertThat(order.getEdges().get(1).isReleased(), is(false));
   }
 
   private class DummyMovementCommand

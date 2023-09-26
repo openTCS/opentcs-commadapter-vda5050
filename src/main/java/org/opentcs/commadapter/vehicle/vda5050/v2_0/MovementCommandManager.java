@@ -119,7 +119,7 @@ public class MovementCommandManager {
 
   private boolean edgesComplete(Order order, State state) {
     return order.getEdges().stream()
-        .filter(edge -> edge.getReleased())
+        .filter(edge -> edge.isReleased())
         .allMatch(edge -> edgeComplete(edge, state.getEdgeStates()));
   }
 

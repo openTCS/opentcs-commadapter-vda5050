@@ -56,7 +56,7 @@ public class EdgeMappingTest {
 
     assertThat(edge.getEdgeId(), is(path.getName()));
     assertThat(edge.getSequenceId(), is(1L));
-    assertThat(edge.getReleased(), is(true));
+    assertThat(edge.isReleased(), is(true));
     assertThat(edge.getStartNodeId(), is(source.getName()));
     assertThat(edge.getEndNodeId(), is(dest.getName()));
   }
@@ -122,7 +122,7 @@ public class EdgeMappingTest {
 
     assertThat(edge.getEdgeId(), is(path.getName()));
     assertThat(edge.getSequenceId(), is(1L));
-    assertThat(edge.getReleased(), is(false));
+    assertThat(edge.isReleased(), is(false));
     assertThat(edge.getStartNodeId(), is(source.getName()));
     assertThat(edge.getEndNodeId(), is(dest.getName()));
   }

@@ -167,7 +167,7 @@ public class Edge
     return this;
   }
 
-  public Boolean getReleased() {
+  public Boolean isReleased() {
     return released;
   }
 
