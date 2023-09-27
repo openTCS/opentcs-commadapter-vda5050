@@ -16,6 +16,9 @@ import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROP
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_PATH_ORIENTATION_REVERSE;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_PATH_ROTATION_ALLOWED_FORWARD;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_PATH_ROTATION_ALLOWED_REVERSE;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_POINT_DEVIATION_THETA;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_POINT_DEVIATION_XY;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_POINT_MAP_ID;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_DEVIATION_XY;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME;
@@ -68,6 +71,9 @@ public class ModelEditorPropertySuggestions
     keySuggestions.add(PROPKEY_PATH_ORIENTATION_REVERSE);
     keySuggestions.add(PROPKEY_PATH_ROTATION_ALLOWED_FORWARD);
     keySuggestions.add(PROPKEY_PATH_ROTATION_ALLOWED_REVERSE);
+    keySuggestions.add(PROPKEY_POINT_MAP_ID);
+    keySuggestions.add(PROPKEY_POINT_DEVIATION_XY);
+    keySuggestions.add(PROPKEY_POINT_DEVIATION_THETA);
     // pick parameters
     keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
         + ".<INDEX>.parameter." + Pick.PARAMKEY_LOAD_HANDLING_DEVICE);

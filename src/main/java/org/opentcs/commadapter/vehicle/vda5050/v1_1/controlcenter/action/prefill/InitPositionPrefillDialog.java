@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import org.opentcs.access.KernelServicePortal;
 import static org.opentcs.commadapter.vehicle.vda5050.common.Conversions.toRelativeConvexAngle;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MAP_ID;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_POINT_MAP_ID;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.action.InitPosition.PARAMKEY_LAST_NODE_ID;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.action.InitPosition.PARAMKEY_MAP_ID;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.action.InitPosition.PARAMKEY_THETA;
@@ -83,7 +83,7 @@ public class InitPositionPrefillDialog
                      toRadians(toRelativeConvexAngle(p.getVehicleOrientationAngle()))
                  ));
     }
-    Optional<String> mapID = getProperty(PROPKEY_VEHICLE_MAP_ID, p);
+    Optional<String> mapID = getProperty(PROPKEY_POINT_MAP_ID, p);
     if (mapID.isPresent()) {
       parameters.put(PARAMKEY_MAP_ID, mapID.get());
     }

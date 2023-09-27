@@ -46,9 +46,9 @@ public class NodeMappingTest {
         .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA, "45")
         .withProperty(ObjectProperties.PROPKEY_VEHICLE_MAP_ID, "mapid-vehicle");
     Point point = new Point("Point-0001")
-        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_XY, "1.2")
-        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA, "90")
-        .withProperty(ObjectProperties.PROPKEY_VEHICLE_MAP_ID, "mapid-point");
+        .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_XY, "1.2")
+        .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_THETA, "90")
+        .withProperty(ObjectProperties.PROPKEY_POINT_MAP_ID, "mapid-point");
 
     NodePosition np = NodeMapping.toNodePosition(point, vehicle, false);
 
@@ -64,8 +64,8 @@ public class NodeMappingTest {
         .withPrecisePosition(new Triple(500, 500, 0));
     Point point = new Point("Point-0001")
         .withPosition(new Triple(1000, 1000, 0))
-        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_XY, "1.2")
-        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA, "90");
+        .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_XY, "1.2")
+        .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_THETA, "90");
 
     NodePosition np = NodeMapping.toNodePosition(point, vehicle, true);
 

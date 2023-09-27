@@ -107,4 +107,16 @@ public interface ObjectProperties {
    * transport order destinations.
    */
   String PROPKEY_CUSTOM_DEST_ACTION_PREFIX = "vda5050:destinationAction";
+  /**
+   * Default map id for this point.
+   */
+  String PROPKEY_POINT_MAP_ID = PROPKEY_VEHICLE_MAP_ID;
+  /**
+   * Default xy deviation for this point.
+   */
+  String PROPKEY_POINT_DEVIATION_XY = PROPKEY_VEHICLE_DEVIATION_XY;
+  /**
+   * Default orientation deviation for this point.
+   */
+  String PROPKEY_POINT_DEVIATION_THETA = PROPKEY_VEHICLE_DEVIATION_THETA;
 }
