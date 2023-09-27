@@ -13,6 +13,8 @@ toc::[]
 
 == Unreleased
 
+* New features and enhancements:
+** When resolving the vehicle's reported position to a point in the plant model, consider the `mapId`, too.
 ...
 
 == Version 0.14 (2023-09-26)

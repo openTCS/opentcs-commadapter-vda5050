@@ -13,9 +13,12 @@ import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import org.opentcs.commadapter.vehicle.vda5050.common.AngleMath;
+import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyDouble;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_DEVIATION_XY;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MAP_ID;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.AgvPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.State;
 import org.opentcs.components.kernel.services.TCSObjectService;
@@ -53,12 +56,13 @@ public class VehiclePositionResolver {
   /**
    * Find the correct vehicle position given a state message.
    *
-   * @param currentPosition The name of the current vehicle position.
+   * @param lastKnownPosition The name of the vehicles last known position. {@code Null} if the
+   * last position is not known.
    * @param currentState The current vehicle state.
    * @return The vehicle position or null if no position can be found.
    */
   @Nullable
-  public String resolveVehiclePosition(@Nullable String currentPosition,
+  public String resolveVehiclePosition(@Nullable String lastKnownPosition,
                                        @Nonnull State currentState) {
     requireNonNull(currentState, "currentState");
 
@@ -70,7 +74,7 @@ public class VehiclePositionResolver {
     // Try to derive the point name from the AGV position.
     Vehicle vehicle = objectService.fetchObject(Vehicle.class, vehicleReference);
     String logicalPosition = findVehicleLogicalPosition(
-        currentPosition,
+        lastKnownPosition,
         currentState.getAgvPosition(),
         vehicle
     );
@@ -78,44 +82,51 @@ public class VehiclePositionResolver {
       return logicalPosition;
     }
 
-    // Use the last known position.
-    return currentPosition;
+    return lastKnownPosition;
   }
 
-  private String findVehicleLogicalPosition(@Nullable String currentPosition,
+  private String findVehicleLogicalPosition(@Nullable String lastKnownPosition,
                                             @Nullable AgvPosition position,
                                             @Nonnull Vehicle vehicle) {
     if (position == null) {
       return null;
     }
 
-    if (isCurrentLogicalPositionCorrect(currentPosition, position, vehicle)) {
-      return currentPosition;
+    if (isCurrentLogicalPositionCorrect(lastKnownPosition, position, vehicle)) {
+      return lastKnownPosition;
     }
 
     for (Point p : objectService.fetchObjects(Point.class)) {
-      if (isWithinDeviationXY(p, position, vehicle)
-          && isWithinDeviationTheta(p, position, vehicle)) {
+      if (isPointAtAGVPosition(p, position, vehicle)) {
         return p.getName();
       }
     }
     return null;
   }
 
-  private boolean isCurrentLogicalPositionCorrect(@Nullable String currentPosition,
+  private boolean isCurrentLogicalPositionCorrect(@Nullable String lastKnownPosition,
                                                   @Nonnull AgvPosition position,
                                                   @Nonnull Vehicle vehicle) {
-    if (currentPosition == null) {
+    if (lastKnownPosition == null) {
       return false;
     }
 
-    Point point = objectService.fetchObject(Point.class, currentPosition);
+    Point point = objectService.fetchObject(Point.class, lastKnownPosition);
     if (point == null) {
       return false;
     }
 
-    return isWithinDeviationXY(point, position, vehicle)
-        && isWithinDeviationTheta(point, position, vehicle);
+    return isPointAtAGVPosition(point, position, vehicle);
+  }
+
+  private boolean isPointAtAGVPosition(Point p, AgvPosition position, Vehicle vehicle) {
+    return isWithinDeviationXY(p, position, vehicle)
+        && isWithinDeviationTheta(p, position, vehicle)
+        && isOnSameMapID(p, position, vehicle);
+  }
+
+  private boolean isOnSameMapID(Point p, AgvPosition position, Vehicle vehicle) {
+    return position.getMapId().equals(getProperty(PROPKEY_VEHICLE_MAP_ID, p, vehicle).orElse(""));
   }
 
   private boolean isWithinDeviationXY(Point p, AgvPosition position, Vehicle vehicle) {
@@ -130,15 +141,7 @@ public class VehiclePositionResolver {
     if (Double.isNaN(p.getVehicleOrientationAngle())) {
       return true;
     }
-    return Math.abs(angleDifference(p.getVehicleOrientationAngle(), toDegrees(position.getTheta())))
+    return AngleMath.angleBetween(p.getVehicleOrientationAngle(), toDegrees(position.getTheta()))
         <= getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_THETA, p, vehicle).orElse(0.0);
-  }
-
-  private double angleDifference(double d1, double d2) {
-    double t = Math.abs(d1 - d2) % 360;
-    if (t > 180) {
-      return t - 360;
-    }
-    return t;
   }
 }
