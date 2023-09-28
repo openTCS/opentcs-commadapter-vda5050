@@ -16,7 +16,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 import javax.inject.Inject;
 import org.opentcs.access.KernelServicePortal;
-import static org.opentcs.commadapter.vehicle.vda5050.common.Conversions.toRelativeConvexAngle;
+import static org.opentcs.commadapter.vehicle.vda5050.common.AngleMath.toRelativeConvexAngle;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_POINT_MAP_ID;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition.PARAMKEY_LAST_NODE_ID;
