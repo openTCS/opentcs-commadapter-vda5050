@@ -55,7 +55,8 @@ Upon receiving a message on the `state` topic, the vehicle driver will...
 . update the energy level with the kernel.
 . update the list of reported errors with the kernel (see <<Mapping of reported errors>> below).
 . update the vehicle's state with the kernel (see <<Mapping of vehicle state>> below).
-. check whether `lastNodeSequenceId` has changed, and if yes, report the respective movement command (and all previous movement commands) as finished to the kernel.
+. check `nodeStates` and `edgeStates` to see whether a step on the route has been completed, and if yes, report the respective movement command (and all previous movement commands) as finished to the kernel.
+  (With the final step of a drive order's route, the `actionStates` are also checked to see whether the actions for that step (and especially the drive order's destination operation) have been completed.)
 
 == Processing logical positions
 
