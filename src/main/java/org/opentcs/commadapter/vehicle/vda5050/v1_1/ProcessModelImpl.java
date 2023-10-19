@@ -127,11 +127,21 @@ public class ProcessModelImpl
     );
   }
 
+  /**
+   * Returns the current/most recent state reported by the vehicle.
+   *
+   * @return The current/most recent state reported by the vehicle
+   */
   @Nonnull
   public State getCurrentState() {
     return currentState;
   }
 
+  /**
+   * Sets the current/most recent state reported by the vehicle.
+   *
+   * @param currentState The current/most recent state reported by the vehicle.
+   */
   public void setCurrentState(@Nonnull State currentState) {
     State oldValue = this.currentState;
     this.currentState = requireNonNull(currentState, "currentState");
@@ -141,11 +151,21 @@ public class ProcessModelImpl
                                                   currentState);
   }
 
+  /**
+   * Returns the previous state reported by the vehicle.
+   *
+   * @return The previous state reported by the vehicle
+   */
   @Nonnull
   public State getPreviousState() {
     return previousState;
   }
 
+  /**
+   * Sets the previous state reported by the vehicle.
+   *
+   * @param previousState The previous state reported by the vehicle
+   */
   public void setPreviousState(@Nonnull State previousState) {
     State oldValue = this.previousState;
     this.previousState = requireNonNull(previousState, "previousState");
@@ -166,6 +186,11 @@ public class ProcessModelImpl
     return lastOrderSent;
   }
 
+  /**
+   * Sets the last order sent to the vehicle.
+   *
+   * @param lastOrderSent The last order sent to the vehicle
+   */
   public synchronized void setLastOrderSent(@Nullable Order lastOrderSent) {
     Order oldValue = this.lastOrderSent;
     this.lastOrderSent = lastOrderSent;
@@ -186,6 +211,11 @@ public class ProcessModelImpl
     return lastInstantActionsSent;
   }
 
+  /**
+   * Sets the last instant actions sent to the vehicle.
+   *
+   * @param lastInstantActionsSent The last instant actions sent to the vehicle
+   */
   public synchronized void setLastInstantActionsSent(
       @Nullable InstantActions lastInstantActionsSent
   ) {
