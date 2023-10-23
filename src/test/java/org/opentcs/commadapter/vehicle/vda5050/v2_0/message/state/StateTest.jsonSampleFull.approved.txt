@@ -40,7 +40,6 @@
     }
   } ],
   "driving" : true,
-  "paused" : false,
   "actionStates" : [ {
     "actionId" : "some-action-id",
     "actionType" : "some-type",
@@ -102,6 +101,7 @@
       "height" : 1.4
     }
   } ],
+  "paused" : false,
   "newBaseRequest" : false,
   "distanceSinceLastNode" : 12.0,
   "information" : [ {

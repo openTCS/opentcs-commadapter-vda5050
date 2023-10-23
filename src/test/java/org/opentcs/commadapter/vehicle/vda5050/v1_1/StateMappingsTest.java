@@ -201,7 +201,6 @@ public class StateMappingsTest {
                      List.of(),
                      List.of(),
                      false,
-                     false,
                      List.of(),
                      new BatteryState(100.0, false),
                      OperatingMode.AUTOMATIC,

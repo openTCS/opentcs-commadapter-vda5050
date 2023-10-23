@@ -14,6 +14,7 @@ import java.time.Instant;
 import java.util.List;
 import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import static org.opentcs.commadapter.vehicle.vda5050.common.Limits.UINT32_MAX_VALUE;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.Header;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.AgvPosition;
@@ -176,7 +177,6 @@ public class State
    * @param edgeStates List of {@link EdgeState} objects that need to be traversed for fulfilling
    * the order.
    * @param driving Whether the AGV is driving and/or rotating.
-   * @param paused Whether the AGV is currently in a paused state.
    * @param actionStates List of the current actions and the actions which are yet to be finished.
    * @param batteryState Contains all battery-related information.
    * @param operatingMode Current operating mode of the AGV.
@@ -191,7 +191,6 @@ public class State
                @Nonnull List<NodeState> nodeStates,
                @Nonnull List<EdgeState> edgeStates,
                @Nonnull Boolean driving,
-               @Nonnull Boolean paused,
                @Nonnull List<ActionState> actionStates,
                @Nonnull BatteryState batteryState,
                @Nonnull OperatingMode operatingMode,
@@ -199,7 +198,7 @@ public class State
                @Nonnull List<InfoEntry> informations,
                @Nonnull SafetyState safetyState) {
     this(0L, Instant.EPOCH, "", "", "", orderId, orderUpdateId, lastNodeId, lastNodeSequenceId,
-         nodeStates, edgeStates, driving, paused, actionStates, batteryState, operatingMode, errors,
+         nodeStates, edgeStates, driving, actionStates, batteryState, operatingMode, errors,
          informations, safetyState);
   }
 
@@ -218,7 +217,6 @@ public class State
       @Nonnull @JsonProperty(required = true, value = "nodeStates") List<NodeState> nodeStates,
       @Nonnull @JsonProperty(required = true, value = "edgeStates") List<EdgeState> edgeStates,
       @Nonnull @JsonProperty(required = true, value = "driving") Boolean driving,
-      @Nonnull @JsonProperty(required = true, value = "paused") Boolean paused,
       @Nonnull @JsonProperty(required = true, value = "actionStates") List<ActionState> actionStates,
       @Nonnull @JsonProperty(required = true, value = "batteryState") BatteryState batteryState,
       @Nonnull @JsonProperty(required = true, value = "operatingMode") OperatingMode operatingMode,
@@ -235,7 +233,6 @@ public class State
     this.nodeStates = requireNonNull(nodeStates, "nodeStates");
     this.edgeStates = requireNonNull(edgeStates, "edgeStates");
     this.driving = requireNonNull(driving, "driving");
-    this.paused = requireNonNull(paused, "paused");
     this.actionStates = requireNonNull(actionStates, "actionStates");
     this.batteryState = requireNonNull(batteryState, "batteryState");
     this.operatingMode = requireNonNull(operatingMode, "operatingMode");
@@ -305,8 +302,8 @@ public class State
     return paused;
   }
 
-  public State setPaused(@Nonnull Boolean paused) {
-    this.paused = requireNonNull(paused, "paused");
+  public State setPaused(@Nullable Boolean paused) {
+    this.paused = paused;
     return this;
   }
 

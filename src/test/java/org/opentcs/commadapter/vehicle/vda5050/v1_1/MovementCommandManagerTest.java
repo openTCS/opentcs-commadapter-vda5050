@@ -82,7 +82,7 @@ public class MovementCommandManagerTest {
     manager.enqueue(new OrderAssociation(order, command));
 
     manager.onStateMessage(
-        new State("some-order-id", 0L, "", 0L, List.of(), List.of(), false, false, List.of(),
+        new State("some-order-id", 0L, "", 0L, List.of(), List.of(), false, List.of(),
                   new BatteryState(0.0, false), OperatingMode.AUTOMATIC, List.of(), List.of(),
                   new SafetyState(EStop.NONE, false)),
         callback
@@ -113,7 +113,7 @@ public class MovementCommandManagerTest {
     manager.onStateMessage(
         new State("some-order-id", 0L, "", 0L, List.of(),
                   List.of(new EdgeState("some-path", 1L, true)),
-                  false, false, List.of(),
+                  false, List.of(),
                   new BatteryState(0.0, false), OperatingMode.AUTOMATIC, List.of(), List.of(),
                   new SafetyState(EStop.NONE, false)),
         callback
@@ -147,7 +147,7 @@ public class MovementCommandManagerTest {
                       new NodeState("source-point", 0L, true),
                       new NodeState("dest-point", 2L, true)
                   ),
-                  List.of(), false, false, List.of(),
+                  List.of(), false, List.of(),
                   new BatteryState(0.0, false), OperatingMode.AUTOMATIC, List.of(), List.of(),
                   new SafetyState(EStop.NONE, false)),
         callback
@@ -182,7 +182,7 @@ public class MovementCommandManagerTest {
                       new NodeState("dest-point", 5L, true)
                   ),
                   List.of(new EdgeState("some-path", 4L, true)),
-                  false, false, List.of(),
+                  false, List.of(),
                   new BatteryState(0.0, false), OperatingMode.AUTOMATIC, List.of(), List.of(),
                   new SafetyState(EStop.NONE, false)),
         callback
@@ -214,7 +214,7 @@ public class MovementCommandManagerTest {
         new State("some-OTHER-order-id", 0L, "", 0L,
                   List.of(),
                   List.of(),
-                  false, false, List.of(),
+                  false, List.of(),
                   new BatteryState(0.0, false), OperatingMode.AUTOMATIC, List.of(), List.of(),
                   new SafetyState(EStop.NONE, false)),
         callback
@@ -252,7 +252,7 @@ public class MovementCommandManagerTest {
         new State("some-order-id", 0L, "", 0L,
                   List.of(),
                   List.of(),
-                  false, false,
+                  false,
                   List.of(
                       new ActionState("some-action-id", "some-action-type", actionStatus)
                   ),
@@ -293,7 +293,7 @@ public class MovementCommandManagerTest {
         new State("some-order-id", 0L, "", 0L,
                   List.of(),
                   List.of(),
-                  false, false,
+                  false,
                   List.of(
                       new ActionState("some-OTHER-action-id", "some-action-type", actionStatus)
                   ),
@@ -334,7 +334,7 @@ public class MovementCommandManagerTest {
         new State("some-order-id", 0L, "", 0L,
                   List.of(),
                   List.of(),
-                  false, false,
+                  false,
                   List.of(
                       new ActionState("some-OTHER-action-id", "some-action-type", actionStatus)
                   ),
@@ -375,7 +375,7 @@ public class MovementCommandManagerTest {
         new State("some-order-id", 0L, "", 0L,
                   List.of(),
                   List.of(),
-                  false, false,
+                  false,
                   List.of(
                       new ActionState("some-action-id", "some-action-type", actionStatus)
                   ),
@@ -416,7 +416,7 @@ public class MovementCommandManagerTest {
         new State("some-order-id", 0L, "", 0L,
                   List.of(),
                   List.of(),
-                  false, false,
+                  false,
                   List.of(
                       new ActionState("some-action-id", "some-action-type", actionStatus)
                   ),

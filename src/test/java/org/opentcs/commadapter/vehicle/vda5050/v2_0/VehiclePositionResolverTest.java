@@ -83,7 +83,6 @@ public class VehiclePositionResolverTest {
                       new ArrayList<>(),
                       new ArrayList<>(),
                       false,
-                      false,
                       new ArrayList<>(),
                       new BatteryState(100.0, false),
                       OperatingMode.AUTOMATIC,

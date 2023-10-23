@@ -68,7 +68,6 @@ public class StateTest {
         List.of(),
         List.of(),
         true,
-        false,
         List.of(),
         new BatteryState(50.0, false),
         OperatingMode.SEMIAUTOMATIC,
@@ -116,7 +115,6 @@ public class StateTest {
                 )
         ),
         true,
-        false,
         List.of(
             new ActionState("some-action-id", "some-type", ActionStatus.FAILED)
                 .setActionDescription("some-action-description")
@@ -180,6 +178,7 @@ public class StateTest {
                     .setWeight(0L)
             )
         )
+        .setPaused(Boolean.FALSE)
         .setNewBaseRequest(Boolean.FALSE)
         .setDistanceSinceLastNode(12.0);
   }
