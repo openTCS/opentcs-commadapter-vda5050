@@ -57,6 +57,18 @@ public interface ObjectProperties {
    */
   String PROPKEY_VEHICLE_ERRORS_WARNING = "vda5050:errors.warning";
   /**
+   * The key of the vehicle property containing the vehicle's list of info messages.
+   */
+  String PROPKEY_VEHICLE_INFORMATIONS_INFO = "vda5050:information.info";
+  /**
+   * The key of the vehicle property containing the vehicle's list of debug messages.
+   */
+  String PROPKEY_VEHICLE_INFORMATIONS_DEBUG = "vda5050:information.debug";
+  /**
+   * The key of the vehicle property containing the vehicle's paused state.
+   */
+  String PROPKEY_VEHICLE_PAUSED = "vda5050:paused";
+  /**
    * The key of the vehicle property containing the vehicle's recharge operation.
    */
   String PROPKEY_VEHICLE_RECHARGE_OPERATION = "vda5050:rechargeOperation";

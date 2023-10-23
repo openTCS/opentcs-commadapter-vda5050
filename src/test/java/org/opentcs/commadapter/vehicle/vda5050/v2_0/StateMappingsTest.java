@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.matchesPattern;
+import static org.hamcrest.Matchers.nullValue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.ActionState;
@@ -23,6 +24,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.EStop;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.EdgeState;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.ErrorEntry;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.ErrorLevel;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.InfoEntry;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.InfoLevel;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.Load;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.NodeState;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.OperatingMode;
@@ -191,6 +194,76 @@ public class StateMappingsTest {
 
     String result = StateMappings.toErrorPropertyValue(state, ErrorLevel.FATAL);
     assertThat(result, is("brakes nonfunctional, motor on fire, reactor overheated, tire blown"));
+  }
+
+  @Test
+  public void mapEmptyInfoListToEmptyString() {
+    state.setInformation(List.of());
+    assertThat(StateMappings.toInfoPropertyValue(state, InfoLevel.DEBUG), is(emptyString()));
+
+    state.setInformation(List.of(
+        new InfoEntry(
+            "visualization type 1",
+            InfoLevel.INFO
+        )
+    ));
+    assertThat(StateMappings.toInfoPropertyValue(state, InfoLevel.DEBUG), is(emptyString()));
+  }
+
+  @Test
+  public void mapOnlySelectedInfoLevels() {
+    state.setInformation(List.of(
+        new InfoEntry("visualization type 1",
+                      InfoLevel.INFO),
+        new InfoEntry("debug level 1",
+                      InfoLevel.DEBUG),
+        new InfoEntry("some flag true",
+                      InfoLevel.DEBUG),
+        new InfoEntry("visualization color green",
+                      InfoLevel.INFO)
+    ));
+
+    String result = StateMappings.toInfoPropertyValue(state, InfoLevel.INFO);
+    assertThat(result, is("visualization color green, visualization type 1"));
+
+    result = StateMappings.toInfoPropertyValue(state, InfoLevel.DEBUG);
+    assertThat(result, is("debug level 1, some flag true"));
+  }
+
+  @Test
+  public void mapInfoTypesInLexicographicOrder() {
+    state.setInformation(List.of(
+        new InfoEntry("visualization type 1",
+                      InfoLevel.INFO),
+        new InfoEntry("debug level 1",
+                      InfoLevel.INFO),
+        new InfoEntry("some flag true",
+                      InfoLevel.INFO),
+        new InfoEntry("visualization color green",
+                      InfoLevel.INFO)
+    ));
+
+    String result = StateMappings.toInfoPropertyValue(state, InfoLevel.INFO);
+    assertThat(
+        result,
+        is("debug level 1, some flag true, visualization color green, visualization type 1")
+    );
+  }
+
+  @Test
+  public void mapMissingPausedStateToNull() {
+    state.setPaused(null);
+
+    String result = StateMappings.toPausedPropertyValue(state);
+    assertThat(result, is(nullValue()));
+  }
+
+  @Test
+  public void mapPausedStateToBoolString() {
+    state.setPaused(true);
+
+    String result = StateMappings.toPausedPropertyValue(state);
+    assertThat(result, is("true"));
   }
 
   private State createState() {

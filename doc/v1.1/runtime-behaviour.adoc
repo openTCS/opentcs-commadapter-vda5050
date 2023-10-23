@@ -55,7 +55,7 @@ Upon receiving a message on the `state` topic, the vehicle driver will...
 . update the vehicle's pose with the kernel in case the vehicle has reported an `agvPosition`.
 . update the list of load handling devices with the kernel (see <<Mapping of load handling devices>> below).
 . update the energy level with the kernel.
-. update the list of reported errors with the kernel (see <<Mapping of reported errors>> below).
+. update state information mapped to vehicle properties with the kernel (see <<Mapping of state information to vehicle properties>> below).
 . update the vehicle's state with the kernel (see <<Mapping of vehicle state>> below).
 . check `nodeStates` and `edgeStates` to see whether a step on the route has been completed, and if yes, report the respective movement command (and all previous movement commands) as finished to the kernel.
   (With the final step of a drive order's route, the `actionStates` are also checked to see whether the actions for that step (and especially the drive order's destination operation) have been completed.)
@@ -86,12 +86,15 @@ As a result, there is no specified way for vehicles to report empty load handlin
 Since load handling devices in openTCS are derived from the reported loads, all respective load handling devices will have their `full` flag set to `true`.
 When a vehicle does not report any loads, the list of load handling devices will be empty.
 
-== Mapping of reported errors
+== Mapping of state information to vehicle properties
 
-The vehicle driver will set two properties on the kernel's vehicle element, containing error information reported by the vehicle:
+The vehicle driver will set the following properties on the kernel's vehicle element, containing information reported by the vehicle:
 
-* The property with the key `vda5050:errors.fatal` will contain a concatenated list of `errorTypes` of all `errors` with an `errorLevel` of `FATAL`.
-* The property with the key `vda5050:errors.warning` will contain a concatenated list of `errorTypes` of all `errors` with an `errorLevel` of `WARNING`.
+* The property with the key `vda5050:errors.fatal` will contain a concatenated list of ``errorType``s of all ``error``s with an `errorLevel` of `FATAL`.
+* The property with the key `vda5050:errors.warning` will contain a concatenated list of ``errorType``s of all ``error``s with an `errorLevel` of `WARNING`.
+* The property with the key `vda5050:information.debug` will contain a concatenated list of ``infoType``s of all `info` elements with an `infoLevel` of `DEBUG`.
+* The property with the key `vda5050:information.info` will contain a concatenated list of ``infoType``s of all `info` elements with an `infoLevel` of `INFO`.
+* The property with the key `vda5050:paused` will contain the vehicle's paused state (`true` or `false`), or it will be `null` / not set, if the vehicle has not reported a paused state.
 
 == Mapping of vehicle state
 

@@ -33,6 +33,9 @@ import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROP
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_RECHARGE_OPERATION;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_INFORMATION_INFO;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_INFORMATION_DEBUG;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_PAUSED;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.StateMappings.toLoadHandlingDevices;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.StateMappings.toVehicleState;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.ConnectionEventListener;
@@ -54,6 +57,7 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.connection.Connectio
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Order;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.ErrorLevel;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.InfoLevel;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.OperatingMode;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.OperatingMode.AUTOMATIC;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.State;
@@ -582,6 +586,18 @@ public class CommAdapterImpl
     getProcessModel().setVehicleProperty(
         PROPKEY_VEHICLE_ERRORS_WARNING,
         StateMappings.toErrorPropertyValue(state, ErrorLevel.WARNING)
+    );
+    getProcessModel().setVehicleProperty(
+        PROPKEY_VEHICLE_INFORMATION_INFO,
+        StateMappings.toInfoPropertyValue(state, InfoLevel.INFO)
+    );
+    getProcessModel().setVehicleProperty(
+        PROPKEY_VEHICLE_INFORMATION_DEBUG,
+        StateMappings.toInfoPropertyValue(state, InfoLevel.DEBUG)
+    );
+    getProcessModel().setVehicleProperty(
+        PROPKEY_VEHICLE_PAUSED,
+        StateMappings.toPausedPropertyValue(state)
     );
     getProcessModel().setVehicleState(toVehicleState(state));
     getProcessModel().setVehicleLength(

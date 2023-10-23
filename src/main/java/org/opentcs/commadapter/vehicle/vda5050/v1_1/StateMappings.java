@@ -10,11 +10,14 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 import java.util.ArrayList;
 import java.util.List;
 import static java.util.Objects.requireNonNull;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ActionStatus;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ErrorEntry;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ErrorLevel;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.InfoLevel;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.Load;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.OperatingMode;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.State;
@@ -120,6 +123,44 @@ public class StateMappings {
             .sorted()
             .collect(Collectors.toList())
     );
+  }
+
+  /**
+   * Returns a concatenated list of all info types with the specified info level from
+   * the given state message.
+   *
+   * @param state The state message.
+   * @param infoLevel The info level of the info types to be returned.
+   * @return A concatenated list of info types from the given state message.
+   */
+  @Nonnull
+  public static String toInfoPropertyValue(@Nonnull State state, @Nonnull InfoLevel infoLevel) {
+    requireNonNull(state, "state");
+    requireNonNull(infoLevel, "infoLevel");
+
+    return String.join(
+        ", ",
+        state.getInformations().stream()
+            .filter(info -> info.getInfoLevel() == infoLevel)
+            .map(info -> info.getInfoType())
+            .distinct()
+            .sorted()
+            .collect(Collectors.toList())
+    );
+  }
+
+  /**
+   * Returns the paused state from the given state message if present. Otherwise, returns
+   * null.
+   *
+   * @param state The state message.
+   * @return The paused state (can be null).
+   */
+  @Nullable
+  public static String toPausedPropertyValue(@Nonnull State state) {
+    requireNonNull(state, "state");
+
+    return Objects.toString(state.isPaused(), null);
   }
 
   private static boolean hasPendingMovement(State state) {

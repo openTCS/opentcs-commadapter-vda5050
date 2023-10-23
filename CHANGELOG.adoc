@@ -15,6 +15,7 @@ toc::[]
 
 * New features and enhancements:
 ** When resolving the vehicle's reported position to a point in the plant model, consider the `mapId`, too.
+** The paused state and informational messages are now mapped to a vehicle's properties using the keys `vda5050:paused`, `vda5050:information.info` and `vda5050:information.debug`.
 * Fixes:
 ** Actually accept state messages lacking the `paused` flag.
 
