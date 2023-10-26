@@ -11,6 +11,10 @@ toc::[]
 
 = Changelog
 
+== Unreleased
+
+...
+
 == Version 0.15 (2023-10-26)
 
 * New features and enhancements:
