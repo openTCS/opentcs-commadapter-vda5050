@@ -11,7 +11,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.15 (2023-10-26)
 
 * New features and enhancements:
 ** When resolving the vehicle's reported position to a point in the plant model, consider the `mapId`, too.
@@ -19,6 +19,8 @@ toc::[]
 * Fixes:
 ** Actually accept state messages lacking the `paused` flag.
 ** If configured, correctly withdraw the transport order assigned to a vehicle when its operation mode changes.
+* Other changes:
+** Update openTCS baseline dependency to 5.11.0.
 
 == Version 0.14 (2023-09-26)
 
