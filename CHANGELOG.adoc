@@ -18,6 +18,7 @@ toc::[]
 ** The paused state and informational messages are now mapped to a vehicle's properties using the keys `vda5050:paused`, `vda5050:information.info` and `vda5050:information.debug`.
 * Fixes:
 ** Actually accept state messages lacking the `paused` flag.
+** If configured, correctly withdraw the transport order assigned to a vehicle when its operation mode changes.
 
 == Version 0.14 (2023-09-26)
 

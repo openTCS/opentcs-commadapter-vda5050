@@ -183,10 +183,12 @@ public class MessageResponseMatcher {
    */
   private void sendNextOrder() {
     if (!sendingAllowed) {
+      LOG.debug("{}: Cannot send next order. Sending is currently disallowed", commAdapterName);
       return;
     }
 
     if (requests.isEmpty()) {
+      LOG.debug("{}: Cannot send next order. No request to send", commAdapterName);
       return;
     }
 

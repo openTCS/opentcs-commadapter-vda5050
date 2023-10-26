@@ -622,19 +622,6 @@ public class CommAdapterImpl
     }
   }
 
-  private void onMovementCommandFailed(@Nonnull MovementCommand failedCommand) {
-    requireNonNull(failedCommand, "failedCommand");
-
-    MovementCommand oldestCommand = getSentQueue().peek();
-    if (Objects.equals(failedCommand, oldestCommand)) {
-      getSentQueue().poll();
-      getProcessModel().commandFailed(failedCommand);
-    }
-    else {
-      LOG.warn("Not oldest movement command: {} != {}", failedCommand, oldestCommand);
-    }
-  }
-
   private void processVehicleOperatingMode(State state) {
     if (getProcessModel().getPreviousState().getOperatingMode() == state.getOperatingMode()) {
       return;
@@ -642,7 +629,7 @@ public class CommAdapterImpl
 
     if (configuration.onOpModeChangeDoWithdrawOrder()
         .getOrDefault(mapToConfigOperatingMode(state.getOperatingMode()), Boolean.FALSE)) {
-      movementCommandManager.failCurrentCommand(this::onMovementCommandFailed);
+      getProcessModel().transportOrderWithdrawalRequested(true);
     }
 
     if (configuration.onOpModeChangeDoResetPosition()
@@ -661,10 +648,7 @@ public class CommAdapterImpl
         .toIntegrationLevel()
         .ifPresent((integrationLevel) -> {
           getExecutor().execute(() -> {
-            vehicleService.updateVehicleIntegrationLevel(
-                getProcessModel().getVehicleReference(),
-                integrationLevel
-            );
+            getProcessModel().integrationLevelChangeRequested(integrationLevel);
           });
         });
   }

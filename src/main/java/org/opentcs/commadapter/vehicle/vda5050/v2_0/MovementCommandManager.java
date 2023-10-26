@@ -26,11 +26,15 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.EdgeState;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.NodeState;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.State;
 import org.opentcs.drivers.vehicle.MovementCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Tracks the progress of movement commands and reports back finished ones.
  */
 public class MovementCommandManager {
+
+  private static final Logger LOG = LoggerFactory.getLogger(MovementCommandManager.class);
 
   /**
    * A list of currently tracked orders.
@@ -91,6 +95,9 @@ public class MovementCommandManager {
   public void failCurrentCommand(@Nonnull Consumer<MovementCommand> callback) {
     if (!trackedOrders.isEmpty()) {
       callback.accept(trackedOrders.poll().getCommand());
+    }
+    else {
+      LOG.debug("No commands to fail");
     }
   }
 
