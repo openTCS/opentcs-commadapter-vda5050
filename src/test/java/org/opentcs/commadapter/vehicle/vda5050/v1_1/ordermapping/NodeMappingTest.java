@@ -62,8 +62,9 @@ public class NodeMappingTest {
   public void extendDeviationToIncludeVehicle() {
     Vehicle vehicle = new Vehicle("vehicle-0001")
         .withPrecisePosition(new Triple(500, 500, 0));
-    Point point = new Point("Point-0001")
-        .withPosition(new Triple(1000, 1000, 0))
+    Point point = new Point("Point-0001");
+    point = point
+        .withPose(point.getPose().withPosition(new Triple(1000, 1000, 0)))
         .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_XY, "1.2")
         .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_THETA, "90");
 
@@ -88,8 +89,8 @@ public class NodeMappingTest {
   @Test
   public void setPointPosition() {
     Vehicle vehicle = new Vehicle("vehicle-0001");
-    Point point = new Point("Point-0001")
-        .withPosition(new Triple(12000, 144000, 0));
+    Point point = new Point("Point-0001");
+    point = point.withPose(point.getPose().withPosition(new Triple(12000, 144000, 0)));
 
     NodePosition np = NodeMapping.toNodePosition(point, vehicle, false);
 
@@ -103,11 +104,11 @@ public class NodeMappingTest {
     Vehicle vehicle = new Vehicle("vehicle-0001");
     Point point = new Point("Point-0001");
 
-    point = point.withVehicleOrientationAngle(180.0);
+    point = point.withPose(point.getPose().withOrientationAngle(180.0));
     NodePosition np = NodeMapping.toNodePosition(point, vehicle, false);
     assertThat(np.getTheta(), closeTo(Math.PI, 0.00001));
 
-    point = point.withVehicleOrientationAngle(270.0);
+    point = point.withPose(point.getPose().withOrientationAngle(270.0));
     np = NodeMapping.toNodePosition(point, vehicle, false);
     assertThat(np.getTheta(), closeTo(-Math.PI / 2, 0.00001));
   }
@@ -115,8 +116,8 @@ public class NodeMappingTest {
   @Test
   public void leaveUnknownPointOrientationUnset() {
     Vehicle vehicle = new Vehicle("vehicle-0001");
-    Point point = new Point("Point-0001")
-        .withVehicleOrientationAngle(Double.NaN);
+    Point point = new Point("Point-0001");
+    point = point.withPose(point.getPose().withOrientationAngle(Double.NaN));
 
     NodePosition np = NodeMapping.toNodePosition(point, vehicle, false);
 

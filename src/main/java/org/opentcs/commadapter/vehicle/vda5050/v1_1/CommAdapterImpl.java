@@ -63,7 +63,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.State;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.visualization.Visualization;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.ExecutableActionsTagsPredicate;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.OrderMapper;
-import org.opentcs.components.kernel.services.VehicleService;
 import org.opentcs.customizations.kernel.KernelExecutor;
 import org.opentcs.data.model.Triple;
 import org.opentcs.data.model.Vehicle;
@@ -167,10 +166,6 @@ public class CommAdapterImpl
    */
   private final ExecutableActionsTagsPredicate isActionExecutable;
   /**
-   * Vehicle service to interact with the vehicle.
-   */
-  private final VehicleService vehicleService;
-  /**
    * The comm adapter configuration.
    */
   private final CommAdapterConfiguration configuration;
@@ -185,7 +180,6 @@ public class CommAdapterImpl
    * @param clientManager The MQTT client manager to use.
    * @param messageValidator Validates messages against JSON schemas.
    * @param jsonBinder Binds JSON strings to objects and vice versa.
-   * @param vehicleService The vehicle service to use.
    * @param configuration The adapter configuration.
    */
   @Inject
@@ -196,7 +190,6 @@ public class CommAdapterImpl
                          MqttClientManager clientManager,
                          MessageValidator messageValidator,
                          JsonBinder jsonBinder,
-                         VehicleService vehicleService,
                          CommAdapterConfiguration configuration) {
     super(new ProcessModelImpl(vehicle),
           getPropertyInteger(PROPKEY_VEHICLE_MAX_STEPS_BASE, vehicle).orElse(2) + 1,
@@ -216,7 +209,6 @@ public class CommAdapterImpl
     this.clientManager = requireNonNull(clientManager, "clientManager");
     this.messageValidator = requireNonNull(messageValidator, "messageValidator");
     this.jsonBinder = requireNonNull(jsonBinder, "jsonBinder");
-    this.vehicleService = requireNonNull(vehicleService, "vehicleService");
     this.configuration = requireNonNull(configuration, "configuration");
 
     messageResponseMatcher = new MessageResponseMatcher(

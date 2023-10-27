@@ -76,11 +76,11 @@ public class InitPositionPrefillDialog
 
     Point p = (Point) pointComboBox.getSelectedItem();
     Map<String, String> parameters = new HashMap<>();
-    parameters.put(PARAMKEY_X, String.valueOf(p.getPosition().getX() / 1000.0));
-    parameters.put(PARAMKEY_Y, String.valueOf(p.getPosition().getY() / 1000.0));
-    if (!Double.isNaN(p.getVehicleOrientationAngle())) {
+    parameters.put(PARAMKEY_X, String.valueOf(p.getPose().getPosition().getX() / 1000.0));
+    parameters.put(PARAMKEY_Y, String.valueOf(p.getPose().getPosition().getY() / 1000.0));
+    if (!Double.isNaN(p.getPose().getOrientationAngle())) {
       parameters.put(PARAMKEY_THETA, String.valueOf(
-                     toRadians(toRelativeConvexAngle(p.getVehicleOrientationAngle()))
+                     toRadians(toRelativeConvexAngle(p.getPose().getOrientationAngle()))
                  ));
     }
     Optional<String> mapID = getProperty(PROPKEY_POINT_MAP_ID, p);

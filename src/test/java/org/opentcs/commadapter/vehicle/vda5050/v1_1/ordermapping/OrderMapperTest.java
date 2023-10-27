@@ -379,12 +379,16 @@ public class OrderMapperTest {
   public void firstNodeShouldHaveVehicleBasedDeviationRange() {
     // The source point is 1.234m away from the vehicle.
     // The deviation range of that node should be atleast this distance.
-    Point source = new Point("Point-0001")
-        .withPosition(new Triple(
-            vehicle.getPrecisePosition().getX() + 1234,
-            vehicle.getPrecisePosition().getY(),
-            0
-        ));
+    Point source = new Point("Point-0001");
+    source = source.withPose(
+        source.getPose().withPosition(
+            new Triple(
+                vehicle.getPrecisePosition().getX() + 1234,
+                vehicle.getPrecisePosition().getY(),
+                0
+            )
+        )
+    );
     Point dest = new Point("Point-0002");
 
     MovementCommand commandOne = new DummyMovementCommand(source, dest);

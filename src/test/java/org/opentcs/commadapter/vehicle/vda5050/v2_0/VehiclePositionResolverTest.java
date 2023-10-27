@@ -58,11 +58,11 @@ public class VehiclePositionResolverTest {
   @BeforeEach
   public void setup() {
     point1 = new Point("point_01");
-    point1 = point1.withPosition(new Triple(200, 100, 0));
+    point1 = point1.withPose(point1.getPose().withPosition(new Triple(200, 100, 0)));
     point1 = point1.withProperty(PROPKEY_VEHICLE_MAP_ID, "map_1");
 
     point2 = new Point("point_02");
-    point2 = point2.withPosition(new Triple(123, 456, 0));
+    point2 = point2.withPose(point2.getPose().withPosition(new Triple(123, 456, 0)));
     point2 = point2.withProperty(PROPKEY_VEHICLE_MAP_ID, "map_2");
 
     vehicle = new Vehicle("vehicle-0001");
@@ -114,8 +114,8 @@ public class VehiclePositionResolverTest {
 
     // Even if the vehicle is physically located at a different known point.
     state.setAgvPosition(new AgvPosition(
-        point2.getPosition().getX() / 1000.0,
-        point2.getPosition().getY() / 1000.0,
+        point2.getPose().getPosition().getX() / 1000.0,
+        point2.getPose().getPosition().getY() / 1000.0,
         0.0,
         point2.getProperty(PROPKEY_VEHICLE_MAP_ID),
         true
@@ -179,13 +179,13 @@ public class VehiclePositionResolverTest {
                                                        double deviationTheta) {
     // If the state does not contain a lastNodeId, then the resolver should search the plant model
     // and try to find a point that matches the AGV position.
-    point1 = point1.withVehicleOrientationAngle(0);
+    point1 = point1.withPose(point1.getPose().withOrientationAngle(0));
     setupObjectService(objectService);
 
     state.setLastNodeId("");
     state.setAgvPosition(new AgvPosition(
-        point1.getPosition().getX() / 1000.0 + deviationX,
-        point1.getPosition().getY() / 1000.0 + deviationY,
+        point1.getPose().getPosition().getX() / 1000.0 + deviationX,
+        point1.getPose().getPosition().getY() / 1000.0 + deviationY,
         toRadians(deviationTheta),
         point1.getProperty(PROPKEY_VEHICLE_MAP_ID),
         true
@@ -208,8 +208,8 @@ public class VehiclePositionResolverTest {
                                                              double deviationY) {
     state.setLastNodeId("");
     state.setAgvPosition(new AgvPosition(
-        point1.getPosition().getX() / 1000.0 + deviationX,
-        point1.getPosition().getY() / 1000.0 + deviationY,
+        point1.getPose().getPosition().getX() / 1000.0 + deviationX,
+        point1.getPose().getPosition().getY() / 1000.0 + deviationY,
         0.0,
         point1.getProperty(PROPKEY_VEHICLE_MAP_ID),
         true
@@ -222,13 +222,13 @@ public class VehiclePositionResolverTest {
   @ParameterizedTest
   @ValueSource(doubles = {15.1, -15.1})
   public void shouldNotFindPositionIfOutsideDeviationRangeTheta(double deviationTheta) {
-    point1 = point1.withVehicleOrientationAngle(0);
+    point1 = point1.withPose(point1.getPose().withOrientationAngle(0));
     setupObjectService(objectService);
 
     state.setLastNodeId("");
     state.setAgvPosition(new AgvPosition(
-        point1.getPosition().getX() / 1000.0,
-        point1.getPosition().getY() / 1000.0,
+        point1.getPose().getPosition().getX() / 1000.0,
+        point1.getPose().getPosition().getY() / 1000.0,
         toRadians(deviationTheta),
         point1.getProperty(PROPKEY_VEHICLE_MAP_ID),
         true
@@ -242,8 +242,8 @@ public class VehiclePositionResolverTest {
   public void shouldNotFindPositionIfMapIdIsWrong() {
     state.setLastNodeId("");
     state.setAgvPosition(new AgvPosition(
-        point1.getPosition().getX() / 1000.0,
-        point1.getPosition().getY() / 1000.0,
+        point1.getPose().getPosition().getX() / 1000.0,
+        point1.getPose().getPosition().getY() / 1000.0,
         0.0,
         "Wrong map id",
         true

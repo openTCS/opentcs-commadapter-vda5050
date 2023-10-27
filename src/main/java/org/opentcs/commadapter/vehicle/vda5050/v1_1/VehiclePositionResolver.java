@@ -130,18 +130,18 @@ public class VehiclePositionResolver {
   }
 
   private boolean isWithinDeviationXY(Point p, AgvPosition position, Vehicle vehicle) {
-    double deviationX = Math.abs(p.getPosition().getX() / 1000.0 - position.getX());
-    double deviationY = Math.abs(p.getPosition().getY() / 1000.0 - position.getY());
+    double deviationX = Math.abs(p.getPose().getPosition().getX() / 1000.0 - position.getX());
+    double deviationY = Math.abs(p.getPose().getPosition().getY() / 1000.0 - position.getY());
 
     return Math.sqrt((deviationX * deviationX) + (deviationY * deviationY))
         <= getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_XY, p, vehicle).orElse(0.0);
   }
 
   private boolean isWithinDeviationTheta(Point p, AgvPosition position, Vehicle vehicle) {
-    if (Double.isNaN(p.getVehicleOrientationAngle())) {
+    if (Double.isNaN(p.getPose().getOrientationAngle())) {
       return true;
     }
-    return AngleMath.angleBetween(p.getVehicleOrientationAngle(), toDegrees(position.getTheta()))
+    return AngleMath.angleBetween(p.getPose().getOrientationAngle(), toDegrees(position.getTheta()))
         <= getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_THETA, p, vehicle).orElse(0.0);
   }
 }

@@ -110,14 +110,14 @@ public class NodeMapping {
     requireNonNull(vehicle, "vehicle");
 
     NodePosition position = new NodePosition(
-        point.getPosition().getX() / 1000.0,
-        point.getPosition().getY() / 1000.0,
+        point.getPose().getPosition().getX() / 1000.0,
+        point.getPose().getPosition().getY() / 1000.0,
         getProperty(PROPKEY_VEHICLE_MAP_ID, point, vehicle).orElse("")
     );
 
-    if (!Double.isNaN(point.getVehicleOrientationAngle())) {
+    if (!Double.isNaN(point.getPose().getOrientationAngle())) {
       position.setTheta(
-          toRadians(toRelativeConvexAngle(point.getVehicleOrientationAngle()))
+          toRadians(toRelativeConvexAngle(point.getPose().getOrientationAngle()))
       );
     }
 
@@ -149,8 +149,10 @@ public class NodeMapping {
 
   private static Double extendedDeviationXY(Point point, Vehicle vehicle) {
     // Ensure the deviation range is large enough for the vehicle to accept this node.
-    double deltaX = (vehicle.getPrecisePosition().getX() - point.getPosition().getX()) / 1000.0;
-    double deltaY = (vehicle.getPrecisePosition().getY() - point.getPosition().getY()) / 1000.0;
+    double deltaX
+        = (vehicle.getPrecisePosition().getX() - point.getPose().getPosition().getX()) / 1000.0;
+    double deltaY
+        = (vehicle.getPrecisePosition().getY() - point.getPose().getPosition().getY()) / 1000.0;
 
     return Math.sqrt(deltaX * deltaX + deltaY * deltaY) + 0.01;
   }
