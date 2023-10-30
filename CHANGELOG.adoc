@@ -11,7 +11,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.16 (2023-10-30)
 
 * New features and enhancements:
 ** When extending the allowed deviation radius for the first node on a route to include the vehicle position, ensure that it is really only extended but never reduced.
