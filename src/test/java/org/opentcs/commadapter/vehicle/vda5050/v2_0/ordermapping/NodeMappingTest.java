@@ -61,6 +61,24 @@ public class NodeMappingTest {
   @Test
   public void extendDeviationToIncludeVehicle() {
     Vehicle vehicle = new Vehicle("vehicle-0001")
+        .withPrecisePosition(new Triple(5000, 5000, 0));
+    Point point = new Point("Point-0001");
+    point = point
+        .withPose(point.getPose().withPosition(new Triple(1000, 1000, 0)))
+        .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_XY, "1.2")
+        .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_THETA, "90");
+
+    NodePosition np = NodeMapping.toNodePosition(point, vehicle, true);
+
+    // Assert that the computed deviation is the distance between vehicle position and point,
+    // with an extra tolerance added.
+    assertThat(np.getAllowedDeviationXY(), is(closeTo(5.657 + 0.01, 0.001)));
+    assertThat(np.getAllowedDeviationTheta(), is(Math.PI));
+  }
+
+  @Test
+  public void stickToNodeDeviationIfVehicleIsCloser() {
+    Vehicle vehicle = new Vehicle("vehicle-0001")
         .withPrecisePosition(new Triple(500, 500, 0));
     Point point = new Point("Point-0001");
     point = point
@@ -70,7 +88,7 @@ public class NodeMappingTest {
 
     NodePosition np = NodeMapping.toNodePosition(point, vehicle, true);
 
-    assertThat(np.getAllowedDeviationXY(), is(closeTo(0.71, 0.05)));
+    assertThat(np.getAllowedDeviationXY(), is(closeTo(1.2, 0.0)));
     assertThat(np.getAllowedDeviationTheta(), is(Math.PI));
   }
 

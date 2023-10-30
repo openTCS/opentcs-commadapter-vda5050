@@ -10,6 +10,7 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping;
 import static java.lang.Math.toRadians;
 import java.util.List;
 import static java.util.Objects.requireNonNull;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import static org.opentcs.commadapter.vehicle.vda5050.common.AngleMath.toRelativeConvexAngle;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
@@ -124,27 +125,26 @@ public class NodeMapping {
     position.setAllowedDeviationXY(
         extendDeviationToIncludeVehicle
             ? extendedDeviationXY(point, vehicle)
-            : regularDeviationXY(point, vehicle)
+            : regularDeviationXY(point, vehicle).orElse(null)
     );
 
     position.setAllowedDeviationTheta(
         extendDeviationToIncludeVehicle
             ? extendedDeviationTheta()
-            : regularDeviationTheta(point, vehicle)
+            : regularDeviationTheta(point, vehicle).orElse(null)
     );
 
     return position;
   }
 
-  private static Double regularDeviationXY(Point point, Vehicle vehicle) {
-    return getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_XY, point, vehicle).orElse(null);
+  private static Optional<Double> regularDeviationXY(Point point, Vehicle vehicle) {
+    return getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_XY, point, vehicle);
   }
 
-  private static Double regularDeviationTheta(Point point, Vehicle vehicle) {
+  private static Optional<Double> regularDeviationTheta(Point point, Vehicle vehicle) {
     // XXX Ensure the angle is (positive and) within 0 and 180 degrees.
     return getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_THETA, point, vehicle)
-        .map(value -> toRadians(value))
-        .orElse(null);
+        .map(value -> toRadians(value));
   }
 
   private static Double extendedDeviationXY(Point point, Vehicle vehicle) {
@@ -154,7 +154,10 @@ public class NodeMapping {
     double deltaY
         = (vehicle.getPrecisePosition().getY() - point.getPose().getPosition().getY()) / 1000.0;
 
-    return Math.sqrt(deltaX * deltaX + deltaY * deltaY) + 0.01;
+    return Math.max(
+        Math.sqrt(deltaX * deltaX + deltaY * deltaY) + 0.01,
+        regularDeviationXY(point, vehicle).orElse(0.0)
+    );
   }
 
   private static Double extendedDeviationTheta() {

@@ -13,7 +13,9 @@ toc::[]
 
 == Unreleased
 
-...
+* New features and enhancements:
+** When extending the allowed deviation radius for the first node on a route to include the vehicle position, ensure that it is really only extended but never reduced.
+   I.e. always use the deviation of the node as the minimum allowed deviation, even if the vehicle is closer than that to the node's coordinates.
 
 == Version 0.15 (2023-10-26)
 
