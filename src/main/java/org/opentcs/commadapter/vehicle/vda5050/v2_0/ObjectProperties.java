@@ -94,6 +94,11 @@ public interface ObjectProperties {
   String PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION
       = "vda5050:movementCommandCompletedCondition";
   /**
+   * The key of the vehicle property containing the distance that is added to the extended
+   * deviation range of a node.
+   */
+  String PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING = "vda5050:extendedDeviationRangePadding";
+  /**
    * The key property containing a list of executable action tags.
    */
   String PROPKEY_EXECUTABLE_ACTIONS_TAGS = "vda5050:actionTags";

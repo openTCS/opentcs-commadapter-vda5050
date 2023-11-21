@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import org.junit.jupiter.api.Test;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.NodePosition;
 import org.opentcs.data.model.Point;
 import org.opentcs.data.model.Triple;
@@ -72,7 +73,46 @@ public class NodeMappingTest {
 
     // Assert that the computed deviation is the distance between vehicle position and point,
     // with an extra tolerance added.
-    assertThat(np.getAllowedDeviationXY(), is(closeTo(5.657 + 0.01, 0.001)));
+    assertThat(np.getAllowedDeviationXY(),
+               is(closeTo(5.65685 + NodeMapping.EXTENDED_DEVIATION_RANGE_PADDING_DEFAULT, 0.00001))
+    );
+    assertThat(np.getAllowedDeviationTheta(), is(Math.PI));
+  }
+
+  @Test
+  public void extendDeviationToIncludeVehicleWithExtraPadding() {
+    Vehicle vehicle = new Vehicle("vehicle-0001")
+        .withPrecisePosition(new Triple(5000, 5000, 0))
+        .withProperty(PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING, "1.23");
+    Point point = new Point("Point-0001");
+    point = point
+        .withPose(point.getPose().withPosition(new Triple(1000, 1000, 0)))
+        .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_XY, "1.2")
+        .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_THETA, "90");
+
+    NodePosition np = NodeMapping.toNodePosition(point, vehicle, true);
+
+    // Assert that the computed deviation is the distance between vehicle position and point,
+    // with an extra tolerance added.
+    assertThat(np.getAllowedDeviationXY(), is(closeTo(5.65685 + 1.23, 0.00001)));
+    assertThat(np.getAllowedDeviationTheta(), is(Math.PI));
+  }
+
+  @Test
+  public void extendedDeviationRangePaddingMustNotBeNegative() {
+    Vehicle vehicle = new Vehicle("vehicle-0001")
+        .withPrecisePosition(new Triple(5000, 5000, 0))
+        .withProperty(PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING, "-1.23");
+    Point point = new Point("Point-0001");
+    point = point
+        .withPose(point.getPose().withPosition(new Triple(1000, 1000, 0)))
+        .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_XY, "1.2")
+        .withProperty(ObjectProperties.PROPKEY_POINT_DEVIATION_THETA, "90");
+
+    NodePosition np = NodeMapping.toNodePosition(point, vehicle, true);
+
+    // If the padding is less than zero it is clipped to zero.
+    assertThat(np.getAllowedDeviationXY(), is(closeTo(5.65685 + 0.0, 0.00001)));
     assertThat(np.getAllowedDeviationTheta(), is(Math.PI));
   }
 

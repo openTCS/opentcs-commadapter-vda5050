@@ -43,5 +43,9 @@ The property value contains a string that describes the condition under which a 
 Valid values are `EDGE` and `EDGE_AND_NODE`.
 For details regarding the functionality behind this property, see the 'Movement command completion' section in xref:runtime-behaviour.adoc#movement-command-completion[].
 (Default value: `EDGE_AND_NODE`)
+`vda5050:extendedDeviationRangePadding` (optional)::
+The property value contains a padding distance in m, which is added when a node's deviation range is extended to include the vehicle position.
+If the value is negative, it is instead replaced with zero.
+(Default value: `0.01`.)
 
 NOTE: If any of the required properties are not set or contain unusable data, the driver may fail to be instantiated for / attached to the vehicle.
