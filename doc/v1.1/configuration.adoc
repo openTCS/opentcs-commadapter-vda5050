@@ -38,5 +38,10 @@ The property value contains the decimal representation of the vehicle length in 
 `vda5050:vehicleLengthUnloaded` (optional)::
 The property value contains the decimal representation of the vehicle length in mm to be set when the vehicle reports no loads.
 (Default value: `1000`.)
+`vda5050:movementCommandCompletedCondition` (optional)::
+The property value contains a string that describes the condition under which a movement command is considered completed.
+Valid values are `EDGE` and `EDGE_AND_NODE`.
+For details regarding the functionality behind this property, see the 'Movement command completion' section in xref:runtime-behaviour.adoc#movement-command-completion[].
+(Default value: `EDGE_AND_NODE`)
 
 NOTE: If any of the required properties are not set or contain unusable data, the driver may fail to be instantiated for / attached to the vehicle.

@@ -57,11 +57,22 @@ Upon receiving a message on the `state` topic, the vehicle driver will...
 . update the energy level with the kernel.
 . update state information mapped to vehicle properties with the kernel (see <<Mapping of state information to vehicle properties>> below).
 . update the vehicle's state with the kernel (see <<Mapping of vehicle state>> below).
-. check `nodeStates` and `edgeStates` to see whether a step on the route has been completed, and if yes, report the respective movement command (and all previous movement commands) as finished to the kernel.
+. check (`nodeStates` and) `edgeStates` to see whether a step on the route has been completed, and if yes, report the respective movement command (and all previous movement commands) as finished to the kernel (see <<Movement command completion>> below).
   (With the final step of a drive order's route, the `actionStates` are also checked to see whether the actions for that step (and especially the drive order's destination operation) have been completed.)
 
 NOTE: For the _state_ topic, the VDA5050 1.1 specification mentions an optional property `mapDiscription`.
 As this obviously is a spelling error, the openTCS driver expects a property named `mapDescription`, instead.
+
+[#movement-command-completion]
+== Movement command completion
+
+The vehicle driver considers a step on the vehicle's route and the respective movement command as completed, when the vehicle no longer reports the associated node state and/or edge state in its state.
+The exact behavior can be configured by setting the (optional) `vda5050:movementCommandCompletedCondition` property on a vehicle element in the plant model to one of the following values:
+
+* `EDGE`: A step / movement command is considered completed when its associated edge state has disappeared from the vehicle state.
+* `EDGE_AND_NODE`: A step / movement command is considered completed when its associated edge state _and_ node state have _both_ disappeared from the vehicle state.
+
+If the aforementioned property is not set, the vehicle driver's default behaviour corresponds to the value `EDGE_AND_NODE`.
 
 == Processing logical positions
 

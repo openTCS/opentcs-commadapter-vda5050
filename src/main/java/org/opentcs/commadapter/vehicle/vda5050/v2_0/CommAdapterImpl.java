@@ -177,7 +177,6 @@ public class CommAdapterImpl
    * @param vehicle The attached vehicle.
    * @param kernelExecutor The kernel's executor service.
    * @param componentsFactory A factory for our components.
-   * @param movementCommandManager The movement command manager to use.
    * @param clientManager The MQTT client manager to use.
    * @param messageValidator Validates messages against JSON schemas.
    * @param jsonBinder Binds JSON strings to objects and vice versa.
@@ -187,7 +186,6 @@ public class CommAdapterImpl
   public CommAdapterImpl(@Assisted Vehicle vehicle,
                          @KernelExecutor ScheduledExecutorService kernelExecutor,
                          CommAdapterComponentsFactory componentsFactory,
-                         MovementCommandManager movementCommandManager,
                          MqttClientManager clientManager,
                          MessageValidator messageValidator,
                          JsonBinder jsonBinder,
@@ -206,11 +204,12 @@ public class CommAdapterImpl
         = getPropertyInteger(PROPKEY_VEHICLE_LENGTH_LOADED, vehicle).orElse(1000);
     this.vehicleLengthUnloaded
         = getPropertyInteger(PROPKEY_VEHICLE_LENGTH_UNLOADED, vehicle).orElse(1000);
-    this.movementCommandManager = requireNonNull(movementCommandManager, "movementCommandManager");
     this.clientManager = requireNonNull(clientManager, "clientManager");
     this.messageValidator = requireNonNull(messageValidator, "messageValidator");
     this.jsonBinder = requireNonNull(jsonBinder, "jsonBinder");
     this.configuration = requireNonNull(configuration, "configuration");
+
+    movementCommandManager = componentsFactory.createMovementCommandManager(vehicle);
 
     messageResponseMatcher = new MessageResponseMatcher(
         this.getName(),

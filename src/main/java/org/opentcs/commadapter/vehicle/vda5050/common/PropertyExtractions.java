@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.opentcs.data.TCSObject;
+import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.MovementCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,4 +144,29 @@ public class PropertyExtractions {
     return Optional.empty();
   }
 
+  /**
+   * Tries to extract the property with the given key and map it to a
+   * {@link MovementCommandCompletedCondition}.
+   *
+   * @param key The key of the property to extract.
+   * @param vehicle The vehicle to extract the property from.
+   * @return An optional containing the the extracted and mapped value or {@link Optional#EMPTY}, if
+   * the property value is not valid or if the property is not set.
+   */
+  public static Optional<MovementCommandCompletedCondition>
+      getMovementCommandCompletedCondition(String key, Vehicle vehicle) {
+    return getProperty(key, vehicle)
+        .map(propertyValue -> {
+          try {
+            return MovementCommandCompletedCondition.valueOf(propertyValue);
+          }
+          catch (IllegalArgumentException e) {
+            LOG.warn("Property '{}' for vehicle '{}' has no valid value.",
+                     key,
+                     vehicle.getName()
+            );
+            return null;
+          }
+        });
+  }
 }

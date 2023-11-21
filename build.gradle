@@ -39,6 +39,8 @@ dependencies {
   implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
 
   runtimeOnly group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.36'
+
+  testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
 }
 
 // Attributes for the AsciiDoc documentation to include code from source files

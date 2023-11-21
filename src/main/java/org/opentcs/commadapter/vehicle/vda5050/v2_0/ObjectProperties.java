@@ -89,6 +89,11 @@ public interface ObjectProperties {
    */
   String PROPKEY_VEHICLE_MIN_VISU_INTERVAL = "vda5050:minVisualizationInterval";
   /**
+   * The key of the vehicle property containing the movement command completed condition.
+   */
+  String PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION
+      = "vda5050:movementCommandCompletedCondition";
+  /**
    * The key property containing a list of executable action tags.
    */
   String PROPKEY_EXECUTABLE_ACTIONS_TAGS = "vda5050:actionTags";

@@ -7,6 +7,7 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
+import com.google.inject.assistedinject.Assisted;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +17,10 @@ import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import org.opentcs.commadapter.vehicle.vda5050.common.MovementCommandCompletedCondition;
+import org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Edge;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Node;
@@ -25,6 +30,7 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ActionStatus;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.EdgeState;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.NodeState;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.State;
+import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.MovementCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +46,22 @@ public class MovementCommandManager {
    * A list of currently tracked orders.
    */
   private final Queue<OrderAssociation> trackedOrders = new ArrayDeque<>();
+  /**
+   * The movement command completed condition.
+   */
+  private final MovementCommandCompletedCondition completedCondition;
 
   /**
    * Construct a new MovementCommandManager.
+   *
+   * @param vehicle The vehicle to create the manager for.
    */
-  public MovementCommandManager() {
+  @Inject
+  public MovementCommandManager(@Assisted Vehicle vehicle) {
+    requireNonNull(vehicle, "vehicle");
+    this.completedCondition = PropertyExtractions.getMovementCommandCompletedCondition(
+        PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION, vehicle
+    ).orElse(MovementCommandCompletedCondition.EDGE_AND_NODE);
   }
 
   /**
@@ -120,8 +137,14 @@ public class MovementCommandManager {
   }
 
   private boolean movementComplete(OrderAssociation association, State state) {
-    return edgesComplete(association.getOrder(), state)
-        && nodesComplete(association.getOrder(), state);
+    switch (completedCondition) {
+      case EDGE:
+        return edgesComplete(association.getOrder(), state);
+      case EDGE_AND_NODE:
+      default:
+        return edgesComplete(association.getOrder(), state)
+            && nodesComplete(association.getOrder(), state);
+    }
   }
 
   private boolean edgesComplete(Order order, State state) {

@@ -15,11 +15,15 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.opentcs.data.model.Location;
 import org.opentcs.data.model.LocationType;
 import org.opentcs.data.model.Point;
+import org.opentcs.data.model.Vehicle;
 import org.opentcs.data.order.Route;
 import org.opentcs.drivers.vehicle.MovementCommand;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for object properties-related utility methods.
@@ -223,6 +227,56 @@ public class PropertyExtractionsTest {
     Optional<Float> result = PropertyExtractions.getPropertyFloat("some-other-property", command);
 
     assertFalse(result.isPresent());
+  }
+
+  @Test
+  public void returnEmptyIfMovementCommandCompletedConditionPropertyNotPresentInVehicle() {
+    Vehicle vehicle = new Vehicle("vehicle-01");
+
+    Optional<MovementCommandCompletedCondition> result
+        = PropertyExtractions.getMovementCommandCompletedCondition(
+            "MovementCommandCompletedCondition",
+            vehicle
+        );
+
+    assertThat(result).isEmpty();
+  }
+
+  @Test
+  public void returnEmptyIfMovementCommandCompletedConditionPropertyValueNotValid() {
+    Vehicle vehicle = new Vehicle("vehicle-01")
+        .withProperty(
+            "MovementCommandCompletedCondition",
+            "invalid-value"
+        );
+
+    Optional<MovementCommandCompletedCondition> result
+        = PropertyExtractions.getMovementCommandCompletedCondition(
+            "MovementCommandCompletedCondition",
+            vehicle
+        );
+
+    assertTrue(result.isEmpty());
+  }
+
+  @ParameterizedTest
+  @EnumSource(MovementCommandCompletedCondition.class)
+  public void returnMovementCommandCompletedConditionPropertyIfPresentInVehicle(
+      MovementCommandCompletedCondition value
+  ) {
+    Vehicle vehicle = new Vehicle("vehicle-01")
+        .withProperty(
+            "MovementCommandCompletedCondition",
+            value.name()
+        );
+
+    Optional<MovementCommandCompletedCondition> result
+        = PropertyExtractions.getMovementCommandCompletedCondition(
+            "MovementCommandCompletedCondition",
+            vehicle
+        );
+
+    assertThat(result).isPresent();
   }
 
   private class DummyMovementCommand
