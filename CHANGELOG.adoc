@@ -11,7 +11,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.17 (2023-11-22)
 
 * New features and enhancements:
 ** Check vehicle property `vda5050:movementCommandCompletedCondition` to decide when a movement command should be considered complete.
