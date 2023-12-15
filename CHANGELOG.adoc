@@ -11,9 +11,9 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.18 (2023-12-15)
 
-New features and enhancements:
+* New features and enhancements:
 ** Always consider both edgeStates and nodeStates when checking whether the final movement of an order has been completed.
 
 == Version 0.17 (2023-11-22)
