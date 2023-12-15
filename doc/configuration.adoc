@@ -65,7 +65,7 @@ The interval (in ms) for trying to reconnect to the MQTT broker.
 
 The following example configuration can be used as a template to be pasted into the kernel configuration file and adjusted for the respective plant:
 
-```
+----
 commadapter.vehicle.vda5050.enabledVersions = 1.1, 2.0
 commadapter.vehicle.vda5050.onOpModeChangeDoUpdateIntegrationLevel = AUTOMATIC=LEAVE_UNCHANGED, SEMIAUTOMATIC=LEAVE_UNCHANGED, SERVICE=LEAVE_UNCHANGED, MANUAL=LEAVE_UNCHANGED, TEACHIN=LEAVE_UNCHANGED
 commadapter.vehicle.vda5050.onOpModeChangeDoWithdrawOrder = AUTOMATIC=false, SEMIAUTOMATIC=false, SERVICE=false, MANUAL=false, TEACHIN=false
@@ -78,4 +78,4 @@ commadapter.vehicle.vda5050.mqtt.password = secret
 commadapter.vehicle.vda5050.mqtt.clientId = opentcs-vda5050-driver
 commadapter.vehicle.vda5050.mqtt.keepAliveInterval = 10000
 commadapter.vehicle.vda5050.mqtt.reconnectInterval = 10000
-```
+----
