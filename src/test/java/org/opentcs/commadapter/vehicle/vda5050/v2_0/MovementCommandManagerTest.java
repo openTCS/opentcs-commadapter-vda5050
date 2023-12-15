@@ -146,6 +146,61 @@ public class MovementCommandManagerTest {
     verify(callback, times(1)).accept(association.getCommand());
   }
 
+  @ParameterizedTest
+  @EnumSource(MovementCommandCompletedCondition.class)
+  public void keepFinalMovementWhenEdgeStatsAreNotEmpty(
+      MovementCommandCompletedCondition condition) {
+    OrderAssociation association = new OrderBuilder("some-order-id",
+                                                    "source_point",
+                                                    "dest-point",
+                                                    true).build();
+    State state = new StateBuilder(association.getOrder().getOrderId())
+        .withEdgeStatesFrom(association.getOrder())
+        .build();
+    // A final movement command can only be finished if both edge and node stats are empty
+    // regardless of the completion condition
+    manager = new MovementCommandManager(vehicleWithCondition(condition));
+    manager.enqueue(association);
+    manager.onStateMessage(state, callback);
+    verifyNoInteractions(callback);
+  }
+
+  @ParameterizedTest
+  @EnumSource(MovementCommandCompletedCondition.class)
+  public void keepFinalMovementWhenNodeStatsAreNotEmpty(
+      MovementCommandCompletedCondition condition) {
+    OrderAssociation association = new OrderBuilder("some-order-id",
+                                                    "source_point",
+                                                    "dest-point",
+                                                    true).build();
+    State state = new StateBuilder(association.getOrder().getOrderId())
+        .withNodeStatesFrom(association.getOrder())
+        .build();
+    // A final movement command can only be finished if both edge and node stats are empty
+    // regardless of the completion condition
+    manager = new MovementCommandManager(vehicleWithCondition(condition));
+    manager.enqueue(association);
+    manager.onStateMessage(state, callback);
+    verifyNoInteractions(callback);
+  }
+
+  @ParameterizedTest
+  @EnumSource(MovementCommandCompletedCondition.class)
+  public void finishFinalMovementOnlyWhenBothEdgeAndNodeStatesAreEmtpy(
+      MovementCommandCompletedCondition condition) {
+    OrderAssociation association = new OrderBuilder("some-order-id",
+                                                    "source_point",
+                                                    "dest-point",
+                                                    true).build();
+    State state = new StateBuilder(association.getOrder().getOrderId())
+        .build();
+
+    manager = new MovementCommandManager(vehicleWithCondition(condition));
+    manager.enqueue(association);
+    manager.onStateMessage(state, callback);
+    verify(callback, times(1)).accept(association.getCommand());
+  }
+
   @Test
   public void finishMovementIfStateContainsNodesAndEdgesWithDifferentSequenceIds() {
     OrderAssociation association = new OrderBuilder("some-order-id",

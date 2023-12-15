@@ -69,6 +69,8 @@ The exact behavior can be configured by setting the (optional) `vda5050:movement
 
 If the aforementioned property is not set, the vehicle driver's default behaviour corresponds to the value `EDGE_AND_NODE`.
 
+For the _final_ movement of an order to be considered completed, it is _always_ required that the associated edge state _and_ node state have _both_ disappeared from the vehicle state -- regardless of the value of the `vda5050:movementCommandCompletedCondition` property.
+
 == Processing logical positions
 
 The vehicle driver generally expects the vehicle to report its logical position by setting `lastNodeId` properly.

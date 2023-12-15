@@ -137,6 +137,10 @@ public class MovementCommandManager {
   }
 
   private boolean movementComplete(OrderAssociation association, State state) {
+    if (association.getCommand().isFinalMovement()) {
+      return edgesComplete(association.getOrder(), state)
+          && nodesComplete(association.getOrder(), state);
+    }
     switch (completedCondition) {
       case EDGE:
         return edgesComplete(association.getOrder(), state);
