@@ -13,7 +13,10 @@ toc::[]
 
 == Unreleased
 
-...
+* Changes affecting developers:
+** Update JUnit to 5.10.1.
+** Update ApprovalTests to 22.3.3.
+** Update Mockito to 5.8.0.
 
 == Version 0.18 (2023-12-15)
 
