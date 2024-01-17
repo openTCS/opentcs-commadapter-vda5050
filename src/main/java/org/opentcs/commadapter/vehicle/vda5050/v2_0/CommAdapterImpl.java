@@ -201,9 +201,9 @@ public class CommAdapterImpl
     this.minVisualizationInterval
         = getPropertyInteger(PROPKEY_VEHICLE_MIN_VISU_INTERVAL, vehicle).orElse(500);
     this.vehicleLengthLoaded
-        = getPropertyInteger(PROPKEY_VEHICLE_LENGTH_LOADED, vehicle).orElse(1000);
+        = getPropertyInteger(PROPKEY_VEHICLE_LENGTH_LOADED, vehicle).orElse(vehicle.getLength());
     this.vehicleLengthUnloaded
-        = getPropertyInteger(PROPKEY_VEHICLE_LENGTH_UNLOADED, vehicle).orElse(1000);
+        = getPropertyInteger(PROPKEY_VEHICLE_LENGTH_UNLOADED, vehicle).orElse(vehicle.getLength());
     this.clientManager = requireNonNull(clientManager, "clientManager");
     this.messageValidator = requireNonNull(messageValidator, "messageValidator");
     this.jsonBinder = requireNonNull(jsonBinder, "jsonBinder");

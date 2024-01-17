@@ -34,10 +34,10 @@ The property value contains the decimal representation of the minimum time in mi
 (Default value: `500`.)
 `vda5050:vehicleLengthLoaded` (optional)::
 The property value contains the decimal representation of the vehicle length in mm to be set when the vehicle reports at least one load.
-(Default value: `1000`.)
+(Default value: The vehicle length configured in the plant model.)
 `vda5050:vehicleLengthUnloaded` (optional)::
 The property value contains the decimal representation of the vehicle length in mm to be set when the vehicle reports no loads.
-(Default value: `1000`.)
+(Default value: The vehicle length configured in the plant model.)
 `vda5050:movementCommandCompletedCondition` (optional)::
 The property value contains a string that describes the condition under which a movement command is considered completed.
 Valid values are `EDGE` and `EDGE_AND_NODE`.
