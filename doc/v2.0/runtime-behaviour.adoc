@@ -303,8 +303,8 @@ NOTE: Angles in the plant model are expected to be in degrees, with an angle of 
 
 ==== Deviation extension for initial order messages
 
-In the first order message sent for a new VDA5050 order, the vehicle driver will always extend the deviation range of the first node to include the vehicle's current pose.
-An optional padding value is read from the vehicle property `vda5050:extendedDeviationRangePadding` and is added to the extended deviation range.
+In the first order message sent for a new VDA5050 order, the vehicle driver will always extend the deviation range (`allowedDeviationXY` and `allowedDeviationTheta`) of the first node to include the vehicle's current position and orientation.
+An optional padding value is read from the vehicle property `vda5050:extendedDeviationRangePadding` and is added to the extended `allowedDeviationXY`.
 
 === Edge properties in order messages
 
