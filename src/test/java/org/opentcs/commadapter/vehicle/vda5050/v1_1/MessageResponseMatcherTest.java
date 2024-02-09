@@ -42,6 +42,7 @@ import org.opentcs.data.order.Route;
 import org.opentcs.drivers.vehicle.MovementCommand;
 
 /**
+ * Unit tests for {@link MessageResponseMatcher}.
  */
 public class MessageResponseMatcherTest {
 
@@ -148,6 +149,24 @@ public class MessageResponseMatcherTest {
 
     // The order should have been sent only once - not again as a reaction to the state message.
     verify(sendOrderCallback, times(1)).accept(any());
+  }
+
+  @Test
+  public void shouldNotSendWhenInManualModeAndOrderRejection() {
+    Order order = new Order("some-order", 0L, List.of(), List.of());
+    InstantActions action = new InstantActions();
+    State state = stateWithOperatingMode(OperatingMode.MANUAL);
+    state.setErrors(List.of(
+        new ErrorEntry(
+            "validationError",
+            ErrorLevel.WARNING
+        )
+    ));
+
+    messageResponseMatcher.onStateMessage(state);
+    messageResponseMatcher.enqueueAction(action);
+
+    verify(sendInstantActionsCallback, never()).accept(action);
   }
 
   @Test

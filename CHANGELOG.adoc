@@ -12,8 +12,11 @@ toc::[]
 = Changelog
 
 == Unreleased
+
 * New features and enhancements:
 ** In case the property `vda5050:vehicleLengthLoaded` or `vda5050:vehicleLengthUnloaded` is not set, the vehicle length configured in the plant model is used as the default value for the respective property.
+* Fixes:
+** Dont send cancel order actions when the vehicles changes its operating mode and is actively rejecting an order.
 * Changes affecting developers:
 ** Update JUnit to 5.10.1.
 ** Update ApprovalTests to 22.3.3.

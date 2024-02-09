@@ -114,37 +114,39 @@ public class MessageResponseMatcher {
   public void onStateMessage(@Nonnull State state) {
     requireNonNull(state, "state");
 
-    Object currentRequest = requests.peek();
-    if (currentRequest != null) {
-      if (vehicleRejectedOrder(state)) {
-        if (currentRequest instanceof OrderAssociation) {
-          orderRejectedCallback.accept((OrderAssociation) currentRequest);
-        }
-
-        LOG.warn("{}: Vehicle indicates order rejection. Last request sent to it was: {}",
-                 commAdapterName,
-                 currentRequest);
-        return;
-      }
-
-      if (requestAccepted(currentRequest, state)) {
-        requests.poll();
-        if (currentRequest instanceof OrderAssociation) {
-          OrderAssociation order = (OrderAssociation) currentRequest;
-          LOG.debug("{}: Vehicle acknowledged order: {}", commAdapterName, order);
-          orderAcceptedCallback.accept(order);
-        }
-        else if (currentRequest instanceof InstantActions) {
-          InstantActions actions = (InstantActions) currentRequest;
-          LOG.debug("{}: Vehicle acknowledged instant actions: {}", commAdapterName, actions);
-        }
-      }
-    }
-
     sendingAllowed = state.getOperatingMode() == OperatingMode.AUTOMATIC
         || state.getOperatingMode() == OperatingMode.SEMIAUTOMATIC;
 
-    sendNextOrder();
+    Object currentRequest = requests.peek();
+    if (currentRequest == null) {
+      return;
+    }
+
+    if (vehicleRejectedOrder(state)) {
+      if (currentRequest instanceof OrderAssociation) {
+        orderRejectedCallback.accept((OrderAssociation) currentRequest);
+      }
+
+      LOG.warn("{}: Vehicle indicates order rejection. Last request sent to it was: {}",
+               commAdapterName,
+               currentRequest);
+    }
+    else if (requestAccepted(currentRequest, state)) {
+      requests.poll();
+      if (currentRequest instanceof OrderAssociation) {
+        OrderAssociation order = (OrderAssociation) currentRequest;
+        LOG.debug("{}: Vehicle acknowledged order: {}", commAdapterName, order);
+        orderAcceptedCallback.accept(order);
+      }
+      else if (currentRequest instanceof InstantActions) {
+        InstantActions actions = (InstantActions) currentRequest;
+        LOG.debug("{}: Vehicle acknowledged instant actions: {}", commAdapterName, actions);
+      }
+      sendNextOrder();
+    }
+    else {
+      sendNextOrder();
+    }
   }
 
   private boolean vehicleRejectedOrder(State state) {
