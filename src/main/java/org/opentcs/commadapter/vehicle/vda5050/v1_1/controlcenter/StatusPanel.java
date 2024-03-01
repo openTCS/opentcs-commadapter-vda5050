@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ProcessModelImpl;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.I18nCommAdapter.BUNDLE_PATH;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.commands.SendInstantActions;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.commands.SendInstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.connection.Connection;

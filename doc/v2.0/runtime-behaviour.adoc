@@ -340,6 +340,11 @@ The instant action's blocking type is set to `NONE`.
 An instant action of type `startPause`/`stopPause` is sent when the vehicle is paused/unpaused in openTCS.
 The instant action's blocking type is set to `NONE`.
 
+=== Sending arbitrary instant actions via the openTCS kernel API
+
+It is possible to have the vehicle driver send instant actions of any type using the openTCS kernel API.
+This can be done by invoking `VehicleService.sendCommAdapterCommand()` with an appropriately prepared instance of `org.opentcs.commadapter.vehicle.vda5050.v2_0.commands.SendInstantActions`.
+
 == Topic `factsheet`
 
 Factsheet messages are currently not processed by the driver.

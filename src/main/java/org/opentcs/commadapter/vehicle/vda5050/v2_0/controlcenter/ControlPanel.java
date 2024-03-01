@@ -18,7 +18,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.ProcessModelImpl;
-import org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.commands.SendInstantActions;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.commands.SendInstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.commands.SendOrderCommand;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.action.ActionConfigurationPanel;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;

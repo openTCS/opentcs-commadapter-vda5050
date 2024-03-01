@@ -5,10 +5,10 @@
  * see the licensing information (LICENSE.txt) you should have received with
  * this copy of the software.)
  */
-package org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.commands;
+package org.opentcs.commadapter.vehicle.vda5050.v2_0.commands;
 
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterImpl;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.instantactions.InstantActions;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.CommAdapterImpl;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.InstantActions;
 import org.opentcs.drivers.vehicle.AdapterCommand;
 import org.opentcs.drivers.vehicle.VehicleCommAdapter;
 
