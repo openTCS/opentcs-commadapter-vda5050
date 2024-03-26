@@ -28,11 +28,11 @@ So, with the vehicle property values being set as
 
 the driver would publish or subscribe to the following topics:
 
-* `uagv/v1/Some_Company/AGV-XY-1234/order` (published to)
-* `uagv/v1/Some_Company/AGV-XY-1234/instantActions` (published to)
-* `uagv/v1/Some_Company/AGV-XY-1234/state` (subscribed to)
-* `uagv/v1/Some_Company/AGV-XY-1234/visualization` (subscribed to)
-* `uagv/v1/Some_Company/AGV-XY-1234/connection` (subscribed to)
+* `uagv/v2/Some_Company/AGV-XY-1234/order` (published to)
+* `uagv/v2/Some_Company/AGV-XY-1234/instantActions` (published to)
+* `uagv/v2/Some_Company/AGV-XY-1234/state` (subscribed to)
+* `uagv/v2/Some_Company/AGV-XY-1234/visualization` (subscribed to)
+* `uagv/v2/Some_Company/AGV-XY-1234/connection` (subscribed to)
 
 NOTE: It is not recommended to use non-ASCII characters (e.g. German umlauts), spaces etc. in MQTT topic names, as they may make it more difficult to investigate in case of problems.
 Since the topic names used are derived from the property values listed above, it is also not recommended to use such characters in these property values.
