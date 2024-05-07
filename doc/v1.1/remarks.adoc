@@ -1,4 +1,8 @@
+:doctype: book
 :toc: macro
+:toclevels: 6
+:sectnums: all
+:sectnumlevels: 6
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
