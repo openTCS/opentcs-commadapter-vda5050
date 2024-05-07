@@ -129,8 +129,8 @@ The general behaviour with sending order messages is the following:
 
 * The vehicle driver subsequently sends one VDA5050 order message per step on the vehicle's route.
   This means that a vehicle that is currently at point _A_ and is supposed to move via points _B_ and _C_ to point _D_ will always receive three VDA5050 order messages.
-* The order messages sent by this vehicle driver contain only the _base_ of the vehicle's route.
-  A _horizon_ is not included.
+* The order messages sent by this vehicle driver contain both the _base_ and the _horizon_ of the vehicle's route.
+  How many steps of the route are sent as _base_ and _horizon_ can be configured using the vehicle properties `vda5050:maxStepsBase` and `vda5050:maxStepsHorizon` -- see xref:configuration.adoc[].
 * The vehicle driver sends the next order message (for the next step on the vehicle's route) only after a state message from the vehicle indicates that it has received the previous order message (by reflecting the order message's `orderId` and `orderUpdateId`.)
 ** In case the vehicle driver has sent an order message and receives a state message from the vehicle _not_ indicating that the vehicle has received the order message, the vehicle driver repeats the order message.
 ** In case the vehicle driver receives a state message from the vehicle indicating that the vehicle rejects an order, it does not repeat the order message or send further ones.
