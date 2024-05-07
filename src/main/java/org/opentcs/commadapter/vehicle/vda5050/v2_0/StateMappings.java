@@ -114,6 +114,10 @@ public class StateMappings {
     requireNonNull(state, "state");
     requireNonNull(errorLevel, "errorLevel");
 
+    if (state.getErrors() == null || state.getErrors().isEmpty()) {
+      return "";
+    }
+
     return String.join(
         ", ",
         state.getErrors().stream()
@@ -137,6 +141,10 @@ public class StateMappings {
   public static String toInfoPropertyValue(@Nonnull State state, @Nonnull InfoLevel infoLevel) {
     requireNonNull(state, "state");
     requireNonNull(infoLevel, "infoLevel");
+
+    if (state.getErrors() == null || state.getErrors().isEmpty()) {
+      return "";
+    }
 
     return String.join(
         ", ",
