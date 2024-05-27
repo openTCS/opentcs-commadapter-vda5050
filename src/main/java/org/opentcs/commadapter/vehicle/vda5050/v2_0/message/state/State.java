@@ -146,7 +146,7 @@ public class State
    */
   private List<ErrorEntry> errors;
   /**
-   * List of {@link InfoEntry} objects.
+   * [Optional] List of {@link InfoEntry} objects.
    * <p>
    * This should only be used for visualization or debugging – it must not be used for logic in
    * master control. An empty list indicates that the AGV has no information.
@@ -407,7 +407,7 @@ public class State
   }
 
   public State setInformation(List<InfoEntry> information) {
-    this.information = requireNonNull(information, "information");
+    this.information = information;
     return this;
   }
 

@@ -34,16 +34,15 @@
       "controlPoints" : [ {
         "x" : 9.8,
         "y" : 7.6,
-        "weight" : 2.0,
-        "orientation" : 3.14
+        "weight" : 2.0
       } ]
     }
   } ],
   "driving" : true,
   "actionStates" : [ {
     "actionId" : "some-action-id",
-    "actionType" : "some-type",
     "actionStatus" : "FAILED",
+    "actionType" : "some-type",
     "actionDescription" : "some-action-description",
     "resultDescription" : "some-result-description"
   } ],

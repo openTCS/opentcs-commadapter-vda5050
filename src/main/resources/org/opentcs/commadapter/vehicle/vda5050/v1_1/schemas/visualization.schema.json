@@ -29,7 +29,10 @@
             "type": "string"
         },
         "agvPosition": {
-            "type": "object",
+            "type": [
+              "object",
+              "null"
+            ],
             "additionalProperties": false,
             "title": "agvPosition",
             "$id": "#/position",
@@ -47,18 +50,27 @@
                     "type": "string"
                 },
                 "mapDescription": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                 },
                 "positionInitialized": {
                     "type": "boolean"
                 },
                 "localizationScore": {
-                    "type": "number",
+                    "type": [
+                      "number",
+                      "null"
+                    ],
                     "minimum": 0.0,
                     "maximum": 1.0
                 },
                 "deviationRange": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                 }
             },
             "required": [
@@ -70,18 +82,30 @@
             ]
         },
         "velocity": {
-            "type": "object",
+            "type": [
+              "object",
+              "null"
+            ],
             "additionalProperties": false,
             "title": "velocity",
             "properties": {
                 "vx": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                 },
                 "vy": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                 },
                 "omega": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                 }
             }
         }

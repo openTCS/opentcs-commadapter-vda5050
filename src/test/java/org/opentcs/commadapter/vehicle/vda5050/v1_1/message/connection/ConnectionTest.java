@@ -37,7 +37,10 @@ public class ConnectionTest {
 
   @Test
   public void validateAgainstJsonSchema() {
-    messageValidator.validate(jsonBinder.toJson(connection), Connection.class);
+    messageValidator.validate(
+        jsonBinder.toJson(connection),
+        Connection.class
+    );
   }
 
   @Test

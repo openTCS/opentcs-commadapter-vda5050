@@ -225,8 +225,8 @@ public class VehicleSimulator
     ActionTuple tuple = new ActionTuple();
     tuple.action = action;
     tuple.state = new ActionState(action.getActionId(),
-                                  action.getActionType(),
-                                  ActionStatus.WAITING);
+                                  ActionStatus.WAITING)
+        .setActionType(action.getActionType());
     actionMap.put(action.getActionId(), tuple);
 
     switch (tuple.action.getActionType()) {
@@ -315,8 +315,9 @@ public class VehicleSimulator
       vehicleState.getNodeStates().add(state);
       node.getActions().forEach(action -> {
         vehicleState.getActionStates().add(new ActionState(action.getActionId(),
-                                                           action.getActionType(),
-                                                           ActionStatus.WAITING));
+                                                           ActionStatus.WAITING)
+            .setActionType(action.getActionType())
+        );
       });
     });
     vehicleState.getEdgeStates().clear();
@@ -329,8 +330,9 @@ public class VehicleSimulator
                                                      edge.isReleased()));
       edge.getActions().forEach(action -> {
         vehicleState.getActionStates().add(new ActionState(action.getActionId(),
-                                                           action.getActionType(),
-                                                           ActionStatus.WAITING));
+                                                           ActionStatus.WAITING)
+            .setActionType(action.getActionType())
+        );
       });
     });
     sendState();
@@ -360,8 +362,9 @@ public class VehicleSimulator
       vehicleState.getNodeStates().add(state);
       node.getActions().forEach(action -> {
         vehicleState.getActionStates().add(new ActionState(action.getActionId(),
-                                                           action.getActionType(),
-                                                           ActionStatus.WAITING));
+                                                           ActionStatus.WAITING)
+            .setActionType(action.getActionType())
+        );
       });
     });
     order.getEdges().forEach(edge -> {
@@ -373,8 +376,9 @@ public class VehicleSimulator
                                                      edge.isReleased()));
       edge.getActions().forEach(action -> {
         vehicleState.getActionStates().add(new ActionState(action.getActionId(),
-                                                           action.getActionType(),
-                                                           ActionStatus.WAITING));
+                                                           ActionStatus.WAITING)
+            .setActionType(action.getActionType())
+        );
       });
     });
     sendState();

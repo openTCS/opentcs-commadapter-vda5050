@@ -55,7 +55,7 @@ public class InstantActions
       @Nonnull @JsonProperty(required = true, value = "version") String version,
       @Nonnull @JsonProperty(required = true, value = "manufacturer") String manufacturer,
       @Nonnull @JsonProperty(required = true, value = "serialNumber") String serialNumber,
-      @Nonnull @JsonProperty(required = true, value = "instantActions") List<Action> actions) {
+      @Nonnull @JsonProperty(required = true, value = "actions") List<Action> actions) {
     super(headerId, timestamp, version, manufacturer, serialNumber);
     this.actions = requireNonNull(actions, "actions");
   }

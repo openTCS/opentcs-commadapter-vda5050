@@ -254,8 +254,8 @@ public class MessageResponseMatcherTest {
             .map(action
                 -> new ActionState(
                 action.getActionId(),
-                action.getActionType(),
                 ActionStatus.WAITING)
+                .setActionType(action.getActionType())
             )
             .collect(Collectors.toList())
     );

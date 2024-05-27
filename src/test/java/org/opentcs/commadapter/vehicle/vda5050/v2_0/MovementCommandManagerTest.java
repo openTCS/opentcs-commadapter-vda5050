@@ -267,7 +267,9 @@ public class MovementCommandManagerTest {
         .withActionAtDestPoint("some-action-type", "some-action-id", BlockingType.NONE)
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId())
-        .withActionState(new ActionState("some-OTHER-action-id", "some-action-type", actionStatus))
+        .withActionState(
+            new ActionState("some-OTHER-action-id", actionStatus)
+                .setActionType("some-action-type"))
         .build();
     // Actions that are unrelated to the movement command should not block it from completing.
     manager.enqueue(association);
@@ -327,7 +329,10 @@ public class MovementCommandManagerTest {
                                                     true)
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId())
-        .withActionState(new ActionState("some-OTHER-action-id", "some-action-type", actionStatus))
+        .withActionState(
+            new ActionState("some-OTHER-action-id", actionStatus)
+                .setActionType("some-action-type")
+        )
         .build();
     // Unrelated actions dont block a movement command from completing. Even for final movements.
     manager.enqueue(association);
@@ -429,11 +434,10 @@ public class MovementCommandManagerTest {
           order.getNodes().stream().flatMap(node -> node.getActions().stream()),
           order.getEdges().stream().flatMap(edge -> edge.getActions().stream())
       ).forEach(action -> {
-        state.getActionStates().add(new ActionState(
-            action.getActionId(),
-            action.getActionType(),
-            actionStatus
-        ));
+        state.getActionStates().add(
+            new ActionState(action.getActionId(), actionStatus)
+                .setActionType(action.getActionType())
+        );
       });
       return this;
     }

@@ -34,7 +34,10 @@
             "type": "integer"
         },
         "zoneSetId": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
         },
         "lastNodeId": {
             "type": "string"
@@ -46,13 +49,22 @@
             "type": "boolean"
         },
         "paused": {
-            "type": "boolean"
+            "type": [
+              "boolean",
+              "null"
+            ]
         },
         "newBaseRequest": {
-            "type": "boolean"
+            "type": [
+              "boolean",
+              "null"
+            ]
         },
         "distanceSinceLastNode": {
-            "type": "number"
+            "type": [
+              "number",
+              "null"
+            ]
         },
         "operatingMode": {
             "type": "string",
@@ -78,10 +90,16 @@
                         "type": "integer"
                     },
                     "nodeDescription": {
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                     },
                     "nodePosition": {
-                        "type": "object",
+                        "type": [
+                          "object",
+                          "null"
+                        ],
                         "additionalProperties": false,
                         "title": "nodePosition",
                         "properties": {
@@ -92,18 +110,27 @@
                                 "type": "number"
                             },
                             "theta": {
-                                "type": "number",
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
                                 "minimum": -3.14159265359,
                                 "maximum": 3.14159265359
                             },
                             "allowedDeviationXY": {
                                 "title": "allowedDeviationXY",
-                                "type": "number",
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
                                 "minimum": 0
                             },
                             "allowedDeviationTheta": {
                                 "title": "allowedDeviationTheta",
-                                "type": "number",
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
                                 "minimum": 0,
                                 "maximum": 3.141592654
                             },
@@ -112,7 +139,10 @@
                             },
                             "mapDescription": {
                                 "title": "mapDescription",
-                                "type": "string"
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                             }
                         },
                         "required": [
@@ -146,13 +176,19 @@
                         "type": "integer"
                     },
                     "edgeDescription": {
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                     },
                     "released": {
                         "type": "boolean"
                     },
                     "trajectory": {
-                        "type": "object",
+                        "type": [
+                          "object",
+                          "null"
+                        ],
                         "additionalProperties": false,
                         "properties": {
                             "degree": {
@@ -183,7 +219,10 @@
                                             "type": "number"
                                         },
                                         "orientation": {
-                                            "type": "number",
+                                            "type": [
+                                              "number",
+                                              "null"
+                                            ],
                                             "minimum": -3.14159265359,
                                             "maximum": 3.14159265359
                                         }
@@ -211,7 +250,10 @@
             }
         },
         "agvPosition": {
-            "type": "object",
+            "type": [
+              "object",
+              "null"
+            ],
             "additionalProperties": false,
             "title": "agvPosition",
             "properties": {
@@ -228,18 +270,27 @@
                     "type": "string"
                 },
                 "mapDescription": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                 },
                 "positionInitialized": {
                     "type": "boolean"
                 },
                 "localizationScore": {
-                    "type": "number",
+                    "type": [
+                      "number",
+                      "null"
+                    ],
                     "minimum": 0.0,
                     "maximum": 1.0
                 },
                 "deviationRange": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                 }
             },
             "required": [
@@ -251,39 +302,66 @@
             ]
         },
         "velocity": {
-            "type": "object",
+            "type": [
+              "object",
+              "null"
+            ],
             "additionalProperties": false,
             "title": "velocity",
             "properties": {
                 "vx": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                 },
                 "vy": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                 },
                 "omega": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                 }
             }
         },
         "loads": {
-            "type": "array",
+            "type": [
+              "array",
+              "null"
+            ],
             "items": {
                 "type": "object",
                 "additionalProperties": false,
                 "title": "load",
                 "properties": {
                     "loadId": {
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                     },
                     "loadType": {
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                     },
                     "loadPosition": {
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                     },
                     "boundingBoxReference": {
-                        "type": "object",
+                        "type": [
+                          "object",
+                          "null"
+                        ],
                         "additionalProperties": false,
                         "properties": {
                             "x": {
@@ -296,7 +374,10 @@
                                 "type": "number"
                             },
                             "theta": {
-                                "type": "number"
+                                "type": [
+                                  "number",
+                                  "null"
+                                ]
                             }
                         },
                         "required": [
@@ -306,7 +387,10 @@
                         ]
                     },
                     "loadDimensions": {
-                        "type": "object",
+                        "type": [
+                          "object",
+                          "null"
+                        ],
                         "additionalProperties": false,
                         "title": "loadDimensions",
                         "properties": {
@@ -317,7 +401,10 @@
                                 "type": "number"
                             },
                             "height": {
-                                "type": "number"
+                                "type": [
+                                  "number",
+                                  "null"
+                                ]
                             }
                         },
                         "required": [
@@ -326,7 +413,10 @@
                         ]
                     },
                     "weight": {
-                        "type": "number"
+                        "type": [
+                          "number",
+                          "null"
+                        ]
                     }
                 },
                 "required": []
@@ -346,10 +436,16 @@
                         ]
                     },
                     "actionType": {
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                     },
                     "actionDescription": {
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                     },
                     "actionStatus": {
                         "type": "string",
@@ -362,7 +458,10 @@
                         ]
                     },
                     "resultDescription": {
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                     }
                 },
                 "required": [
@@ -381,16 +480,25 @@
                     "type": "number"
                 },
                 "batteryVoltage": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                 },
                 "batteryHealth": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                 },
                 "charging": {
                     "type": "boolean"
                 },
                 "reach": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                 }
             },
             "required": [
@@ -410,7 +518,10 @@
                         "type": "string"
                     },
                     "errorReferences": {
-                        "type": "array",
+                        "type": [
+                          "array",
+                          "null"
+                        ],
                         "title": "errorReferences",
                         "items": {
                             "type": "object",
@@ -431,7 +542,10 @@
                         }
                     },
                     "errorDescription": {
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                     },
                     "errorLevel": {
                         "type": "string",
@@ -459,7 +573,10 @@
                         "type": "string"
                     },
                     "infoReferences": {
-                        "type": "array",
+                        "type": [
+                          "array",
+                          "null"
+                        ],
                         "title": "infoReferences",
                         "items": {
                             "type": "object",
@@ -480,7 +597,10 @@
                         }
                     },
                     "infoDescription": {
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                     },
                     "infoLevel": {
                         "type": "string",

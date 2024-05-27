@@ -95,8 +95,7 @@
       "controlPoints" : [ {
         "x" : 1.2,
         "y" : 2.3,
-        "weight" : 1.0,
-        "orientation" : 3.14
+        "weight" : 1.0
       } ]
     }
   } ],

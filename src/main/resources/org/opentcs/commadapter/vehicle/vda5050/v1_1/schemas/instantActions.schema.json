@@ -52,7 +52,10 @@
                         "title": "actionId"
                     },
                     "actionDescription": {
-                        "type": "string",
+                        "type": [
+                          "string",
+                          "null"
+                        ],
                         "title": "Additional Information on the action"
                     },
                     "blockingType": {
@@ -65,7 +68,10 @@
                         ]
                     },
                     "actionParameters": {
-                        "type": "array",
+                        "type": [
+                          "array",
+                          "null"
+                        ],
                         "items": {
                             "title": "actionParameter",
                             "type": "object",

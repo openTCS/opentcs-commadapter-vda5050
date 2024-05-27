@@ -42,7 +42,10 @@
         },
         "zoneSetId": {
             "title": "zoneSetId",
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
         },
         "nodes": {
             "title": "List of Nodes",
@@ -74,7 +77,10 @@
                     },
                     "nodeDescription": {
                         "title": "nodeDescription",
-                        "type": "string"
+                        "type": [
+                          "string",
+                          "null"
+                        ]
                     },
                     "released": {
                         "type": "boolean",
@@ -82,7 +88,10 @@
                     },
                     "nodePosition": {
                         "title": "nodePosition",
-                        "type": "object",
+                        "type": [
+                          "object",
+                          "null"
+                        ],
                         "additionalProperties": false,
                         "required": [
                             "x",
@@ -100,18 +109,27 @@
                             },
                             "theta": {
                                 "title": "Theta",
-                                "type": "number",
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
                                 "minimum": -3.14159265359,
                                 "maximum": 3.14159265359
                             },
                             "allowedDeviationXY": {
                                 "title": "allowedDeviationXY",
-                                "type": "number",
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
                                 "minimum": 0
                             },
                             "allowedDeviationTheta": {
                                 "title": "allowedDeviationTheta",
-                                "type": "number",
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
                                 "minimum": 0,
                                 "maximum": 3.141592654
                             },
@@ -121,7 +139,10 @@
                             },
                             "mapDescription": {
                                 "title": "mapDescription",
-                                "type": "string"
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
                             }
                         }
                     },
@@ -147,7 +168,10 @@
                                     "title": "actionId"
                                 },
                                 "actionDescription": {
-                                    "type": "string",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
                                     "title": "Additional Information on the action"
                                 },
                                 "blockingType": {
@@ -160,7 +184,10 @@
                                     ]
                                 },
                                 "actionParameters": {
-                                    "type": "array",
+                                    "type": [
+                                      "array",
+                                      "null"
+                                    ],
                                     "items": {
                                         "title": "actionParameter",
                                         "type": "object",
@@ -233,7 +260,10 @@
                         "title": "sequenceId"
                     },
                     "edgeDescription": {
-                        "type": "string",
+                        "type": [
+                          "string",
+                          "null"
+                        ],
                         "title": "edgeDescription"
                     },
                     "released": {
@@ -249,25 +279,40 @@
                         "title": "endNodeId"
                     },
                     "maxSpeed": {
-                        "type": "number",
+                        "type": [
+                          "number",
+                          "null"
+                        ],
                         "title": "maxSpeed"
                     },
                     "maxHeight": {
-                        "type": "number",
+                        "type": [
+                          "number",
+                          "null"
+                        ],
                         "title": "maxHeight"
                     },
                     "minHeight": {
-                        "type": "number",
+                        "type": [
+                          "number",
+                          "null"
+                        ],
                         "title": "minHeight"
                     },
                     "orientation": {
-                        "type": "number",
+                        "type": [
+                          "number",
+                          "null"
+                        ],
                         "title": "orientation",
                         "minimum": -3.14159265359,
                         "maximum": 3.14159265359
                     },
                     "direction": {
-                        "type": "string",
+                        "type": [
+                          "string",
+                          "null"
+                        ],
                         "title": "direction",
                         "examples": [
                             "left",
@@ -277,19 +322,31 @@
                         ]
                     },
                     "rotationAllowed": {
-                        "type": "boolean",
+                        "type": [
+                          "boolean",
+                          "null"
+                        ],
                         "title": "rotationAllowed"
                     },
                     "maxRotationSpeed": {
-                        "type": "number",
+                        "type": [
+                          "number",
+                          "null"
+                        ],
                         "title": "maxRotationSpeed"
                     },
                     "length": {
-                        "type": "number",
+                        "type": [
+                          "number",
+                          "null"
+                        ],
                         "title": "length"
                     },
                     "trajectory": {
-                        "type": "object",
+                        "type": [
+                          "object",
+                          "null"
+                        ],
                         "additionalProperties": false,
                         "properties": {
                             "degree": {
@@ -320,7 +377,10 @@
                                             "type": "number"
                                         },
                                         "orientation": {
-                                            "type": "number",
+                                            "type": [
+                                              "number",
+                                              "null"
+                                            ],
                                             "minimum": -3.14159265359,
                                             "maximum": 3.14159265359
                                         }
@@ -360,7 +420,10 @@
                                     "title": "actionId"
                                 },
                                 "actionDescription": {
-                                    "type": "string",
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
                                     "title": "Additional Information on the action"
                                 },
                                 "blockingType": {
@@ -373,7 +436,10 @@
                                     ]
                                 },
                                 "actionParameters": {
-                                    "type": "array",
+                                    "type": [
+                                      "array",
+                                      "null"
+                                    ],
                                     "items": {
                                         "title": "actionParameter",
                                         "type": "object",

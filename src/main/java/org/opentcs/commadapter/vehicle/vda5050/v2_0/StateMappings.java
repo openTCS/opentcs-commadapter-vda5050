@@ -138,6 +138,10 @@ public class StateMappings {
     requireNonNull(state, "state");
     requireNonNull(infoLevel, "infoLevel");
 
+    if (state.getInformation() == null) {
+      return "";
+    }
+
     return String.join(
         ", ",
         state.getInformation().stream()

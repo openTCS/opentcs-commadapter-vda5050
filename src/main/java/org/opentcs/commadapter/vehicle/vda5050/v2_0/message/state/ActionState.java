@@ -27,7 +27,7 @@ public class ActionState
    */
   private String actionId;
   /**
-   * Type of the action.
+   * [Optional] Type of the action.
    * <p>
    * Only for informational or visualization purposes.
    */
@@ -50,10 +50,8 @@ public class ActionState
   @JsonCreator
   public ActionState(
       @Nonnull @JsonProperty(required = true, value = "actionId") String actionId,
-      @Nonnull @JsonProperty(required = true, value = "actionType") String actionType,
       @Nonnull @JsonProperty(required = true, value = "actionStatus") ActionStatus actionStatus) {
     this.actionId = requireNonNull(actionId, "actionId");
-    this.actionType = requireNonNull(actionType, "actionType");
     this.actionStatus = requireNonNull(actionStatus, "actionStatus");
   }
 
@@ -97,8 +95,8 @@ public class ActionState
     return actionType;
   }
 
-  public ActionState setActionType(@Nonnull String actionType) {
-    this.actionType = requireNonNull(actionType, "actionType");
+  public ActionState setActionType(String actionType) {
+    this.actionType = actionType;
     return this;
   }
 

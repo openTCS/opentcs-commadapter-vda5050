@@ -61,7 +61,8 @@ public class StateMappingsTest {
     state.setNodeStates(List.of());
     state.setEdgeStates(List.of());
     state.setActionStates(List.of(
-        new ActionState("some-id", "some-type", ActionStatus.RUNNING)
+        new ActionState("some-id", ActionStatus.RUNNING)
+            .setActionType("some-type")
     ));
     assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.EXECUTING));
 

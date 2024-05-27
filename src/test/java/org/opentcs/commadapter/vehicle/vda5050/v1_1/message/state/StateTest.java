@@ -12,6 +12,7 @@ import java.util.List;
 import org.approvaltests.Approvals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.opentcs.commadapter.vehicle.vda5050.ResourceLoader;
 import org.opentcs.commadapter.vehicle.vda5050.common.JsonBinder;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.MessageValidator;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.AgvPosition;
@@ -25,6 +26,9 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Velocity;
  */
 public class StateTest {
 
+  private static final String RESOURCE_DIR
+      = "/org/opentcs/commadapter/vehicle/vda5050/v1_1/message/state/";
+
   private MessageValidator messageValidator;
   private JsonBinder jsonBinder;
 
@@ -36,12 +40,60 @@ public class StateTest {
 
   @Test
   public void validateAgainstJsonSchemaMinimal() {
-    messageValidator.validate(jsonBinder.toJson(createStateMinimal()), State.class);
+    messageValidator.validate(
+        jsonBinder.toJson(createStateMinimal()),
+        State.class
+    );
   }
 
   @Test
   public void validateAgainstJsonSchemaFull() {
-    messageValidator.validate(jsonBinder.toJson(createStateFull()), State.class);
+    messageValidator.validate(
+        jsonBinder.toJson(createStateFull()),
+        State.class
+    );
+  }
+
+  @Test
+  public void validateJsonWithNullForOptionalFieldsAgainstSchema() {
+    messageValidator.validate(
+        ResourceLoader.load(RESOURCE_DIR + "stateMessageWithNullForOptionalFields.json"),
+        State.class
+    );
+  }
+
+  @Test
+  public void deserializeJsonWithNullForOptionalFields() {
+    Approvals.verify(
+        jsonBinder.toJson(
+            jsonBinder.fromJson(
+                ResourceLoader.load(RESOURCE_DIR + "stateMessageWithNullForOptionalFields.json"),
+                State.class
+            )
+        )
+    );
+  }
+
+  @Test
+  public void validateJsonWithNullForOptionalRootFieldsAgainstSchema() {
+    messageValidator.validate(
+        ResourceLoader.load(RESOURCE_DIR + "stateMessageWithNullForOptionalRootFields.json"),
+        State.class
+    );
+  }
+
+  @Test
+  public void deserializeJsonWithNullForOptionalRootFields() {
+    Approvals.verify(
+        jsonBinder.toJson(
+            jsonBinder.fromJson(
+                ResourceLoader.load(
+                    RESOURCE_DIR + "stateMessageWithNullForOptionalRootFields.json"
+                ),
+                State.class
+            )
+        )
+    );
   }
 
   @Test
@@ -116,7 +168,8 @@ public class StateTest {
         ),
         true,
         List.of(
-            new ActionState("some-action-id", "some-type", ActionStatus.FAILED)
+            new ActionState("some-action-id", ActionStatus.FAILED)
+                .setActionType("some-type")
                 .setActionDescription("some-action-description")
                 .setResultDescription("some-result-description")
         ),

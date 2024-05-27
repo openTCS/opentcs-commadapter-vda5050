@@ -12,6 +12,7 @@ import java.util.List;
 import org.approvaltests.Approvals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.opentcs.commadapter.vehicle.vda5050.ResourceLoader;
 import org.opentcs.commadapter.vehicle.vda5050.common.JsonBinder;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.MessageValidator;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
@@ -26,6 +27,9 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Trajectory;
  */
 public class OrderTest {
 
+  private static final String RESOURCE_DIR
+      = "/org/opentcs/commadapter/vehicle/vda5050/v1_1/message/order/";
+
   private MessageValidator messageValidator;
   private JsonBinder jsonBinder;
 
@@ -37,12 +41,26 @@ public class OrderTest {
 
   @Test
   public void validateAgainstJsonSchemaMinmal() {
-    messageValidator.validate(jsonBinder.toJson(createOrderMinimal()), Order.class);
+    messageValidator.validate(
+        jsonBinder.toJson(createOrderMinimal()),
+        Order.class
+    );
   }
 
   @Test
   public void validateAgainstJsonSchemaFull() {
-    messageValidator.validate(jsonBinder.toJson(createOrderFull()), Order.class);
+    messageValidator.validate(
+        jsonBinder.toJson(createOrderFull()),
+        Order.class
+    );
+  }
+
+  @Test
+  public void validateJsonWithNullForOptionalFieldsAgainstSchema() {
+    messageValidator.validate(
+        ResourceLoader.load(RESOURCE_DIR + "orderMessageWithNullForOptionalFields.json"),
+        Order.class
+    );
   }
 
   @Test
