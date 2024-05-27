@@ -17,6 +17,10 @@ toc::[]
 
 == Unreleased
 
+* New features and enhancements:
+** Allow `null` for optional properties in JSON messages.
+* Fixes:
+** Some of the fields that are optional according to the VDA5050 specification are now also correctly treated as such in the driver implementations.
 * Changes affecting developers:
 ** Update Gradle wrapper to 8.7.
 
@@ -24,10 +28,8 @@ toc::[]
 
 * New features and enhancements:
 ** In case the property `vda5050:vehicleLengthLoaded` or `vda5050:vehicleLengthUnloaded` is not set, the vehicle length configured in the plant model is used as the default value for the respective property.
-** Allow `null` for optional properties in JSON messages.
 * Fixes:
 ** Dont send cancel order actions when the vehicles changes its operating mode and is actively rejecting an order.
-** Some of the fields that are optional according to the VDA5050 specification are now also correctly treated as such in the driver implementations.
 * Changes affecting developers:
 ** Update JUnit to 5.10.1.
 ** Update ApprovalTests to 22.3.3.
