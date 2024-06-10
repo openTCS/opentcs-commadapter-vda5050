@@ -19,6 +19,7 @@ toc::[]
 
 * New features and enhancements:
 ** Allow `null` for optional properties in JSON messages.
+** Support action mapping for transport order destinations.
 * Fixes:
 ** Some of the fields that are optional according to the VDA5050 specification are now also correctly treated as such in the driver implementations.
 * Changes affecting developers:

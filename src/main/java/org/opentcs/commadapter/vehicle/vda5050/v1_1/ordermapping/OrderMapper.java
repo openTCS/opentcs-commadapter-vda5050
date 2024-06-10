@@ -204,7 +204,8 @@ public class OrderMapper {
             .stream()
             .flatMap(opLocation -> ActionsMapping.mapPropertyActions(opLocation).stream())
             .filter(propActionFilter),
-        movementCommandPropAction(command, vehicle).stream()
+        movementCommandPropAction(command, vehicle).stream(),
+        ActionsMapping.mapPropertyActions(command).stream()
     )
         .map(propertyAction -> ActionsMapping.fromPropertyAction(vehicle, propertyAction))
         .collect(Collectors.toList());

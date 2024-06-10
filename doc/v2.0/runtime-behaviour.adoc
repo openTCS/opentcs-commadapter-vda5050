@@ -285,6 +285,19 @@ The vehicle driver will then always use that blocking type given in the vehicle 
 For example, you could set `vda5050:action.beep.blockingType = SOFT` on a vehicle element in the plant model.
 Whenever an action of type `beep` is sent to the vehicle, it will always have `SOFT` as its blocking type.
 
+=== Actions at transport order destinations
+
+Similar to how you can set actions at points, paths and locations, it is also possible to set actions on transport order destinations.
+The actions set this way are independent of the plant model, i.e. they do not need to be defined at location types.
+
+The properties available for setting actions on a transport order destination are:
+
+* `vda5050:action.<INDEX>`
+* `vda5050:action.<INDEX>.blockingType`
+* `vda5050:action.<INDEX>.parameter.<PARAMETER>`
+
+See <<actions-at-points-paths-locations,Actions at points, paths and locations>> for explanation of these properties.
+
 === Node position properties in order messages
 
 * `nodePosition.x` and `nodePosition.y`:

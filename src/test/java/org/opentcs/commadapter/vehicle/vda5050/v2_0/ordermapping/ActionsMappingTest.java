@@ -79,6 +79,55 @@ public class ActionsMappingTest {
   }
 
   @Test
+  public void createActionsFromMovementCommand() {
+    LocationType locationType = new LocationType("locType");
+    Location location = new Location("destLoc", locationType.getReference());
+
+    MovementCommand command = new DummyMovementCommand("destOp", location)
+        .withFinalMovement(true)
+        .withProperties(
+            Map.of(
+                PROPKEY_CUSTOM_ACTION_PREFIX + ".01", "some-action",
+                PROPKEY_CUSTOM_ACTION_PREFIX + ".01.blockingType", "SOFT",
+                PROPKEY_CUSTOM_ACTION_PREFIX + ".01.parameter.x", "123",
+                PROPKEY_CUSTOM_ACTION_PREFIX + ".01.parameter.y", "456"
+            ));
+
+    List<PropertyAction> result = ActionsMapping.mapPropertyActions(command);
+
+    assertThat(result, hasSize(1));
+
+    PropertyAction action = result.get(0);
+    assertThat(action.getActionType(), is("some-action"));
+    assertThat(action.getBlockingType(), is(BlockingType.SOFT));
+    assertThat(action.getActionParameters(), hasSize(2));
+
+    org.assertj.core.api.Assertions.assertThat(action.getActionParameters())
+        .hasSize(2)
+        .extracting(ActionParameter::getKey, ActionParameter::getValue)
+        .contains(tuple("x", "123"), tuple("y", "456"));
+  }
+
+  @Test
+  public void createNoActionsIfNotFinalMovement() {
+    LocationType locationType = new LocationType("locType");
+    Location location = new Location("destLoc", locationType.getReference());
+
+    MovementCommand command = new DummyMovementCommand("destOp", location)
+        .withFinalMovement(false)
+        .withProperties(
+            Map.of(
+                PROPKEY_CUSTOM_ACTION_PREFIX + ".01", "some-action",
+                PROPKEY_CUSTOM_ACTION_PREFIX + ".01.blockingType", "SOFT",
+                PROPKEY_CUSTOM_ACTION_PREFIX + ".01.parameter.x", "123",
+                PROPKEY_CUSTOM_ACTION_PREFIX + ".01.parameter.y", "456"
+            ));
+    List<PropertyAction> result = ActionsMapping.mapPropertyActions(command);
+
+    assertThat(result, hasSize(0));
+  }
+
+  @Test
   public void parseFloatingPointActionParameterPositive() {
     point = point.withProperties(
         Map.of(
@@ -541,19 +590,23 @@ public class ActionsMappingTest {
     private final String operation;
     private final Location opLocation;
     private final Map<String, String> properties;
+    private final boolean finalMovement;
 
     DummyMovementCommand(String operation, Location opLocation) {
       this.operation = requireNonNull(operation, "operation");
       this.opLocation = requireNonNull(opLocation, "opLocation");
       this.properties = Map.of();
+      this.finalMovement = false;
     }
 
     private DummyMovementCommand(String operation,
                                  Location opLocation,
-                                 Map<String, String> properties) {
+                                 Map<String, String> properties,
+                                 boolean finalMovement) {
       this.operation = requireNonNull(operation, "operation");
       this.opLocation = requireNonNull(opLocation, "opLocation");
       this.properties = requireNonNull(properties, "properties");
+      this.finalMovement = finalMovement;
     }
 
     @Override
@@ -591,7 +644,7 @@ public class ActionsMappingTest {
 
     @Override
     public boolean isFinalMovement() {
-      throw new UnsupportedOperationException("Not supported yet.");
+      return finalMovement;
     }
 
     @Override
@@ -615,7 +668,11 @@ public class ActionsMappingTest {
     }
 
     public DummyMovementCommand withProperties(Map<String, String> properties) {
-      return new DummyMovementCommand(operation, opLocation, properties);
+      return new DummyMovementCommand(operation, opLocation, properties, finalMovement);
+    }
+
+    public DummyMovementCommand withFinalMovement(boolean finalMovement) {
+      return new DummyMovementCommand(operation, opLocation, properties, finalMovement);
     }
   }
 }

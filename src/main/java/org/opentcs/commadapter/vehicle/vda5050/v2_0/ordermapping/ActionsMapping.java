@@ -101,6 +101,27 @@ public class ActionsMapping {
     return createAction(propertyAction, vehicle);
   }
 
+  public static List<PropertyAction> mapPropertyActions(MovementCommand command) {
+    requireNonNull(command, "command");
+
+    if (!command.isFinalMovement()) {
+      return List.of();
+    }
+
+    // XXX AtomicInteger is only used as a counter object, not for concurrency.
+    // XXX We may want to use something more efficient.
+    AtomicInteger actionCounter = new AtomicInteger(0);
+    return command.getProperties().entrySet().stream()
+        .map(property -> extractActionIndex(property.getKey()))
+        .filter(actionIndex -> actionIndex != null)
+        .sorted()
+        .map(actionIndex -> createPropertyAction(actionIndex,
+                                                 actionCounter.getAndIncrement(),
+                                                 command)
+        )
+        .collect(Collectors.toCollection(ArrayList::new));
+  }
+
   /**
    * Maps a movement command to a {@link PropertyAction}.
    *
@@ -358,6 +379,20 @@ public class ActionsMapping {
   private static String extractActionIndex(String propertyKey) {
     Matcher matcher = ACTION_PROP_INDEX_PATTERN.matcher(propertyKey);
     return matcher.matches() ? matcher.group(1) : null;
+  }
+
+  private static PropertyAction createPropertyAction(String actionIndex,
+                                                     int actionNumber,
+                                                     MovementCommand command) {
+    LOG.debug("Start mapping actions for movement command: {}", command);
+    return new PropertyAction(
+        command.getProperties().get(PROPKEY_CUSTOM_ACTION_PREFIX + "." + actionIndex),
+        "Order_destination_custom_action_" + actionNumber,
+        extractBlockingType(actionIndex, command.getProperties()).orElse(BlockingType.NONE),
+        extractActionParameters(actionIndex, command.getProperties()),
+        EnumSet.allOf(ActionTrigger.class),
+        Set.of()
+    );
   }
 
   private static PropertyAction createPropertyAction(String actionIndex,
