@@ -8,16 +8,17 @@
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.ordermapping;
 
 import static java.lang.Math.toRadians;
-import java.util.List;
 import static java.util.Objects.requireNonNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyDouble;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_PATH_ORIENTATION_FORWARD;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_PATH_ORIENTATION_REVERSE;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_PATH_ROTATION_ALLOWED_FORWARD;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_PATH_ROTATION_ALLOWED_REVERSE;
+
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Edge;
 import org.opentcs.data.model.Vehicle;
@@ -43,9 +44,11 @@ public class EdgeMapping {
    * @param actions The actions for this edge.
    * @return The mapped edge
    */
-  public static Edge toBaseEdge(Route.Step step,
-                                Vehicle vehicle,
-                                List<Action> actions) {
+  public static Edge toBaseEdge(
+      Route.Step step,
+      Vehicle vehicle,
+      List<Action> actions
+  ) {
     requireNonNull(step, "step");
     requireNonNull(vehicle, "vehicle");
     requireNonNull(actions, "actions");

@@ -32,8 +32,10 @@ public interface CommAdapterComponentsFactory {
    * @param isActionExecutable A predicate to test if an action is executable.
    * @return The new object mapper.
    */
-  OrderMapper createOrderMapper(TCSObjectReference<Vehicle> vehicleReference,
-                                Predicate<String> isActionExecutable);
+  OrderMapper createOrderMapper(
+      TCSObjectReference<Vehicle> vehicleReference,
+      Predicate<String> isActionExecutable
+  );
 
   /**
    * Creates a new vehicle position resolver.

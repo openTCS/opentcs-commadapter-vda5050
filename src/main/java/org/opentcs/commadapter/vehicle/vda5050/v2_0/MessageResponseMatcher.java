@@ -7,9 +7,10 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayDeque;
 import java.util.Objects;
-import static java.util.Objects.requireNonNull;
 import java.util.Queue;
 import java.util.function.Consumer;
 import javax.annotation.Nonnull;
@@ -68,11 +69,18 @@ public class MessageResponseMatcher {
    * @param orderAcceptedCallback The callback for when the order is accepted by the vehicle.
    * @param orderRejectedCallback The callback for when the vehicle rejects an order.
    */
-  public MessageResponseMatcher(@Nonnull String commAdapterName,
-                                @Nonnull Consumer<Order> sendOrderCallback,
-                                @Nonnull Consumer<InstantActions> sendInstantActionsCallback,
-                                @Nonnull Consumer<OrderAssociation> orderAcceptedCallback,
-                                @Nonnull Consumer<OrderAssociation> orderRejectedCallback) {
+  public MessageResponseMatcher(
+      @Nonnull
+      String commAdapterName,
+      @Nonnull
+      Consumer<Order> sendOrderCallback,
+      @Nonnull
+      Consumer<InstantActions> sendInstantActionsCallback,
+      @Nonnull
+      Consumer<OrderAssociation> orderAcceptedCallback,
+      @Nonnull
+      Consumer<OrderAssociation> orderRejectedCallback
+  ) {
     this.commAdapterName = requireNonNull(commAdapterName, "commAdapterName");
     this.sendOrderCallback = requireNonNull(sendOrderCallback, "sendOrderCallback");
     this.sendInstantActionsCallback
@@ -95,8 +103,10 @@ public class MessageResponseMatcher {
     requests.add(request);
 
     if (requests.size() > 1) {
-      LOG.debug("{}: Not sending enqueued request yet, due to unacknowledged previous request.",
-                commAdapterName);
+      LOG.debug(
+          "{}: Not sending enqueued request yet, due to unacknowledged previous request.",
+          commAdapterName
+      );
       return;
     }
 
@@ -111,7 +121,10 @@ public class MessageResponseMatcher {
     requests.clear();
   }
 
-  public void onStateMessage(@Nonnull State state) {
+  public void onStateMessage(
+      @Nonnull
+      State state
+  ) {
     requireNonNull(state, "state");
 
     sendingAllowed = state.getOperatingMode() == OperatingMode.AUTOMATIC
@@ -127,9 +140,11 @@ public class MessageResponseMatcher {
         orderRejectedCallback.accept((OrderAssociation) currentRequest);
       }
 
-      LOG.warn("{}: Vehicle indicates order rejection. Last request sent to it was: {}",
-               commAdapterName,
-               currentRequest);
+      LOG.warn(
+          "{}: Vehicle indicates order rejection. Last request sent to it was: {}",
+          commAdapterName,
+          currentRequest
+      );
     }
     else if (requestAccepted(currentRequest, state)) {
       requests.poll();
@@ -173,9 +188,11 @@ public class MessageResponseMatcher {
       return instantActionsAccepted((InstantActions) request, state);
     }
     else {
-      LOG.warn("{}: Unrecognized request of type {}.",
-               commAdapterName,
-               request.getClass().getName());
+      LOG.warn(
+          "{}: Unrecognized request of type {}.",
+          commAdapterName,
+          request.getClass().getName()
+      );
       return false;
     }
   }
@@ -203,9 +220,11 @@ public class MessageResponseMatcher {
       sendInstantActionsCallback.accept((InstantActions) request);
     }
     else {
-      LOG.warn("{}: Cannot send request. Unrecognized request of type {}.",
-               commAdapterName,
-               request.getClass().getName());
+      LOG.warn(
+          "{}: Cannot send request. Unrecognized request of type {}.",
+          commAdapterName,
+          request.getClass().getName()
+      );
     }
   }
 

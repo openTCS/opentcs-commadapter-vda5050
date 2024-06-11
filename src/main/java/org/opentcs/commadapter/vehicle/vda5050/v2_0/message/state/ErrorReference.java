@@ -7,17 +7,19 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 
 /**
  * Describes a reference to an error.
  */
 public class ErrorReference
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * The reference key.
@@ -30,8 +32,13 @@ public class ErrorReference
 
   @JsonCreator
   public ErrorReference(
-      @Nonnull @JsonProperty(required = true, value = "referenceKey") String referenceKey,
-      @Nonnull @JsonProperty(required = true, value = "referenceValue") String referenceValue) {
+      @Nonnull
+      @JsonProperty(required = true, value = "referenceKey")
+      String referenceKey,
+      @Nonnull
+      @JsonProperty(required = true, value = "referenceValue")
+      String referenceValue
+  ) {
     this.referenceKey = requireNonNull(referenceKey, "referenceKey");
     this.referenceValue = requireNonNull(referenceValue, "referenceValue");
   }
@@ -40,7 +47,10 @@ public class ErrorReference
     return referenceKey;
   }
 
-  public ErrorReference setReferenceKey(@Nonnull String referenceKey) {
+  public ErrorReference setReferenceKey(
+      @Nonnull
+      String referenceKey
+  ) {
     this.referenceKey = requireNonNull(referenceKey, "referenceKey");
     return this;
   }
@@ -49,7 +59,10 @@ public class ErrorReference
     return referenceValue;
   }
 
-  public ErrorReference setReferenceValue(@Nonnull String referenceValue) {
+  public ErrorReference setReferenceValue(
+      @Nonnull
+      String referenceValue
+  ) {
     this.referenceValue = requireNonNull(referenceValue, "referenceValue");
     return this;
   }

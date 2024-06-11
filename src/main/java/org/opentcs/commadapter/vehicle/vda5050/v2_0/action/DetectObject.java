@@ -19,7 +19,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
  * The VDA5050 {@code detectObject} action.
  */
 public class DetectObject
-    extends Action {
+    extends
+      Action {
 
   /**
    * This action's action type.
@@ -30,9 +31,14 @@ public class DetectObject
    */
   public static final String PARAMKEY_OBJECT_TYPE = "objectType";
 
-  public DetectObject(@Nonnull String actionId,
-                      @Nonnull BlockingType blockingType,
-                      @Nullable String paramValueObjectType) {
+  public DetectObject(
+      @Nonnull
+      String actionId,
+      @Nonnull
+      BlockingType blockingType,
+      @Nullable
+      String paramValueObjectType
+  ) {
     super(ACTION_TYPE, actionId, blockingType);
 
     List<ActionParameter> actionParameters = new ArrayList<>();

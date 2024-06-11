@@ -22,7 +22,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
  * created instance is then set as the combo box's selected item.
  */
 public class ActionEditor
-    extends BasicComboBoxEditor {
+    extends
+      BasicComboBoxEditor {
 
   /**
    * The {@link Action} edited last in the combo box.
@@ -63,7 +64,8 @@ public class ActionEditor
    * an editable combo box.
    */
   public static class EditorAction
-      extends Action {
+      extends
+        Action {
 
     public EditorAction(String actionType) {
       super(actionType, "", BlockingType.NONE);

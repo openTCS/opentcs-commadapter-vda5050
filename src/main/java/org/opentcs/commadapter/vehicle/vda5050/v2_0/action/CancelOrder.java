@@ -15,14 +15,20 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
  * The VDA5050 {@code cancelOrder} action.
  */
 public class CancelOrder
-    extends Action {
+    extends
+      Action {
 
   /**
    * This action's action type.
    */
   public static final String ACTION_TYPE = "cancelOrder";
 
-  public CancelOrder(@Nonnull String actionId, @Nonnull BlockingType blockingType) {
+  public CancelOrder(
+      @Nonnull
+      String actionId,
+      @Nonnull
+      BlockingType blockingType
+  ) {
     super(ACTION_TYPE, actionId, blockingType);
   }
 }

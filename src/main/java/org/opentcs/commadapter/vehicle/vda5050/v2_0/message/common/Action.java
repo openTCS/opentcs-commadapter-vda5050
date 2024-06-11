@@ -7,12 +7,13 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 
 /**
@@ -20,7 +21,8 @@ import javax.annotation.Nonnull;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Action
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * Name of action.
@@ -48,9 +50,16 @@ public class Action
 
   @JsonCreator
   public Action(
-      @Nonnull @JsonProperty(required = true, value = "actionType") String actionType,
-      @Nonnull @JsonProperty(required = true, value = "actionId") String actionId,
-      @Nonnull @JsonProperty(required = true, value = "blockingType") BlockingType blockingType) {
+      @Nonnull
+      @JsonProperty(required = true, value = "actionType")
+      String actionType,
+      @Nonnull
+      @JsonProperty(required = true, value = "actionId")
+      String actionId,
+      @Nonnull
+      @JsonProperty(required = true, value = "blockingType")
+      BlockingType blockingType
+  ) {
     this.actionType = requireNonNull(actionType, "actionType");
     this.actionId = requireNonNull(actionId, "actionId");
     this.blockingType = requireNonNull(blockingType, "blockingType");
@@ -60,7 +69,10 @@ public class Action
     return actionType;
   }
 
-  public Action setActionType(@Nonnull String actionType) {
+  public Action setActionType(
+      @Nonnull
+      String actionType
+  ) {
     this.actionType = requireNonNull(actionType, "actionType");
     return this;
   }
@@ -69,7 +81,10 @@ public class Action
     return actionId;
   }
 
-  public Action setActionId(@Nonnull String actionId) {
+  public Action setActionId(
+      @Nonnull
+      String actionId
+  ) {
     this.actionId = requireNonNull(actionId, "actionId");
     return this;
   }

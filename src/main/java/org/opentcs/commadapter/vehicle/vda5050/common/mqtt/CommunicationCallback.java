@@ -7,9 +7,10 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.common.mqtt;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -21,7 +22,8 @@ import org.slf4j.LoggerFactory;
  * A callback for publishing messages to/receiving messages for a topic.
  */
 class CommunicationCallback
-    implements MqttCallback {
+    implements
+      MqttCallback {
 
   /**
    * This class's logger.
@@ -70,7 +72,10 @@ class CommunicationCallback
    *
    * @param listener The listener to register.
    */
-  public void registerConnectionEventListener(@Nonnull ConnectionEventListener listener) {
+  public void registerConnectionEventListener(
+      @Nonnull
+      ConnectionEventListener listener
+  ) {
     requireNonNull(listener, "listener");
     connectionEventListeners.add(listener);
   }
@@ -80,7 +85,10 @@ class CommunicationCallback
    *
    * @param listener The listener to unregister.
    */
-  public void unregisterConnectionEventListener(@Nonnull ConnectionEventListener listener) {
+  public void unregisterConnectionEventListener(
+      @Nonnull
+      ConnectionEventListener listener
+  ) {
     requireNonNull(listener, "listener");
     connectionEventListeners.remove(listener);
   }

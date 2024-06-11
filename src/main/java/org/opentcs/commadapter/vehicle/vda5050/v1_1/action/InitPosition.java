@@ -7,9 +7,10 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.action;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.ActionParameter;
@@ -19,7 +20,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
  * The VDA5050 {@code initPosition} action.
  */
 public class InitPosition
-    extends Action {
+    extends
+      Action {
 
   /**
    * This action's action type.
@@ -46,13 +48,22 @@ public class InitPosition
    */
   public static final String PARAMKEY_LAST_NODE_ID = "lastNodeId";
 
-  public InitPosition(@Nonnull String actionId,
-                      @Nonnull BlockingType blockingType,
-                      @Nonnull String paramValueX,
-                      @Nonnull String paramValueY,
-                      @Nonnull String paramValueTheta,
-                      @Nonnull String paramValueMapId,
-                      @Nonnull String paramValueLastNodeId) {
+  public InitPosition(
+      @Nonnull
+      String actionId,
+      @Nonnull
+      BlockingType blockingType,
+      @Nonnull
+      String paramValueX,
+      @Nonnull
+      String paramValueY,
+      @Nonnull
+      String paramValueTheta,
+      @Nonnull
+      String paramValueMapId,
+      @Nonnull
+      String paramValueLastNodeId
+  ) {
     super(ACTION_TYPE, actionId, blockingType);
 
     List<ActionParameter> actionParameters = new ArrayList<>();

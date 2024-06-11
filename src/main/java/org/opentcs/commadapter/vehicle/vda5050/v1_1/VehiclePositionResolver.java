@@ -7,18 +7,19 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
-import com.google.inject.assistedinject.Assisted;
 import static java.lang.Math.toDegrees;
 import static java.util.Objects.requireNonNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import org.opentcs.commadapter.vehicle.vda5050.common.AngleMath;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyDouble;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_DEVIATION_XY;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MAP_ID;
+
+import com.google.inject.assistedinject.Assisted;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import org.opentcs.commadapter.vehicle.vda5050.common.AngleMath;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.AgvPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.State;
 import org.opentcs.components.kernel.services.TCSObjectService;
@@ -47,8 +48,13 @@ public class VehiclePositionResolver {
    * @param objectService Object service.
    */
   @Inject
-  public VehiclePositionResolver(@Nonnull @Assisted TCSObjectReference<Vehicle> vehicleReference,
-                                 @Nonnull TCSObjectService objectService) {
+  public VehiclePositionResolver(
+      @Nonnull
+      @Assisted
+      TCSObjectReference<Vehicle> vehicleReference,
+      @Nonnull
+      TCSObjectService objectService
+  ) {
     this.objectService = requireNonNull(objectService, "objectService");
     this.vehicleReference = requireNonNull(vehicleReference, "vehicleReference");
   }
@@ -62,8 +68,12 @@ public class VehiclePositionResolver {
    * @return The vehicle position or null if no position can be found.
    */
   @Nullable
-  public String resolveVehiclePosition(@Nullable String lastKnownPosition,
-                                       @Nonnull State currentState) {
+  public String resolveVehiclePosition(
+      @Nullable
+      String lastKnownPosition,
+      @Nonnull
+      State currentState
+  ) {
     requireNonNull(currentState, "currentState");
 
     // Use lastNodeId for the position if it is set.
@@ -85,9 +95,14 @@ public class VehiclePositionResolver {
     return lastKnownPosition;
   }
 
-  private String findVehicleLogicalPosition(@Nullable String lastKnownPosition,
-                                            @Nullable AgvPosition position,
-                                            @Nonnull Vehicle vehicle) {
+  private String findVehicleLogicalPosition(
+      @Nullable
+      String lastKnownPosition,
+      @Nullable
+      AgvPosition position,
+      @Nonnull
+      Vehicle vehicle
+  ) {
     if (position == null) {
       return null;
     }
@@ -104,9 +119,14 @@ public class VehiclePositionResolver {
     return null;
   }
 
-  private boolean isCurrentLogicalPositionCorrect(@Nullable String lastKnownPosition,
-                                                  @Nonnull AgvPosition position,
-                                                  @Nonnull Vehicle vehicle) {
+  private boolean isCurrentLogicalPositionCorrect(
+      @Nullable
+      String lastKnownPosition,
+      @Nonnull
+      AgvPosition position,
+      @Nonnull
+      Vehicle vehicle
+  ) {
     if (lastKnownPosition == null) {
       return false;
     }
@@ -133,15 +153,17 @@ public class VehiclePositionResolver {
     double deviationX = Math.abs(p.getPose().getPosition().getX() / 1000.0 - position.getX());
     double deviationY = Math.abs(p.getPose().getPosition().getY() / 1000.0 - position.getY());
 
-    return Math.sqrt((deviationX * deviationX) + (deviationY * deviationY))
-        <= getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_XY, p, vehicle).orElse(0.0);
+    return Math.sqrt((deviationX * deviationX) + (deviationY * deviationY)) <= getPropertyDouble(
+        PROPKEY_VEHICLE_DEVIATION_XY, p, vehicle
+    ).orElse(0.0);
   }
 
   private boolean isWithinDeviationTheta(Point p, AgvPosition position, Vehicle vehicle) {
     if (Double.isNaN(p.getPose().getOrientationAngle())) {
       return true;
     }
-    return AngleMath.angleBetween(p.getPose().getOrientationAngle(), toDegrees(position.getTheta()))
-        <= getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_THETA, p, vehicle).orElse(0.0);
+    return AngleMath.angleBetween(
+        p.getPose().getOrientationAngle(), toDegrees(position.getTheta())
+    ) <= getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_THETA, p, vehicle).orElse(0.0);
   }
 }

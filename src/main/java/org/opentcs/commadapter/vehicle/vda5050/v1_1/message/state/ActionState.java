@@ -7,11 +7,12 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 
 /**
@@ -20,7 +21,8 @@ import javax.annotation.Nonnull;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ActionState
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * Unique action ID.
@@ -49,8 +51,13 @@ public class ActionState
 
   @JsonCreator
   public ActionState(
-      @Nonnull @JsonProperty(required = true, value = "actionId") String actionId,
-      @Nonnull @JsonProperty(required = true, value = "actionStatus") ActionStatus actionStatus) {
+      @Nonnull
+      @JsonProperty(required = true, value = "actionId")
+      String actionId,
+      @Nonnull
+      @JsonProperty(required = true, value = "actionStatus")
+      ActionStatus actionStatus
+  ) {
     this.actionId = requireNonNull(actionId, "actionId");
     this.actionStatus = requireNonNull(actionStatus, "actionStatus");
   }
@@ -59,7 +66,10 @@ public class ActionState
     return actionId;
   }
 
-  public ActionState setActionId(@Nonnull String actionId) {
+  public ActionState setActionId(
+      @Nonnull
+      String actionId
+  ) {
     this.actionId = requireNonNull(actionId, "actionId");
     return this;
   }
@@ -77,7 +87,10 @@ public class ActionState
     return actionStatus;
   }
 
-  public ActionState setActionStatus(@Nonnull ActionStatus actionStatus) {
+  public ActionState setActionStatus(
+      @Nonnull
+      ActionStatus actionStatus
+  ) {
     this.actionStatus = requireNonNull(actionStatus, "actionStatus");
     return this;
   }

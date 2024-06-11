@@ -9,8 +9,9 @@ package org.opentcs.commadapter.vehicle.vda5050.v2_0.ordermapping;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.Test;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_EXECUTABLE_ACTIONS_TAGS;
+
+import org.junit.jupiter.api.Test;
 import org.opentcs.data.model.Vehicle;
 
 /**

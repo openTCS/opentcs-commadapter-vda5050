@@ -18,7 +18,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.Insta
  * Renders orders when displayed in a list.
  */
 public class InstantActionsListCellRenderer
-    extends DefaultListCellRenderer {
+    extends
+      DefaultListCellRenderer {
 
   /**
    * A prototype for the list to compute its preferred size.
@@ -32,16 +33,20 @@ public class InstantActionsListCellRenderer
   }
 
   @Override
-  public Component getListCellRendererComponent(JList<?> list,
-                                                Object value,
-                                                int index,
-                                                boolean isSelected,
-                                                boolean cellHasFocus) {
-    Component component = super.getListCellRendererComponent(list,
-                                                             value,
-                                                             index,
-                                                             isSelected,
-                                                             cellHasFocus);
+  public Component getListCellRendererComponent(
+      JList<?> list,
+      Object value,
+      int index,
+      boolean isSelected,
+      boolean cellHasFocus
+  ) {
+    Component component = super.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus
+    );
 
     if (value instanceof InstantActions) {
       InstantActions instantActions = (InstantActions) value;

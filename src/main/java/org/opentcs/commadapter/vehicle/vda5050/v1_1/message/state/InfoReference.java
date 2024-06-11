@@ -7,11 +7,12 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 
 /**
@@ -19,7 +20,8 @@ import javax.annotation.Nonnull;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InfoReference
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * The reference key.
@@ -32,8 +34,13 @@ public class InfoReference
 
   @JsonCreator
   public InfoReference(
-      @Nonnull @JsonProperty(required = true, value = "referenceKey") String referenceKey,
-      @Nonnull @JsonProperty(required = true, value = "referenceValue") String referenceValue) {
+      @Nonnull
+      @JsonProperty(required = true, value = "referenceKey")
+      String referenceKey,
+      @Nonnull
+      @JsonProperty(required = true, value = "referenceValue")
+      String referenceValue
+  ) {
     this.referenceKey = requireNonNull(referenceKey, "referenceKey");
     this.referenceValue = requireNonNull(referenceValue, "referenceValue");
   }
@@ -42,7 +49,10 @@ public class InfoReference
     return referenceKey;
   }
 
-  public InfoReference setReferenceKey(@Nonnull String referenceKey) {
+  public InfoReference setReferenceKey(
+      @Nonnull
+      String referenceKey
+  ) {
     this.referenceKey = requireNonNull(referenceKey, "referenceKey");
     return this;
   }
@@ -51,7 +61,10 @@ public class InfoReference
     return referenceValue;
   }
 
-  public InfoReference setReferenceValue(@Nonnull String referenceValue) {
+  public InfoReference setReferenceValue(
+      @Nonnull
+      String referenceValue
+  ) {
     this.referenceValue = requireNonNull(referenceValue, "referenceValue");
     return this;
   }

@@ -7,12 +7,13 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Trajectory;
@@ -22,7 +23,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Trajectory;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Edge
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * Unique edge identification.
@@ -126,12 +128,25 @@ public class Edge
 
   @JsonCreator
   public Edge(
-      @Nonnull @JsonProperty(required = true, value = "edgeId") String edgeId,
-      @Nonnull @JsonProperty(required = true, value = "sequenceId") Long sequenceId,
-      @Nonnull @JsonProperty(required = true, value = "released") Boolean released,
-      @Nonnull @JsonProperty(required = true, value = "startNodeId") String startNodeId,
-      @Nonnull @JsonProperty(required = true, value = "endNodeId") String endNodeId,
-      @Nonnull @JsonProperty(required = true, value = "actions") List<Action> actions) {
+      @Nonnull
+      @JsonProperty(required = true, value = "edgeId")
+      String edgeId,
+      @Nonnull
+      @JsonProperty(required = true, value = "sequenceId")
+      Long sequenceId,
+      @Nonnull
+      @JsonProperty(required = true, value = "released")
+      Boolean released,
+      @Nonnull
+      @JsonProperty(required = true, value = "startNodeId")
+      String startNodeId,
+      @Nonnull
+      @JsonProperty(required = true, value = "endNodeId")
+      String endNodeId,
+      @Nonnull
+      @JsonProperty(required = true, value = "actions")
+      List<Action> actions
+  ) {
     this.edgeId = requireNonNull(edgeId, "edgeId");
     this.sequenceId = requireNonNull(sequenceId, "sequenceId");
     this.released = requireNonNull(released, "released");
@@ -144,7 +159,10 @@ public class Edge
     return edgeId;
   }
 
-  public Edge setEdgeId(@Nonnull String edgeId) {
+  public Edge setEdgeId(
+      @Nonnull
+      String edgeId
+  ) {
     this.edgeId = requireNonNull(edgeId, "edgeId");
     return this;
   }
@@ -153,7 +171,10 @@ public class Edge
     return sequenceId;
   }
 
-  public Edge setSequenceId(@Nonnull Long sequenceId) {
+  public Edge setSequenceId(
+      @Nonnull
+      Long sequenceId
+  ) {
     this.sequenceId = requireNonNull(sequenceId, "sequenceId");
     return this;
   }
@@ -171,7 +192,10 @@ public class Edge
     return released;
   }
 
-  public Edge setReleased(@Nonnull Boolean released) {
+  public Edge setReleased(
+      @Nonnull
+      Boolean released
+  ) {
     this.released = requireNonNull(released, "released");
     return this;
   }
@@ -180,7 +204,10 @@ public class Edge
     return startNodeId;
   }
 
-  public Edge setStartNodeId(@Nonnull String startNodeId) {
+  public Edge setStartNodeId(
+      @Nonnull
+      String startNodeId
+  ) {
     this.startNodeId = requireNonNull(startNodeId, "startNodeId");
     return this;
   }
@@ -189,7 +216,10 @@ public class Edge
     return endNodeId;
   }
 
-  public Edge setEndNodeId(@Nonnull String endNodeId) {
+  public Edge setEndNodeId(
+      @Nonnull
+      String endNodeId
+  ) {
     this.endNodeId = requireNonNull(endNodeId, "endNodeId");
     return this;
   }
@@ -270,7 +300,10 @@ public class Edge
     return actions;
   }
 
-  public Edge setActions(@Nonnull List<Action> actions) {
+  public Edge setActions(
+      @Nonnull
+      List<Action> actions
+  ) {
     this.actions = requireNonNull(actions, "actions");
     return this;
   }

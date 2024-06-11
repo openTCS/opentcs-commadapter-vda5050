@@ -7,24 +7,25 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.ordermapping;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_CUSTOM_ACTION_PREFIX;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_CUSTOM_DEST_ACTION_PREFIX;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_EXECUTABLE_ACTIONS_TAGS;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Node;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Order;
 import org.opentcs.components.kernel.services.TCSObjectService;
@@ -74,9 +75,11 @@ public class OrderMapperTest {
     when(objectService.fetchObject(TransportOrder.class, transportOrder.getReference()))
         .thenReturn(transportOrder);
 
-    mapper = new OrderMapper(vehicle.getReference(),
-                             s -> true,
-                             objectService);
+    mapper = new OrderMapper(
+        vehicle.getReference(),
+        s -> true,
+        objectService
+    );
   }
 
   @Test
@@ -186,10 +189,12 @@ public class OrderMapperTest {
     Point sourcePoint = new Point("Point-0001");
     Point destPoint = new Point("Point-0002");
 
-    DummyMovementCommand command = new DummyMovementCommand(sourcePoint,
-                                                            destPoint,
-                                                            1000,
-                                                            500);
+    DummyMovementCommand command = new DummyMovementCommand(
+        sourcePoint,
+        destPoint,
+        1000,
+        500
+    );
     LocationType locType = new LocationType("loc-type");
     command.setOpLocation(new Location("location-0001", locType.getReference()));
     when(objectService.fetchObject(LocationType.class, locType.getReference()))
@@ -216,9 +221,11 @@ public class OrderMapperTest {
     when(objectService.fetchObject(Vehicle.class, vehicle.getReference()))
         .thenReturn(vehicle);
 
-    mapper = new OrderMapper(vehicle.getReference(),
-                             new ExecutableActionsTagsPredicate(vehicle),
-                             objectService);
+    mapper = new OrderMapper(
+        vehicle.getReference(),
+        new ExecutableActionsTagsPredicate(vehicle),
+        objectService
+    );
 
     // setup a movement command
     Point sourcePoint = new Point("Point-0001");
@@ -429,7 +436,8 @@ public class OrderMapperTest {
   }
 
   private class DummyMovementCommand
-      implements MovementCommand {
+      implements
+        MovementCommand {
 
     private final Route.Step dummyStep;
 
@@ -461,19 +469,23 @@ public class OrderMapperTest {
       this(source, dest, 1000, 500, 0, false);
     }
 
-    DummyMovementCommand(Point source,
-                         Point dest,
-                         int maxSpeedForward,
-                         int maxSpeedReverse) {
+    DummyMovementCommand(
+        Point source,
+        Point dest,
+        int maxSpeedForward,
+        int maxSpeedReverse
+    ) {
       this(source, dest, maxSpeedForward, maxSpeedReverse, 0, false);
     }
 
-    DummyMovementCommand(Point source,
-                         Point dest,
-                         int maxSpeedForward,
-                         int maxSpeedReverse,
-                         int routeIndex,
-                         boolean isFinalMovement) {
+    DummyMovementCommand(
+        Point source,
+        Point dest,
+        int maxSpeedForward,
+        int maxSpeedReverse,
+        int routeIndex,
+        boolean isFinalMovement
+    ) {
       Path path = null;
       if (source != null && dest != null) {
         path = new Path("Path-0001", source.getReference(), dest.getReference())

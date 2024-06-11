@@ -7,11 +7,13 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.common.mqtt;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.mqtt.ConnectionCallback.CONNECT_CONTEXT;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static java.util.Objects.requireNonNull;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
@@ -22,7 +24,6 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import static org.opentcs.commadapter.vehicle.vda5050.common.mqtt.ConnectionCallback.CONNECT_CONTEXT;
 import org.opentcs.customizations.kernel.KernelExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,8 +78,11 @@ public class MqttClientManager {
    * @throws IllegalStateException If there was a problem initializing the MQTT client.
    */
   @Inject
-  public MqttClientManager(MqttConfiguration configuration,
-                           @KernelExecutor ScheduledExecutorService kernelExecutor)
+  public MqttClientManager(
+      MqttConfiguration configuration,
+      @KernelExecutor
+      ScheduledExecutorService kernelExecutor
+  )
       throws IllegalStateException {
     this.configuration = requireNonNull(configuration, "configuration");
     this.kernelExecutor = requireNonNull(kernelExecutor, "kernelExecutor");
@@ -90,7 +94,10 @@ public class MqttClientManager {
    *
    * @param listener The listener to register.
    */
-  public void registerConnectionEventListener(@Nonnull ConnectionEventListener listener) {
+  public void registerConnectionEventListener(
+      @Nonnull
+      ConnectionEventListener listener
+  ) {
     requireNonNull(listener, "listener");
 
     communicationCallback.registerConnectionEventListener(listener);
@@ -102,7 +109,10 @@ public class MqttClientManager {
    *
    * @param listener The listener to unregister.
    */
-  public void unregisterConnectionEventListener(@Nonnull ConnectionEventListener listener) {
+  public void unregisterConnectionEventListener(
+      @Nonnull
+      ConnectionEventListener listener
+  ) {
     requireNonNull(listener, "listener");
 
     communicationCallback.unregisterConnectionEventListener(listener);
@@ -129,10 +139,15 @@ public class MqttClientManager {
    * @param message The message to publish.
    * @param retained Whether or not the message is retained.
    */
-  public void publish(@Nonnull String topic,
-                      @Nonnull QualityOfService qos,
-                      @Nonnull String message,
-                      boolean retained) {
+  public void publish(
+      @Nonnull
+      String topic,
+      @Nonnull
+      QualityOfService qos,
+      @Nonnull
+      String message,
+      boolean retained
+  ) {
     requireNonNull(topic, "topic");
     requireNonNull(qos, "qos");
     requireNonNull(message, "message");
@@ -161,9 +176,14 @@ public class MqttClientManager {
    * @param listener The {@link ConnectionEventListener} that is interested in messages received on
    * the given topic.
    */
-  public void subscribe(@Nonnull String topic,
-                        @Nonnull QualityOfService qos,
-                        @Nonnull ConnectionEventListener listener) {
+  public void subscribe(
+      @Nonnull
+      String topic,
+      @Nonnull
+      QualityOfService qos,
+      @Nonnull
+      ConnectionEventListener listener
+  ) {
     requireNonNull(topic, "topic");
     requireNonNull(qos, "qos");
     requireNonNull(listener, "listener");
@@ -193,8 +213,12 @@ public class MqttClientManager {
    * @param listener The {@link ConnectionEventListener} that is no longer interested in messages
    * received on the given topic.
    */
-  public void unsubscribe(@Nonnull String topic,
-                          @Nonnull ConnectionEventListener listener) {
+  public void unsubscribe(
+      @Nonnull
+      String topic,
+      @Nonnull
+      ConnectionEventListener listener
+  ) {
     requireNonNull(topic, "topic");
     requireNonNull(listener, "listener");
 
@@ -217,10 +241,15 @@ public class MqttClientManager {
    * @param qos The {@link QualityOfService} for the last will message.
    * @param retained If the last will message is retained.
    */
-  public void setLastWill(@Nonnull String topic,
-                          @Nonnull String message,
-                          @Nonnull QualityOfService qos,
-                          boolean retained) {
+  public void setLastWill(
+      @Nonnull
+      String topic,
+      @Nonnull
+      String message,
+      @Nonnull
+      QualityOfService qos,
+      boolean retained
+  ) {
     requireNonNull(topic, "topic");
     requireNonNull(message, "message");
     requireNonNull(qos, "qos");
@@ -238,7 +267,12 @@ public class MqttClientManager {
    * @param topic The topic the message arrived on.
    * @param message The message.
    */
-  public void messageArrived(@Nonnull String topic, @Nonnull MqttMessage message) {
+  public void messageArrived(
+      @Nonnull
+      String topic,
+      @Nonnull
+      MqttMessage message
+  ) {
     requireNonNull(topic, "topic");
     requireNonNull(message, "message");
 
@@ -260,9 +294,11 @@ public class MqttClientManager {
     }
 
     LOG.info("Scheduling broker reconnect in {} ms...", configuration.reconnectInterval());
-    kernelExecutor.schedule(() -> connect(),
-                            configuration.reconnectInterval(),
-                            TimeUnit.MILLISECONDS);
+    kernelExecutor.schedule(
+        () -> connect(),
+        configuration.reconnectInterval(),
+        TimeUnit.MILLISECONDS
+    );
   }
 
   /**
@@ -288,15 +324,17 @@ public class MqttClientManager {
       // mechanism. Otherwise, ensure we set a value of at least one second.
       connectOptions.setKeepAliveInterval(
           configuration.keepAliveInterval() <= 0
-          ? 0
-          : Math.max(configuration.keepAliveInterval(), 1000) / 1000
+              ? 0
+              : Math.max(configuration.keepAliveInterval(), 1000) / 1000
       );
 
       client = new MqttAsyncClient(
-          String.format("%s://%s:%s",
-                        configuration.connectionEncrypted() ? "ssl" : "tcp",
-                        configuration.brokerHost(),
-                        configuration.brokerPort()),
+          String.format(
+              "%s://%s:%s",
+              configuration.connectionEncrypted() ? "ssl" : "tcp",
+              configuration.brokerHost(),
+              configuration.brokerPort()
+          ),
           configuration.clientId(),
           new MemoryPersistence()
       );
@@ -320,10 +358,12 @@ public class MqttClientManager {
       return;
     }
 
-    LOG.info("Initiating connection attempt to {}:{} with client ID '{}'...",
-             configuration.brokerHost(),
-             configuration.brokerPort(),
-             configuration.clientId());
+    LOG.info(
+        "Initiating connection attempt to {}:{} with client ID '{}'...",
+        configuration.brokerHost(),
+        configuration.brokerPort(),
+        configuration.clientId()
+    );
     try {
       client.connect(connectOptions, CONNECT_CONTEXT, connectionCallback);
     }
@@ -365,9 +405,14 @@ public class MqttClientManager {
      */
     private final List<ConnectionEventListener> subscribers;
 
-    Subscription(@Nonnull String topic,
-                 @Nonnull QualityOfService qos,
-                 @Nonnull List<ConnectionEventListener> subscribers) {
+    Subscription(
+        @Nonnull
+        String topic,
+        @Nonnull
+        QualityOfService qos,
+        @Nonnull
+        List<ConnectionEventListener> subscribers
+    ) {
       this.topic = requireNonNull(topic, "topic");
       this.qos = requireNonNull(qos, "qos");
       this.subscribers = requireNonNull(subscribers, "subscribers");

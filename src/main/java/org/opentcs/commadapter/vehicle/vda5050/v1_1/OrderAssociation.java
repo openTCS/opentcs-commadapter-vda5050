@@ -33,7 +33,12 @@ public class OrderAssociation {
    * @param order The order to track.
    * @param command The movement command to track.
    */
-  public OrderAssociation(@Nonnull Order order, @Nonnull MovementCommand command) {
+  public OrderAssociation(
+      @Nonnull
+      Order order,
+      @Nonnull
+      MovementCommand command
+  ) {
     this.order = order;
     this.command = command;
   }

@@ -19,7 +19,10 @@ public interface ConnectionEventListener {
    *
    * @param message The incoming message.
    */
-  void onIncomingMessage(@Nonnull IncomingMessage message);
+  void onIncomingMessage(
+      @Nonnull
+      IncomingMessage message
+  );
 
   /**
    * Called when a connection to the remote peer has been established.

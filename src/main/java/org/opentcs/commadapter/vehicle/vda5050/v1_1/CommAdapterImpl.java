@@ -7,6 +7,26 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
+import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyInteger;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_ERRORS_FATAL;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_ERRORS_WARNING;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_INFORMATIONS_DEBUG;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_INFORMATIONS_INFO;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_LENGTH_LOADED;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_LENGTH_UNLOADED;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_BASE;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MIN_VISU_INTERVAL;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_PAUSED;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_RECHARGE_OPERATION;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.StateMappings.toLoadHandlingDevices;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.StateMappings.toVehicleLength;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.StateMappings.toVehicleState;
+
 import com.google.inject.assistedinject.Assisted;
 import java.beans.PropertyChangeEvent;
 import java.time.Instant;
@@ -15,7 +35,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import static java.util.Objects.requireNonNull;
 import java.util.UUID;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
@@ -25,28 +44,10 @@ import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration;
 import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration.ConfigIntegrationLevel;
 import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration.ConfigOperatingMode;
 import org.opentcs.commadapter.vehicle.vda5050.common.JsonBinder;
-import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
-import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyInteger;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_ERRORS_FATAL;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_ERRORS_WARNING;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_RECHARGE_OPERATION;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_INFORMATIONS_INFO;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_INFORMATIONS_DEBUG;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_PAUSED;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.StateMappings.toLoadHandlingDevices;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.StateMappings.toVehicleState;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.ConnectionEventListener;
-import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.MqttClientManager;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.IncomingMessage;
+import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.MqttClientManager;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.QualityOfService;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_LENGTH_LOADED;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_LENGTH_UNLOADED;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_BASE;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MIN_VISU_INTERVAL;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.StateMappings.toVehicleLength;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.ProcessModelImplTO;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.Header;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
@@ -80,8 +81,10 @@ import org.slf4j.LoggerFactory;
  * The communication adapter implementation for VDA5050.
  */
 public class CommAdapterImpl
-    extends BasicVehicleCommAdapter
-    implements ConnectionEventListener {
+    extends
+      BasicVehicleCommAdapter
+    implements
+      ConnectionEventListener {
 
   /**
    * This class's logger.
@@ -182,19 +185,24 @@ public class CommAdapterImpl
    * @param configuration The adapter configuration.
    */
   @Inject
-  public CommAdapterImpl(@Assisted Vehicle vehicle,
-                         @KernelExecutor ScheduledExecutorService kernelExecutor,
-                         CommAdapterComponentsFactory componentsFactory,
-                         MqttClientManager clientManager,
-                         MessageValidator messageValidator,
-                         JsonBinder jsonBinder,
-                         CommAdapterConfiguration configuration) {
-    super(new ProcessModelImpl(vehicle),
-          getPropertyInteger(PROPKEY_VEHICLE_MAX_STEPS_BASE, vehicle).orElse(2) + 1,
-          getPropertyInteger(PROPKEY_VEHICLE_MAX_STEPS_BASE, vehicle).orElse(2),
-          getProperty(PROPKEY_VEHICLE_RECHARGE_OPERATION, vehicle)
-              .orElse(DestinationOperations.CHARGE),
-          kernelExecutor
+  public CommAdapterImpl(
+      @Assisted
+      Vehicle vehicle,
+      @KernelExecutor
+      ScheduledExecutorService kernelExecutor,
+      CommAdapterComponentsFactory componentsFactory,
+      MqttClientManager clientManager,
+      MessageValidator messageValidator,
+      JsonBinder jsonBinder,
+      CommAdapterConfiguration configuration
+  ) {
+    super(
+        new ProcessModelImpl(vehicle),
+        getPropertyInteger(PROPKEY_VEHICLE_MAX_STEPS_BASE, vehicle).orElse(2) + 1,
+        getPropertyInteger(PROPKEY_VEHICLE_MAX_STEPS_BASE, vehicle).orElse(2),
+        getProperty(PROPKEY_VEHICLE_RECHARGE_OPERATION, vehicle)
+            .orElse(DestinationOperations.CHARGE),
+        kernelExecutor
     );
     this.componentsFactory = requireNonNull(componentsFactory, "componentsFactory");
     this.minVisualizationInterval
@@ -224,9 +232,9 @@ public class CommAdapterImpl
 
     getProcessModel().setTopicPrefix(
         vehicleInterfaceName
-        + "/" + "v" + VERSION_MAJOR
-        + "/" + vehicleManufacturer
-        + "/" + vehicleSerialNumber
+            + "/" + "v" + VERSION_MAJOR
+            + "/" + vehicleManufacturer
+            + "/" + vehicleSerialNumber
     );
 
     this.isActionExecutable = new ExecutableActionsTagsPredicate(vehicle);
@@ -235,8 +243,10 @@ public class CommAdapterImpl
   @Override
   public void initialize() {
     super.initialize();
-    orderMapper = componentsFactory.createOrderMapper(getProcessModel().getVehicleReference(),
-                                                      isActionExecutable);
+    orderMapper = componentsFactory.createOrderMapper(
+        getProcessModel().getVehicleReference(),
+        isActionExecutable
+    );
     vehiclePositionResolver = componentsFactory.createVehiclePositionResolver(
         getProcessModel().getVehicleReference()
     );
@@ -300,9 +310,11 @@ public class CommAdapterImpl
     movementCommandManager.clear();
     messageResponseMatcher.clear();
 
-    Action cancelOrderAction = new Action("cancelOrder",
-                                          UUID.randomUUID().toString(),
-                                          BlockingType.NONE);
+    Action cancelOrderAction = new Action(
+        "cancelOrder",
+        UUID.randomUUID().toString(),
+        BlockingType.NONE
+    );
     InstantActions instantAction = new InstantActions();
     instantAction.setInstantActions(Arrays.asList(cancelOrderAction));
     messageResponseMatcher.enqueueAction(instantAction);
@@ -488,17 +500,21 @@ public class CommAdapterImpl
       }
     }
     else {
-      LOG.warn("Incoming message on unhandled topic '{}': {}",
-               message.getTopic(),
-               message.getMessage());
+      LOG.warn(
+          "Incoming message on unhandled topic '{}': {}",
+          message.getTopic(),
+          message.getMessage()
+      );
     }
   }
 
   @Override
   public void onVehiclePaused(boolean paused) {
-    Action pauseAction = new Action(paused ? "startPause" : "stopPause",
-                                    UUID.randomUUID().toString(),
-                                    BlockingType.NONE);
+    Action pauseAction = new Action(
+        paused ? "startPause" : "stopPause",
+        UUID.randomUUID().toString(),
+        BlockingType.NONE
+    );
     InstantActions instantAction = new InstantActions();
     instantAction.setInstantActions(Arrays.asList(pauseAction));
     messageResponseMatcher.enqueueAction(instantAction);
@@ -509,8 +525,10 @@ public class CommAdapterImpl
 
     long now = System.currentTimeMillis();
     if (now - lastVisualizationMessageTimestamp < minVisualizationInterval) {
-      LOG.trace("Visualization message discarded - last one was {} ms ago.",
-                now - lastVisualizationMessageTimestamp);
+      LOG.trace(
+          "Visualization message discarded - last one was {} ms ago.",
+          now - lastVisualizationMessageTimestamp
+      );
       return;
     }
     lastVisualizationMessageTimestamp = now;
@@ -592,7 +610,8 @@ public class CommAdapterImpl
     movementCommandManager.onStateMessage(state, this::onMovementCommandExecuted);
   }
 
-  private void onMovementCommandExecuted(@Nonnull MovementCommand finishedCommand) {
+  private void onMovementCommandExecuted(@Nonnull
+  MovementCommand finishedCommand) {
     requireNonNull(finishedCommand, "finishedCommand");
 
     MovementCommand oldestCommand = getSentQueue().peek();
@@ -617,9 +636,11 @@ public class CommAdapterImpl
 
     if (configuration.onOpModeChangeDoResetPosition()
         .getOrDefault(mapToConfigOperatingMode(state.getOperatingMode()), Boolean.FALSE)) {
-      LOG.debug("{}: Resetting last known vehicle position due to op mode change to {}...",
-                getName(),
-                state.getOperatingMode());
+      LOG.debug(
+          "{}: Resetting last known vehicle position due to op mode change to {}...",
+          getName(),
+          state.getOperatingMode()
+      );
       getProcessModel().setVehiclePosition(null);
     }
 
@@ -654,11 +675,13 @@ public class CommAdapterImpl
   }
 
   private void processVehiclePosition(AgvPosition position) {
-    getProcessModel().setVehiclePrecisePosition(new Triple(
-        (long) (position.getX() * 1000.0),
-        (long) (position.getY() * 1000.0),
-        0
-    ));
+    getProcessModel().setVehiclePrecisePosition(
+        new Triple(
+            (long) (position.getX() * 1000.0),
+            (long) (position.getY() * 1000.0),
+            0
+        )
+    );
     getProcessModel().setVehicleOrientationAngle(Math.toDegrees(position.getTheta()));
   }
 
@@ -720,12 +743,16 @@ public class CommAdapterImpl
     // rejected orders, too.
     movementCommandManager.enqueue(order);
 
-    getProcessModel().publishUserNotification(new UserNotification(
-        getProcessModel().getName(),
-        String.format("Vehicle rejected VDA5050 order (ID: %s, update ID: %s)",
-                      order.getOrder().getOrderId(),
-                      order.getOrder().getOrderUpdateId()),
-        UserNotification.Level.IMPORTANT
-    ));
+    getProcessModel().publishUserNotification(
+        new UserNotification(
+            getProcessModel().getName(),
+            String.format(
+                "Vehicle rejected VDA5050 order (ID: %s, update ID: %s)",
+                order.getOrder().getOrderId(),
+                order.getOrder().getOrderUpdateId()
+            ),
+            UserNotification.Level.IMPORTANT
+        )
+    );
   }
 }

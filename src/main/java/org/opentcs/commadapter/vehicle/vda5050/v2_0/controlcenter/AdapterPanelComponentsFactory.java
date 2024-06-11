@@ -21,8 +21,10 @@ public interface AdapterPanelComponentsFactory {
    * @param vehicleService The vehicle service used for interaction with the comm adapter.
    * @return The control panel.
    */
-  ControlPanel createControlPanel(ProcessModelImplTO processModel,
-                                  VehicleService vehicleService);
+  ControlPanel createControlPanel(
+      ProcessModelImplTO processModel,
+      VehicleService vehicleService
+  );
 
   /**
    * Creates a {@link StatusPanel} representing the given process model's content.
@@ -31,6 +33,8 @@ public interface AdapterPanelComponentsFactory {
    * @param vehicleService The vehicle service used for interaction with the comm adapter.
    * @return The status panel.
    */
-  StatusPanel createStatusPanel(ProcessModelImplTO processModel,
-                                VehicleService vehicleService);
+  StatusPanel createStatusPanel(
+      ProcessModelImplTO processModel,
+      VehicleService vehicleService
+  );
 }

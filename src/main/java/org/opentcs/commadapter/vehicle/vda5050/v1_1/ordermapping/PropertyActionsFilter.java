@@ -7,16 +7,18 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Collections;
 import java.util.EnumSet;
-import static java.util.Objects.requireNonNull;
 import java.util.function.Predicate;
 
 /**
  * Filters property actions based on whether the vehicle can execute them.
  */
 public class PropertyActionsFilter
-    implements Predicate<PropertyAction> {
+    implements
+      Predicate<PropertyAction> {
 
   /**
    * Action tags that are executable by the vehicle.
@@ -43,10 +45,12 @@ public class PropertyActionsFilter
    * @param edgeActionFilter The edge actions.
    * @param actionTriggers The accepted action triggers.
    */
-  public PropertyActionsFilter(Predicate<String> vehicleActions,
-                               Predicate<String> commandActionFilter,
-                               Predicate<String> edgeActionFilter,
-                               EnumSet<ActionTrigger> actionTriggers) {
+  public PropertyActionsFilter(
+      Predicate<String> vehicleActions,
+      Predicate<String> commandActionFilter,
+      Predicate<String> edgeActionFilter,
+      EnumSet<ActionTrigger> actionTriggers
+  ) {
     this.vehicleActionsFilter = requireNonNull(vehicleActions, "vehicleActions");
     this.commandActionsFilter = requireNonNull(commandActionFilter, "commandActionsFilter");
     this.edgeActionFilter = requireNonNull(edgeActionFilter, "edgeActionFilter");
@@ -65,8 +69,8 @@ public class PropertyActionsFilter
     }
     return action.getTags().stream().anyMatch(
         tag -> vehicleActionsFilter.test(tag)
-        && commandActionsFilter.test(tag)
-        && edgeActionFilter.test(tag)
+            && commandActionsFilter.test(tag)
+            && edgeActionFilter.test(tag)
     );
   }
 }

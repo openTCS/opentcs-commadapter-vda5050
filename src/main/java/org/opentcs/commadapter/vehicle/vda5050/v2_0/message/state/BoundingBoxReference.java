@@ -7,11 +7,12 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 
 /**
@@ -22,7 +23,8 @@ import javax.annotation.Nonnull;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BoundingBoxReference
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * X-coordinate of the point of reference.
@@ -45,9 +47,16 @@ public class BoundingBoxReference
 
   @JsonCreator
   public BoundingBoxReference(
-      @Nonnull @JsonProperty(required = true, value = "x") Double x,
-      @Nonnull @JsonProperty(required = true, value = "y") Double y,
-      @Nonnull @JsonProperty(required = true, value = "z") Double z) {
+      @Nonnull
+      @JsonProperty(required = true, value = "x")
+      Double x,
+      @Nonnull
+      @JsonProperty(required = true, value = "y")
+      Double y,
+      @Nonnull
+      @JsonProperty(required = true, value = "z")
+      Double z
+  ) {
     this.x = requireNonNull(x, "x");
     this.y = requireNonNull(y, "y");
     this.z = requireNonNull(z, "z");
@@ -57,7 +66,10 @@ public class BoundingBoxReference
     return x;
   }
 
-  public BoundingBoxReference setX(@Nonnull Double x) {
+  public BoundingBoxReference setX(
+      @Nonnull
+      Double x
+  ) {
     this.x = requireNonNull(x, "x");
     return this;
   }
@@ -66,7 +78,10 @@ public class BoundingBoxReference
     return y;
   }
 
-  public BoundingBoxReference setY(@Nonnull Double y) {
+  public BoundingBoxReference setY(
+      @Nonnull
+      Double y
+  ) {
     this.y = requireNonNull(y, "y");
     return this;
   }
@@ -75,7 +90,10 @@ public class BoundingBoxReference
     return z;
   }
 
-  public BoundingBoxReference setZ(@Nonnull Double z) {
+  public BoundingBoxReference setZ(
+      @Nonnull
+      Double z
+  ) {
     this.z = requireNonNull(z, "z");
     return this;
   }

@@ -64,9 +64,11 @@ public class PropertyExtractions {
             return Integer.valueOf(object.getProperty(key));
           }
           catch (NumberFormatException e) {
-            LOG.error("Property '{}' for TCSObject {} cannot be parsed as an Integer.",
-                      key,
-                      object.getName());
+            LOG.error(
+                "Property '{}' for TCSObject {} cannot be parsed as an Integer.",
+                key,
+                object.getName()
+            );
             return null;
           }
         })
@@ -90,9 +92,11 @@ public class PropertyExtractions {
             return Double.valueOf(object.getProperty(key));
           }
           catch (NumberFormatException e) {
-            LOG.error("Property '{}' for TCSObject {} cannot be parsed as an Integer.",
-                      key,
-                      object.getName());
+            LOG.error(
+                "Property '{}' for TCSObject {} cannot be parsed as an Integer.",
+                key,
+                object.getName()
+            );
             return null;
           }
         })
@@ -110,9 +114,10 @@ public class PropertyExtractions {
    */
   public static Optional<String> getProperty(String key, MovementCommand command) {
     return Optional.ofNullable(command.getProperties().get(key))
-        .or(command.getOpLocation() != null
-            ? () -> getProperty(key, command.getOpLocation())
-            : Optional::empty
+        .or(
+            command.getOpLocation() != null
+                ? () -> getProperty(key, command.getOpLocation())
+                : Optional::empty
         );
   }
 
@@ -136,9 +141,11 @@ public class PropertyExtractions {
       return Optional.of(Float.valueOf(propertyValue.get()));
     }
     catch (NumberFormatException e) {
-      LOG.warn("Property '{}' for MovementCommand {} or its location cannot be parsed as a float.",
-               key,
-               command);
+      LOG.warn(
+          "Property '{}' for MovementCommand {} or its location cannot be parsed as a float.",
+          key,
+          command
+      );
     }
 
     return Optional.empty();
@@ -161,9 +168,10 @@ public class PropertyExtractions {
             return MovementCommandCompletedCondition.valueOf(propertyValue);
           }
           catch (IllegalArgumentException e) {
-            LOG.warn("Property '{}' for vehicle '{}' has no valid value.",
-                     key,
-                     vehicle.getName()
+            LOG.warn(
+                "Property '{}' for vehicle '{}' has no valid value.",
+                key,
+                vehicle.getName()
             );
             return null;
           }

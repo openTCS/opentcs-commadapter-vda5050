@@ -7,16 +7,9 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import static java.util.Objects.requireNonNull;
-import java.util.Optional;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
@@ -24,16 +17,24 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isA;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_CUSTOM_ACTION_PREFIX;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_CUSTOM_DEST_ACTION_PREFIX;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.ActionParameter;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.ActionTrigger.ORDER_END;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.ActionTrigger.ORDER_START;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.ActionTrigger.PASSING;
+
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.ActionParameter;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
 import org.opentcs.data.model.Location;
 import org.opentcs.data.model.LocationType;
 import org.opentcs.data.model.Path;
@@ -91,7 +92,8 @@ public class ActionsMappingTest {
                 PROPKEY_CUSTOM_ACTION_PREFIX + ".01.blockingType", "SOFT",
                 PROPKEY_CUSTOM_ACTION_PREFIX + ".01.parameter.x", "123",
                 PROPKEY_CUSTOM_ACTION_PREFIX + ".01.parameter.y", "456"
-            ));
+            )
+        );
 
     List<PropertyAction> result = ActionsMapping.mapPropertyActions(command);
 
@@ -121,7 +123,8 @@ public class ActionsMappingTest {
                 PROPKEY_CUSTOM_ACTION_PREFIX + ".01.blockingType", "SOFT",
                 PROPKEY_CUSTOM_ACTION_PREFIX + ".01.parameter.x", "123",
                 PROPKEY_CUSTOM_ACTION_PREFIX + ".01.parameter.y", "456"
-            ));
+            )
+        );
     List<PropertyAction> result = ActionsMapping.mapPropertyActions(command);
 
     assertThat(result, hasSize(0));
@@ -374,14 +377,26 @@ public class ActionsMappingTest {
     assertThat(result, hasSize(4));
 
     assertThat(result.get(0).getTrigger(), contains(PASSING));
-    assertThat(result.get(1).getTrigger(), containsInAnyOrder(ORDER_START,
-                                                              PASSING));
-    assertThat(result.get(2).getTrigger(), containsInAnyOrder(ORDER_END,
-                                                              ORDER_START,
-                                                              PASSING));
-    assertThat(result.get(3).getTrigger(), containsInAnyOrder(ORDER_END,
-                                                              ORDER_START,
-                                                              PASSING));
+    assertThat(
+        result.get(1).getTrigger(), containsInAnyOrder(
+            ORDER_START,
+            PASSING
+        )
+    );
+    assertThat(
+        result.get(2).getTrigger(), containsInAnyOrder(
+            ORDER_END,
+            ORDER_START,
+            PASSING
+        )
+    );
+    assertThat(
+        result.get(3).getTrigger(), containsInAnyOrder(
+            ORDER_END,
+            ORDER_START,
+            PASSING
+        )
+    );
   }
 
   @Test
@@ -440,10 +455,12 @@ public class ActionsMappingTest {
     Location location = new Location("destLoc", locationType.getReference());
 
     MovementCommand command = new DummyMovementCommand("destOp", location)
-        .withProperties(Map.of(
-            PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".blockingType", "HARD",
-            PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".parameter.source", "command"
-        ));
+        .withProperties(
+            Map.of(
+                PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".blockingType", "HARD",
+                PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".parameter.source", "command"
+            )
+        );
 
     Optional<PropertyAction> action
         = ActionsMapping.fromMovementCommand(vehicle, command, location, locationType);
@@ -526,10 +543,14 @@ public class ActionsMappingTest {
 
     // Location type appends/overrides default
     LocationType locationType = new LocationType("locType")
-        .withProperty(PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".destOp.parameter.locationType",
-                      "value-from-location-type")
-        .withProperty(PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".destOp.parameter.override",
-                      "value-from-location-type");
+        .withProperty(
+            PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".destOp.parameter.locationType",
+            "value-from-location-type"
+        )
+        .withProperty(
+            PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".destOp.parameter.override",
+            "value-from-location-type"
+        );
     Location location = new Location("destLoc", locationType.getReference());
     MovementCommand command = new DummyMovementCommand("destOp", location);
 
@@ -540,15 +561,21 @@ public class ActionsMappingTest {
     org.assertj.core.api.Assertions.assertThat(action.get().getActionParameters())
         .hasSize(2)
         .extracting(ActionParameter::getKey, ActionParameter::getValue)
-        .contains(tuple("locationType", "value-from-location-type"),
-                  tuple("override", "value-from-location-type"));
+        .contains(
+            tuple("locationType", "value-from-location-type"),
+            tuple("override", "value-from-location-type")
+        );
 
     // Location appends/overrides location type
     location = new Location("destLoc", locationType.getReference())
-        .withProperty(PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".destOp.parameter.location",
-                      "value-from-location")
-        .withProperty(PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".destOp.parameter.override",
-                      "value-from-location");
+        .withProperty(
+            PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".destOp.parameter.location",
+            "value-from-location"
+        )
+        .withProperty(
+            PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".destOp.parameter.override",
+            "value-from-location"
+        );
     command = new DummyMovementCommand("destOp", location);
 
     action = ActionsMapping.fromMovementCommand(vehicle, command, location, locationType);
@@ -557,9 +584,11 @@ public class ActionsMappingTest {
     org.assertj.core.api.Assertions.assertThat(action.get().getActionParameters())
         .hasSize(3)
         .extracting(ActionParameter::getKey, ActionParameter::getValue)
-        .contains(tuple("locationType", "value-from-location-type"),
-                  tuple("location", "value-from-location"),
-                  tuple("override", "value-from-location"));
+        .contains(
+            tuple("locationType", "value-from-location-type"),
+            tuple("location", "value-from-location"),
+            tuple("override", "value-from-location")
+        );
 
     // Transport order destination appends/overrides location
     command = new DummyMovementCommand("destOp", location)
@@ -578,14 +607,17 @@ public class ActionsMappingTest {
     org.assertj.core.api.Assertions.assertThat(action.get().getActionParameters())
         .hasSize(4)
         .extracting(ActionParameter::getKey, ActionParameter::getValue)
-        .contains(tuple("locationType", "value-from-location-type"),
-                  tuple("location", "value-from-location"),
-                  tuple("movementCommand", "value-from-movement-command"),
-                  tuple("override", "value-from-movement-command"));
+        .contains(
+            tuple("locationType", "value-from-location-type"),
+            tuple("location", "value-from-location"),
+            tuple("movementCommand", "value-from-movement-command"),
+            tuple("override", "value-from-movement-command")
+        );
   }
 
   private static class DummyMovementCommand
-      implements MovementCommand {
+      implements
+        MovementCommand {
 
     private final String operation;
     private final Location opLocation;
@@ -599,10 +631,12 @@ public class ActionsMappingTest {
       this.finalMovement = false;
     }
 
-    private DummyMovementCommand(String operation,
-                                 Location opLocation,
-                                 Map<String, String> properties,
-                                 boolean finalMovement) {
+    private DummyMovementCommand(
+        String operation,
+        Location opLocation,
+        Map<String, String> properties,
+        boolean finalMovement
+    ) {
       this.operation = requireNonNull(operation, "operation");
       this.opLocation = requireNonNull(opLocation, "opLocation");
       this.properties = requireNonNull(properties, "properties");

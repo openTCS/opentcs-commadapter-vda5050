@@ -7,11 +7,12 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter;
 
+import static java.util.Objects.requireNonNull;
+
 import com.google.inject.assistedinject.Assisted;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
-import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.swing.DefaultListModel;
@@ -19,8 +20,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.ProcessModelImpl;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.commands.SendInstantActions;
-import org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.commands.SendOrderCommand;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.action.ActionConfigurationPanel;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.commands.SendOrderCommand;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Edge;
@@ -46,7 +47,8 @@ import org.slf4j.LoggerFactory;
  * Implements the gui of the vehicle control and visualizes the status of protocol data.
  */
 public class ControlPanel
-    extends VehicleCommAdapterPanel {
+    extends
+      VehicleCommAdapterPanel {
 
   /**
    * This class' logger.
@@ -96,11 +98,16 @@ public class ControlPanel
    * @param callWrapper The call wrapper to use for service calls
    */
   @Inject
-  public ControlPanel(ActionConfigurationPanel newOrderActionConfigurationPanel,
-                      ActionConfigurationPanel instantActionConfigurationPanel,
-                      @Assisted ProcessModelImplTO processModel,
-                      @Assisted VehicleService vehicleService,
-                      @ServiceCallWrapper CallWrapper callWrapper) {
+  public ControlPanel(
+      ActionConfigurationPanel newOrderActionConfigurationPanel,
+      ActionConfigurationPanel instantActionConfigurationPanel,
+      @Assisted
+      ProcessModelImplTO processModel,
+      @Assisted
+      VehicleService vehicleService,
+      @ServiceCallWrapper
+      CallWrapper callWrapper
+  ) {
     this.newOrderActionConfigurationPanel
         = requireNonNull(newOrderActionConfigurationPanel, "newOrderActionConfigurationPanel");
     this.instantActionConfigurationPanel
@@ -120,12 +127,16 @@ public class ControlPanel
     }
     processModel = (ProcessModelImplTO) newProcessModel;
 
-    if (Objects.equals(attributeChanged,
-                       VehicleProcessModel.Attribute.COMM_ADAPTER_ENABLED.name())) {
+    if (Objects.equals(
+        attributeChanged,
+        VehicleProcessModel.Attribute.COMM_ADAPTER_ENABLED.name()
+    )) {
       updateCommAdapterEnabled(processModel.isCommAdapterEnabled());
     }
-    else if (Objects.equals(attributeChanged,
-                            VehicleProcessModel.Attribute.COMM_ADAPTER_CONNECTED.name())) {
+    else if (Objects.equals(
+        attributeChanged,
+        VehicleProcessModel.Attribute.COMM_ADAPTER_CONNECTED.name()
+    )) {
       updateCommAdapterConnected(processModel.isCommAdapterConnected());
     }
     else if (Objects.equals(attributeChanged, ProcessModelImpl.Attribute.VEHICLE_IDLE.name())) {
@@ -134,16 +145,22 @@ public class ControlPanel
     else if (Objects.equals(attributeChanged, ProcessModelImpl.Attribute.LAST_ORDER.name())) {
       updateLastOrder(processModel.getLastOrderSent());
     }
-    else if (Objects.equals(attributeChanged,
-                            ProcessModelImpl.Attribute.LAST_INSTANT_ACTIONS.name())) {
+    else if (Objects.equals(
+        attributeChanged,
+        ProcessModelImpl.Attribute.LAST_INSTANT_ACTIONS.name()
+    )) {
       updateLastInstantActions(processModel.getLastInstantActionsSent());
     }
-    else if (Objects.equals(attributeChanged,
-                            ProcessModelImpl.Attribute.BROKER_CONNECTED.name())) {
+    else if (Objects.equals(
+        attributeChanged,
+        ProcessModelImpl.Attribute.BROKER_CONNECTED.name()
+    )) {
       updateCommAdapterConnectedToBroker(processModel.isBrokerConnected());
     }
-    else if (Objects.equals(attributeChanged,
-                            ProcessModelImpl.Attribute.TOPIC_PREFIX.name())) {
+    else if (Objects.equals(
+        attributeChanged,
+        ProcessModelImpl.Attribute.TOPIC_PREFIX.name()
+    )) {
       updateTopicPrefix(processModel.getTopicPrefix());
     }
   }
@@ -279,8 +296,12 @@ public class ControlPanel
    */
   private void sendAdapterCommand(AdapterCommand command) {
     try {
-      callWrapper.call(() -> vehicleService.sendCommAdapterCommand(processModel.getVehicleRef(),
-                                                                   command));
+      callWrapper.call(
+          () -> vehicleService.sendCommAdapterCommand(
+              processModel.getVehicleRef(),
+              command
+          )
+      );
     }
     catch (Exception ex) {
       LOG.warn("Error sending comm adapter command '{}'", command, ex);
@@ -306,6 +327,7 @@ public class ControlPanel
     }
   }
 
+  // FORMATTER:OFF
   // CHECKSTYLE:OFF
   /**
    * This method is called from within the constructor to
@@ -631,6 +653,7 @@ public class ControlPanel
     getAccessibleContext().setAccessibleName(bundle.getString("controlPanel.accessibleName")); // NOI18N
   }// </editor-fold>//GEN-END:initComponents
   // CHECKSTYLE:ON
+  // FORMATTER:ON
 
   private void sendOrderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendOrderButtonActionPerformed
     long updateId;
@@ -677,10 +700,12 @@ public class ControlPanel
   }//GEN-LAST:event_sendOrderButtonActionPerformed
 
   private Node makeNodeFromPointReference(TCSObjectReference<Point> reference) {
-    Node node = new Node(reference.getName(),
-                         0L,
-                         true,
-                         new ArrayList<>());
+    Node node = new Node(
+        reference.getName(),
+        0L,
+        true,
+        new ArrayList<>()
+    );
     Point point = vehicleService.fetchObject(Point.class, reference);
     Vehicle vehicle = vehicleService.fetchObject(Vehicle.class, processModel.getVehicleRef());
     node.setNodePosition(NodeMapping.toNodePosition(point, vehicle, false));
@@ -688,12 +713,14 @@ public class ControlPanel
   }
 
   private Edge makeEdgeFromPath(Path p, Node startNode, Node endNode) {
-    Edge rtn = new Edge(p.getName(),
-                        0L,
-                        true,
-                        startNode.getNodeId(),
-                        endNode.getNodeId(),
-                        new ArrayList<>());
+    Edge rtn = new Edge(
+        p.getName(),
+        0L,
+        true,
+        startNode.getNodeId(),
+        endNode.getNodeId(),
+        new ArrayList<>()
+    );
     return rtn;
   }
 
@@ -779,6 +806,7 @@ public class ControlPanel
     return Optional.of(lastNode.getActions().get(0));
   }
 
+  // FORMATTER:OFF
   // CHECKSTYLE:OFF
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton applyLastInstantActionButton;
@@ -810,4 +838,5 @@ public class ControlPanel
   private javax.swing.JButton vehicleConnectedButton;
   // End of variables declaration//GEN-END:variables
   // CHECKSTYLE:ON
+  // FORMATTER:ON
 }

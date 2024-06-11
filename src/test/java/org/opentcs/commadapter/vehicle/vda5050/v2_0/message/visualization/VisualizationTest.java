@@ -107,19 +107,23 @@ public class VisualizationTest {
   }
 
   private Visualization createVisualizationMinimal() {
-    return new Visualization(0L,
-                             Instant.EPOCH,
-                             "version",
-                             "manufacturer",
-                             "serial-number");
+    return new Visualization(
+        0L,
+        Instant.EPOCH,
+        "version",
+        "manufacturer",
+        "serial-number"
+    );
   }
 
   private Visualization createVisualizationFull() {
-    return new Visualization(0L,
-                             Instant.EPOCH,
-                             "version",
-                             "manufacturer",
-                             "serial-number")
+    return new Visualization(
+        0L,
+        Instant.EPOCH,
+        "version",
+        "manufacturer",
+        "serial-number"
+    )
         .setAgvPosition(
             new AgvPosition(1.2, 3.4, 1.2, "some-map-id", true)
                 .setDeviationRange(0.1)

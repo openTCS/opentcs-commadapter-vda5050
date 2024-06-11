@@ -7,11 +7,12 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 
 /**
@@ -19,7 +20,8 @@ import javax.annotation.Nonnull;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SafetyState
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * Acknowledge-type of e-stop.
@@ -34,8 +36,13 @@ public class SafetyState
 
   @JsonCreator
   public SafetyState(
-      @Nonnull @JsonProperty(required = true, value = "eStop") EStop eStop,
-      @Nonnull @JsonProperty(required = true, value = "fieldViolation") Boolean fieldViolation) {
+      @Nonnull
+      @JsonProperty(required = true, value = "eStop")
+      EStop eStop,
+      @Nonnull
+      @JsonProperty(required = true, value = "fieldViolation")
+      Boolean fieldViolation
+  ) {
     this.eStop = requireNonNull(eStop, "eStop");
     this.fieldViolation = requireNonNull(fieldViolation, "fieldViolation");
   }
@@ -44,7 +51,10 @@ public class SafetyState
     return eStop;
   }
 
-  public SafetyState seteStop(@Nonnull EStop eStop) {
+  public SafetyState seteStop(
+      @Nonnull
+      EStop eStop
+  ) {
     this.eStop = requireNonNull(eStop, "eStop");
     return this;
   }
@@ -53,7 +63,10 @@ public class SafetyState
     return fieldViolation;
   }
 
-  public SafetyState setFieldViolation(@Nonnull Boolean fieldViolation) {
+  public SafetyState setFieldViolation(
+      @Nonnull
+      Boolean fieldViolation
+  ) {
     this.fieldViolation = requireNonNull(fieldViolation, "fieldViolation");
     return this;
   }

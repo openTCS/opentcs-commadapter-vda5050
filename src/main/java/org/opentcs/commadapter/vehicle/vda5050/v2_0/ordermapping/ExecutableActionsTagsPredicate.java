@@ -7,13 +7,14 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.ordermapping;
 
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_EXECUTABLE_ACTIONS_TAGS;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_EXECUTABLE_ACTIONS_TAGS;
 import org.opentcs.data.TCSObject;
 import org.opentcs.drivers.vehicle.MovementCommand;
 
@@ -21,7 +22,8 @@ import org.opentcs.drivers.vehicle.MovementCommand;
  * A predicate to test if an action is executable by a specific vehicle.
  */
 public class ExecutableActionsTagsPredicate
-    implements Predicate<String> {
+    implements
+      Predicate<String> {
 
   /**
    * List of executable actions this vehicle can process.

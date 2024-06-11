@@ -15,7 +15,8 @@ import java.io.Serializable;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Velocity
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * [Optional] The AGV's velocity in its x direction.

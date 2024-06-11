@@ -7,18 +7,20 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyInteger;
+import static org.opentcs.util.Assertions.checkArgument;
+
 import com.google.inject.assistedinject.Assisted;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyInteger;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Edge;
@@ -31,7 +33,6 @@ import org.opentcs.data.model.Vehicle;
 import org.opentcs.data.order.Route.Step;
 import org.opentcs.data.order.TransportOrder;
 import org.opentcs.drivers.vehicle.MovementCommand;
-import static org.opentcs.util.Assertions.checkArgument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,9 +71,16 @@ public class OrderMapper {
    * @param objectService An object service.
    */
   @Inject
-  public OrderMapper(@Assisted @Nonnull TCSObjectReference<Vehicle> vehicleReference,
-                     @Assisted @Nonnull Predicate<String> isActionExecutable,
-                     @Nonnull TCSObjectService objectService) {
+  public OrderMapper(
+      @Assisted
+      @Nonnull
+      TCSObjectReference<Vehicle> vehicleReference,
+      @Assisted
+      @Nonnull
+      Predicate<String> isActionExecutable,
+      @Nonnull
+      TCSObjectService objectService
+  ) {
     this.vehicleReference = requireNonNull(vehicleReference, "vehicleReference");
     this.vehicleActionsFilter = requireNonNull(isActionExecutable, "isActionExecutable");
     this.objectService = requireNonNull(objectService, "objectService");
@@ -84,7 +92,10 @@ public class OrderMapper {
    * @param command The command to convert.
    * @return The order mapper object.
    */
-  public Order toOrder(@Nonnull MovementCommand command) {
+  public Order toOrder(
+      @Nonnull
+      MovementCommand command
+  ) {
     requireNonNull(command, "command");
 
     return mapOrder(command, objectService.fetchObject(Vehicle.class, vehicleReference));
@@ -97,7 +108,12 @@ public class OrderMapper {
    * @param vehicle The vehicle to map the command for.
    * @return The mapped order.
    */
-  private Order mapOrder(@Nonnull MovementCommand command, @Nonnull Vehicle vehicle) {
+  private Order mapOrder(
+      @Nonnull
+      MovementCommand command,
+      @Nonnull
+      Vehicle vehicle
+  ) {
     requireNonNull(command, "command");
     requireNonNull(vehicle, "vehicle");
 
@@ -118,11 +134,13 @@ public class OrderMapper {
 
     order.getEdges().add(mapEdge(command, vehicle));
 
-    order.getNodes().add(mapDestNode(
-        command,
-        command.getStep().getRouteIndex() * 2 + 2,
-        vehicle
-    ));
+    order.getNodes().add(
+        mapDestNode(
+            command,
+            command.getStep().getRouteIndex() * 2 + 2,
+            vehicle
+        )
+    );
 
     // Add rest of the route as the horizon.
     mapHorizon(order, command, vehicle);
@@ -134,25 +152,31 @@ public class OrderMapper {
     Order order = createEmptyOrder(command, vehicle);
 
     // This is a movement consisting only of a destination node.
-    order.getNodes().add(mapDestNode(
-        command,
-        0,
-        vehicle
-    ));
+    order.getNodes().add(
+        mapDestNode(
+            command,
+            0,
+            vehicle
+        )
+    );
 
     return order;
   }
 
   private Order createEmptyOrder(MovementCommand command, Vehicle vehicle) {
-    return new Order(getDriveOrderName(vehicle),
-                     (long) command.getStep().getRouteIndex(),
-                     new ArrayList<>(),
-                     new ArrayList<>());
+    return new Order(
+        getDriveOrderName(vehicle),
+        (long) command.getStep().getRouteIndex(),
+        new ArrayList<>(),
+        new ArrayList<>()
+    );
   }
 
-  private Node getOrCreateSourceNodeForMovement(Order order,
-                                                MovementCommand command,
-                                                Vehicle vehicle) {
+  private Node getOrCreateSourceNodeForMovement(
+      Order order,
+      MovementCommand command,
+      Vehicle vehicle
+  ) {
     if (isNewOrder(order)) {
       return mapInitialNodeOnRoute(command, vehicle);
     }
@@ -164,10 +188,12 @@ public class OrderMapper {
 
   private Node mapInitialNodeOnRoute(MovementCommand command, Vehicle vehicle) {
     PropertyActionsFilter actionFilter
-        = new PropertyActionsFilter(vehicleActionsFilter,
-                                    new ExecutableActionsTagsPredicate(command),
-                                    actionString -> true,
-                                    EnumSet.of(ActionTrigger.ORDER_START));
+        = new PropertyActionsFilter(
+            vehicleActionsFilter,
+            new ExecutableActionsTagsPredicate(command),
+            actionString -> true,
+            EnumSet.of(ActionTrigger.ORDER_START)
+        );
 
     return NodeMapping.toBaseNode(
         command.getStep().getSourcePoint(),
@@ -181,9 +207,13 @@ public class OrderMapper {
     );
   }
 
-  private Node mapDestNode(@Nonnull MovementCommand command,
-                           long sequenceId,
-                           @Nonnull Vehicle vehicle) {
+  private Node mapDestNode(
+      @Nonnull
+      MovementCommand command,
+      long sequenceId,
+      @Nonnull
+      Vehicle vehicle
+  ) {
     return NodeMapping.toBaseNode(
         command.getStep().getDestinationPoint(),
         sequenceId,
@@ -193,8 +223,12 @@ public class OrderMapper {
     );
   }
 
-  private List<Action> actionsForVehicle(@Nonnull MovementCommand command,
-                                         @Nonnull Vehicle vehicle) {
+  private List<Action> actionsForVehicle(
+      @Nonnull
+      MovementCommand command,
+      @Nonnull
+      Vehicle vehicle
+  ) {
     Predicate<PropertyAction> propActionFilter = createPropertyActionsFilter(command);
 
     return concatStreams(
@@ -211,7 +245,10 @@ public class OrderMapper {
         .collect(Collectors.toList());
   }
 
-  private Predicate<PropertyAction> createPropertyActionsFilter(@Nonnull MovementCommand cmd) {
+  private Predicate<PropertyAction> createPropertyActionsFilter(
+      @Nonnull
+      MovementCommand cmd
+  ) {
     return new PropertyActionsFilter(
         vehicleActionsFilter,
         new ExecutableActionsTagsPredicate(cmd),
@@ -220,14 +257,21 @@ public class OrderMapper {
     );
   }
 
-  private Predicate<String> destNodeEdgeActionFilter(@Nonnull MovementCommand cmd) {
+  private Predicate<String> destNodeEdgeActionFilter(
+      @Nonnull
+      MovementCommand cmd
+  ) {
     return involvesActualMovement(cmd)
         ? new ExecutableActionsTagsPredicate(cmd.getStep().getPath())
         : actionString -> true;
   }
 
-  private Optional<PropertyAction> movementCommandPropAction(@Nonnull MovementCommand command,
-                                                             @Nonnull Vehicle vehicle) {
+  private Optional<PropertyAction> movementCommandPropAction(
+      @Nonnull
+      MovementCommand command,
+      @Nonnull
+      Vehicle vehicle
+  ) {
     if (command.isWithoutOperation() || command.getOpLocation() == null) {
       return Optional.empty();
     }
@@ -240,8 +284,10 @@ public class OrderMapper {
     );
   }
 
-  private Edge mapEdge(MovementCommand command,
-                       Vehicle vehicle) {
+  private Edge mapEdge(
+      MovementCommand command,
+      Vehicle vehicle
+  ) {
     PropertyActionsFilter actionFilter = new PropertyActionsFilter(
         vehicleActionsFilter,
         new ExecutableActionsTagsPredicate(command),
@@ -303,8 +349,8 @@ public class OrderMapper {
   private void mapHorizon(Order order, MovementCommand command, Vehicle vehicle) {
     int maxRouteIndex = Math.min(
         command.getStep().getRouteIndex()
-        + getPropertyInteger(ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_HORIZON, vehicle)
-            .orElse(command.getRoute().getSteps().size()),
+            + getPropertyInteger(ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_HORIZON, vehicle)
+                .orElse(command.getRoute().getSteps().size()),
         command.getRoute().getSteps().size()
     );
 
@@ -313,18 +359,22 @@ public class OrderMapper {
 
       order.getEdges().add(mapHorizonEdge(command, step, vehicle));
 
-      order.getNodes().add(mapHorizonNode(
-          command,
-          step,
-          step.getRouteIndex() * 2 + 2,
-          vehicle
-      ));
+      order.getNodes().add(
+          mapHorizonNode(
+              command,
+              step,
+              step.getRouteIndex() * 2 + 2,
+              vehicle
+          )
+      );
     }
   }
 
-  private Edge mapHorizonEdge(MovementCommand command,
-                              Step step,
-                              Vehicle vehicle) {
+  private Edge mapHorizonEdge(
+      MovementCommand command,
+      Step step,
+      Vehicle vehicle
+  ) {
     PropertyActionsFilter actionFilter = new PropertyActionsFilter(
         vehicleActionsFilter,
         new ExecutableActionsTagsPredicate(command),
@@ -341,10 +391,14 @@ public class OrderMapper {
     );
   }
 
-  private Node mapHorizonNode(@Nonnull MovementCommand command,
-                              Step step,
-                              long sequenceId,
-                              @Nonnull Vehicle vehicle) {
+  private Node mapHorizonNode(
+      @Nonnull
+      MovementCommand command,
+      Step step,
+      long sequenceId,
+      @Nonnull
+      Vehicle vehicle
+  ) {
     return NodeMapping.toHorizonNode(
         step.getDestinationPoint(),
         sequenceId,
@@ -358,16 +412,20 @@ public class OrderMapper {
     );
   }
 
-  private List<Action> horizonActionsForVehicle(@Nonnull MovementCommand command,
-                                                @Nonnull Vehicle vehicle,
-                                                Step step,
-                                                boolean isLastStep) {
+  private List<Action> horizonActionsForVehicle(
+      @Nonnull
+      MovementCommand command,
+      @Nonnull
+      Vehicle vehicle,
+      Step step,
+      boolean isLastStep
+  ) {
     Predicate<PropertyAction> propActionFilter = new PropertyActionsFilter(
         vehicleActionsFilter,
         new ExecutableActionsTagsPredicate(command),
         involvesActualMovement(command)
-        ? new ExecutableActionsTagsPredicate(step.getPath())
-        : actionString -> true,
+            ? new ExecutableActionsTagsPredicate(step.getPath())
+            : actionString -> true,
         isLastStep ? EnumSet.of(ActionTrigger.ORDER_END) : EnumSet.of(ActionTrigger.PASSING)
     );
 
@@ -390,8 +448,11 @@ public class OrderMapper {
   }
 
   private Optional<PropertyAction> horizonMovementCommandPropAction(
-      @Nonnull MovementCommand command,
-      @Nonnull Vehicle vehicle) {
+      @Nonnull
+      MovementCommand command,
+      @Nonnull
+      Vehicle vehicle
+  ) {
     if (command.getFinalOperation().equals(MovementCommand.NO_OPERATION)) {
       return Optional.empty();
     }

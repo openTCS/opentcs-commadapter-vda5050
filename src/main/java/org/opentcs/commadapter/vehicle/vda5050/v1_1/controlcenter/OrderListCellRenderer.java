@@ -20,7 +20,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Order;
  * Renders orders when displayed in a list.
  */
 public class OrderListCellRenderer
-    extends DefaultListCellRenderer {
+    extends
+      DefaultListCellRenderer {
 
   /**
    * A prototype for the list to compute its preferred size.
@@ -35,16 +36,20 @@ public class OrderListCellRenderer
   }
 
   @Override
-  public Component getListCellRendererComponent(JList<?> list,
-                                                Object value,
-                                                int index,
-                                                boolean isSelected,
-                                                boolean cellHasFocus) {
-    Component component = super.getListCellRendererComponent(list,
-                                                             value,
-                                                             index,
-                                                             isSelected,
-                                                             cellHasFocus);
+  public Component getListCellRendererComponent(
+      JList<?> list,
+      Object value,
+      int index,
+      boolean isSelected,
+      boolean cellHasFocus
+  ) {
+    Component component = super.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus
+    );
 
     if (value instanceof Order) {
       Order order = (Order) value;

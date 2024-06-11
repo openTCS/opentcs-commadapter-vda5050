@@ -21,23 +21,28 @@ import org.opentcs.util.gui.StringListCellRenderer;
  * long path names.
  */
 public class PathRenderer
-    extends StringListCellRenderer<Path> {
+    extends
+      StringListCellRenderer<Path> {
 
   public PathRenderer() {
     super(path -> path.getName());
   }
 
   @Override
-  public Component getListCellRendererComponent(JList<? extends Path> list,
-                                                Path value,
-                                                int index,
-                                                boolean isSelected,
-                                                boolean cellHasFocus) {
-    JLabel label = (JLabel) super.getListCellRendererComponent(list,
-                                                               value,
-                                                               index,
-                                                               isSelected,
-                                                               cellHasFocus);
+  public Component getListCellRendererComponent(
+      JList<? extends Path> list,
+      Path value,
+      int index,
+      boolean isSelected,
+      boolean cellHasFocus
+  ) {
+    JLabel label = (JLabel) super.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus
+    );
     label.setToolTipText(label.getText());
     return label;
   }

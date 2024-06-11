@@ -7,24 +7,25 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Order;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ActionState;
@@ -62,11 +63,12 @@ public class MessageResponseMatcherTest {
     sendInstantActionsCallback = mock(Consumer.class);
     orderAcceptedCallback = mock(Consumer.class);
     orderRejectedCallback = mock(Consumer.class);
-    messageResponseMatcher = new MessageResponseMatcher("test",
-                                                        sendOrderCallback,
-                                                        sendInstantActionsCallback,
-                                                        orderAcceptedCallback,
-                                                        orderRejectedCallback
+    messageResponseMatcher = new MessageResponseMatcher(
+        "test",
+        sendOrderCallback,
+        sendInstantActionsCallback,
+        orderAcceptedCallback,
+        orderRejectedCallback
     );
     messageResponseMatcher.onStateMessage(newState());
     dummyCommand = new DummyMovementCommand();
@@ -137,12 +139,14 @@ public class MessageResponseMatcherTest {
   public void suppressOrderRepetitionOnOrderRejection(String errorType) {
     Order order = new Order("some-order", 0L, List.of(), List.of());
     State state = newState();
-    state.setErrors(List.of(
-        new ErrorEntry(
-            errorType,
-            ErrorLevel.WARNING
+    state.setErrors(
+        List.of(
+            new ErrorEntry(
+                errorType,
+                ErrorLevel.WARNING
+            )
         )
-    ));
+    );
 
     messageResponseMatcher.enqueueCommand(order, dummyCommand);
     messageResponseMatcher.onStateMessage(state);
@@ -156,12 +160,14 @@ public class MessageResponseMatcherTest {
     Order order = new Order("some-order", 0L, List.of(), List.of());
     InstantActions action = new InstantActions();
     State state = stateWithOperatingMode(OperatingMode.MANUAL);
-    state.setErrors(List.of(
-        new ErrorEntry(
-            "validationError",
-            ErrorLevel.WARNING
+    state.setErrors(
+        List.of(
+            new ErrorEntry(
+                "validationError",
+                ErrorLevel.WARNING
+            )
         )
-    ));
+    );
 
     messageResponseMatcher.onStateMessage(state);
     messageResponseMatcher.enqueueAction(action);
@@ -251,9 +257,9 @@ public class MessageResponseMatcherTest {
     State state = newState();
     state.getActionStates().addAll(
         actions.getInstantActions().stream()
-            .map(action
-                -> new ActionState(action.getActionId(), ActionStatus.WAITING)
-                .setActionType(action.getActionType())
+            .map(
+                action -> new ActionState(action.getActionId(), ActionStatus.WAITING)
+                    .setActionType(action.getActionType())
             )
             .collect(Collectors.toList())
     );
@@ -261,23 +267,26 @@ public class MessageResponseMatcherTest {
   }
 
   private State newState() {
-    return new State("",
-                     0L,
-                     "",
-                     0L,
-                     new ArrayList<>(),
-                     new ArrayList<>(),
-                     false,
-                     new ArrayList<>(),
-                     new BatteryState(100.0, false),
-                     OperatingMode.AUTOMATIC,
-                     new ArrayList<>(),
-                     new ArrayList<>(),
-                     new SafetyState(EStop.NONE, false));
+    return new State(
+        "",
+        0L,
+        "",
+        0L,
+        new ArrayList<>(),
+        new ArrayList<>(),
+        false,
+        new ArrayList<>(),
+        new BatteryState(100.0, false),
+        OperatingMode.AUTOMATIC,
+        new ArrayList<>(),
+        new ArrayList<>(),
+        new SafetyState(EStop.NONE, false)
+    );
   }
 
   private class DummyMovementCommand
-      implements MovementCommand {
+      implements
+        MovementCommand {
 
     @Override
     public Route getRoute() {

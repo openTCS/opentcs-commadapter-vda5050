@@ -7,9 +7,10 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -99,7 +100,12 @@ public class StateMappings {
    * @param lengthLoaded The length of the vehicle when loaded.
    * @return The length of the vehicle based on the loads reported in the given state.
    */
-  public static int toVehicleLength(@Nonnull State state, int lengthUnloaded, int lengthLoaded) {
+  public static int toVehicleLength(
+      @Nonnull
+      State state,
+      int lengthUnloaded,
+      int lengthLoaded
+  ) {
     requireNonNull(state, "state");
 
     if (state.getLoads() == null || state.getLoads().isEmpty()) {
@@ -134,7 +140,12 @@ public class StateMappings {
    * @return A concatenated list of info types from the given state message.
    */
   @Nonnull
-  public static String toInfoPropertyValue(@Nonnull State state, @Nonnull InfoLevel infoLevel) {
+  public static String toInfoPropertyValue(
+      @Nonnull
+      State state,
+      @Nonnull
+      InfoLevel infoLevel
+  ) {
     requireNonNull(state, "state");
     requireNonNull(infoLevel, "infoLevel");
 
@@ -157,7 +168,10 @@ public class StateMappings {
    * @return The paused state (can be null).
    */
   @Nullable
-  public static String toPausedPropertyValue(@Nonnull State state) {
+  public static String toPausedPropertyValue(
+      @Nonnull
+      State state
+  ) {
     requireNonNull(state, "state");
 
     return Objects.toString(state.isPaused(), null);
@@ -169,7 +183,9 @@ public class StateMappings {
 
   private static boolean hasPendingAction(State state) {
     return state.getActionStates().stream()
-        .anyMatch(action -> (action.getActionStatus() != ActionStatus.FAILED
-                             && action.getActionStatus() != ActionStatus.FINISHED));
+        .anyMatch(
+            action -> (action.getActionStatus() != ActionStatus.FAILED
+                && action.getActionStatus() != ActionStatus.FINISHED)
+        );
   }
 }

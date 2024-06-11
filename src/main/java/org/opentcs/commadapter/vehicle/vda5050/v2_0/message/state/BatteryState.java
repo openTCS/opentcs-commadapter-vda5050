@@ -7,21 +7,23 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.Limits.UINT32_MAX_VALUE;
+import static org.opentcs.util.Assertions.checkInRange;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
-import static org.opentcs.commadapter.vehicle.vda5050.common.Limits.UINT32_MAX_VALUE;
-import static org.opentcs.util.Assertions.checkInRange;
 
 /**
  * Describes an AGVs battery state.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BatteryState
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * State of Charge (in percent). Range: [0 ... 100]
@@ -49,8 +51,13 @@ public class BatteryState
 
   @JsonCreator
   public BatteryState(
-      @Nonnull @JsonProperty(required = true, value = "batteryCharge") Double batteryCharge,
-      @Nonnull @JsonProperty(required = true, value = "charging") Boolean charging) {
+      @Nonnull
+      @JsonProperty(required = true, value = "batteryCharge")
+      Double batteryCharge,
+      @Nonnull
+      @JsonProperty(required = true, value = "charging")
+      Boolean charging
+  ) {
     this.batteryCharge = requireNonNull(batteryCharge, "batteryCharge");
     this.charging = requireNonNull(charging, "charging");
   }
@@ -59,7 +66,10 @@ public class BatteryState
     return batteryCharge;
   }
 
-  public BatteryState setBatteryCharge(@Nonnull Double batteryCharge) {
+  public BatteryState setBatteryCharge(
+      @Nonnull
+      Double batteryCharge
+  ) {
     this.batteryCharge = requireNonNull(batteryCharge, "batteryCharge");
     return this;
   }
@@ -89,7 +99,10 @@ public class BatteryState
     return charging;
   }
 
-  public BatteryState setCharging(@Nonnull Boolean charging) {
+  public BatteryState setCharging(
+      @Nonnull
+      Boolean charging
+  ) {
     this.charging = requireNonNull(charging, "charging");
     return this;
   }

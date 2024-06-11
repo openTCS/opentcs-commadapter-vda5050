@@ -7,10 +7,12 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.common;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.util.Assertions.checkState;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
-import static java.util.Objects.requireNonNull;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.everit.json.schema.Schema;
@@ -19,7 +21,6 @@ import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import static org.opentcs.util.Assertions.checkState;
 
 /**
  * Validates JSON inputs against registered schemas.
@@ -35,7 +36,10 @@ public class JsonValidator {
    * schemas belong to.
    * @throws IllegalArgumentException If there was any problem reading a schema from a given reader.
    */
-  public JsonValidator(@Nonnull Map<Class<?>, Reader> schemaReadersByClass)
+  public JsonValidator(
+      @Nonnull
+      Map<Class<?>, Reader> schemaReadersByClass
+  )
       throws IllegalArgumentException {
     requireNonNull(schemaReadersByClass, "schemaReadersByClass");
 
@@ -54,8 +58,14 @@ public class JsonValidator {
    * @throws IllegalArgumentException If the given JSON input is not valid for the schema registered
    * for the given class.
    */
-  public void validate(@Nonnull String json, @Nonnull Class<?> clazz)
-      throws IllegalStateException, IllegalArgumentException {
+  public void validate(
+      @Nonnull
+      String json,
+      @Nonnull
+      Class<?> clazz
+  )
+      throws IllegalStateException,
+        IllegalArgumentException {
     requireNonNull(json, "json");
     requireNonNull(clazz, "clazz");
 
@@ -76,7 +86,10 @@ public class JsonValidator {
     }
   }
 
-  private static Schema createSchema(@Nonnull Reader schemaReader)
+  private static Schema createSchema(
+      @Nonnull
+      Reader schemaReader
+  )
       throws IllegalArgumentException {
     try (schemaReader) {
       return SchemaLoader.load(new JSONObject(new JSONTokener(schemaReader)));

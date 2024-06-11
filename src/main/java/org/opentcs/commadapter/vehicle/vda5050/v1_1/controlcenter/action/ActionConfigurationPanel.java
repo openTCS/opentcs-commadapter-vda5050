@@ -7,13 +7,14 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.action;
 
+import static java.util.Objects.requireNonNull;
+
 import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 import java.util.function.Supplier;
 import javax.inject.Inject;
@@ -29,7 +30,8 @@ import org.opentcs.util.gui.StringListCellRenderer;
  * A panel for configuring an action.
  */
 public class ActionConfigurationPanel
-    extends javax.swing.JPanel {
+    extends
+      javax.swing.JPanel {
 
   /**
    * Supplier for the prefill panel.
@@ -73,9 +75,11 @@ public class ActionConfigurationPanel
       return Optional.empty();
     }
     else {
-      Action action = new Action(selectedAction.getActionType(),
-                                 actionIdTextField.getText(),
-                                 (BlockingType) blockingTypeComboBox.getSelectedItem());
+      Action action = new Action(
+          selectedAction.getActionType(),
+          actionIdTextField.getText(),
+          (BlockingType) blockingTypeComboBox.getSelectedItem()
+      );
       action.setActionParameters(getTableModel().getParameters());
       return Optional.of(action);
     }
@@ -115,6 +119,7 @@ public class ActionConfigurationPanel
     actionTypeComboBox.setSelectedIndex(-1);
   }
 
+  // FORMATTER:OFF
   // CHECKSTYLE:OFF
   /**
    * This method is called from within the constructor to
@@ -273,6 +278,7 @@ public class ActionConfigurationPanel
     add(buttonPanel, gridBagConstraints);
   }// </editor-fold>//GEN-END:initComponents
   // CHECKSTYLE:ON
+  // FORMATTER:ON
 
   private void addParameterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addParameterButtonActionPerformed
     int index = getTableModel().addParameter();
@@ -330,8 +336,10 @@ public class ActionConfigurationPanel
 
     // add and update parameters from prefill panel
     prefillParameters.get().entrySet().forEach(entry -> {
-      actionParameters.put(entry.getKey(),
-                           new ActionParameter(entry.getKey(), entry.getValue()));
+      actionParameters.put(
+          entry.getKey(),
+          new ActionParameter(entry.getKey(), entry.getValue())
+      );
     });
 
     // write new action parameters back to table model
@@ -367,6 +375,7 @@ public class ActionConfigurationPanel
     return actionParametersCopy;
   }
 
+  // FORMATTER:OFF
   // CHECKSTYLE:OFF
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel actionIdLabel;
@@ -384,4 +393,5 @@ public class ActionConfigurationPanel
   private javax.swing.JButton removeParameterButton;
   // End of variables declaration//GEN-END:variables
   // CHECKSTYLE:ON
+  // FORMATTER:ON
 }

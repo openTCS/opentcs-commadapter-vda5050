@@ -7,8 +7,6 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.modeleditor;
 
-import java.util.HashSet;
-import java.util.Set;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_CUSTOM_ACTION_PREFIX;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_CUSTOM_DEST_ACTION_PREFIX;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_EXECUTABLE_ACTIONS_TAGS;
@@ -29,6 +27,9 @@ import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROP
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MIN_VISU_INTERVAL;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_RECHARGE_OPERATION;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER;
+
+import java.util.HashSet;
+import java.util.Set;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.action.Drop;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.action.Pick;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
@@ -39,7 +40,8 @@ import org.opentcs.components.plantoverview.PropertySuggestions;
  * Property suggestions for the Model Editor application specific to the VDA5050 adapter.
  */
 public class ModelEditorPropertySuggestions
-    implements PropertySuggestions {
+    implements
+      PropertySuggestions {
 
   private final Set<String> keySuggestions = new HashSet<>();
   private final Set<String> valueSuggestions = new HashSet<>();
@@ -75,71 +77,103 @@ public class ModelEditorPropertySuggestions
     keySuggestions.add(PROPKEY_POINT_DEVIATION_XY);
     keySuggestions.add(PROPKEY_POINT_DEVIATION_THETA);
     // pick parameters
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Pick.PARAMKEY_LOAD_HANDLING_DEVICE);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Pick.PARAMKEY_STATION_TYPE);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Pick.PARAMKEY_STATION_NAME);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Pick.PARAMKEY_LOAD_TYPE);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Pick.PARAMKEY_LOAD_ID);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Pick.PARAMKEY_HEIGHT);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Pick.PARAMKEY_DEPTH);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Pick.PARAMKEY_SIDE);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".pick.parameter." + Pick.PARAMKEY_LOAD_HANDLING_DEVICE);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".pick.parameter." + Pick.PARAMKEY_STATION_TYPE);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".pick.parameter." + Pick.PARAMKEY_STATION_NAME);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".pick.parameter." + Pick.PARAMKEY_LOAD_TYPE);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".pick.parameter." + Pick.PARAMKEY_LOAD_ID);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".pick.parameter." + Pick.PARAMKEY_HEIGHT);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".pick.parameter." + Pick.PARAMKEY_DEPTH);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".pick.parameter." + Pick.PARAMKEY_SIDE);
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Pick.PARAMKEY_LOAD_HANDLING_DEVICE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Pick.PARAMKEY_STATION_TYPE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Pick.PARAMKEY_STATION_NAME
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Pick.PARAMKEY_LOAD_TYPE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Pick.PARAMKEY_LOAD_ID
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Pick.PARAMKEY_HEIGHT
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Pick.PARAMKEY_DEPTH
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Pick.PARAMKEY_SIDE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".pick.parameter." + Pick.PARAMKEY_LOAD_HANDLING_DEVICE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".pick.parameter." + Pick.PARAMKEY_STATION_TYPE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".pick.parameter." + Pick.PARAMKEY_STATION_NAME
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".pick.parameter." + Pick.PARAMKEY_LOAD_TYPE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".pick.parameter." + Pick.PARAMKEY_LOAD_ID
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".pick.parameter." + Pick.PARAMKEY_HEIGHT
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".pick.parameter." + Pick.PARAMKEY_DEPTH
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".pick.parameter." + Pick.PARAMKEY_SIDE
+    );
     // drop parameters
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Drop.PARAMKEY_LOAD_HANDLING_DEVICE);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Drop.PARAMKEY_STATION_TYPE);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Drop.PARAMKEY_STATION_NAME);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Drop.PARAMKEY_LOAD_TYPE);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Drop.PARAMKEY_LOAD_ID);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Drop.PARAMKEY_HEIGHT);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Drop.PARAMKEY_DEPTH);
-    keySuggestions.add(PROPKEY_CUSTOM_ACTION_PREFIX
-        + ".<INDEX>.parameter." + Drop.PARAMKEY_SIDE);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".drop.parameter." + Drop.PARAMKEY_LOAD_HANDLING_DEVICE);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".drop.parameter." + Drop.PARAMKEY_STATION_TYPE);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".drop.parameter." + Drop.PARAMKEY_STATION_NAME);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".drop.parameter." + Drop.PARAMKEY_LOAD_TYPE);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".drop.parameter." + Drop.PARAMKEY_LOAD_ID);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".drop.parameter." + Drop.PARAMKEY_HEIGHT);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".drop.parameter." + Drop.PARAMKEY_DEPTH);
-    keySuggestions.add(PROPKEY_CUSTOM_DEST_ACTION_PREFIX
-        + ".drop.parameter." + Drop.PARAMKEY_SIDE);
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Drop.PARAMKEY_LOAD_HANDLING_DEVICE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Drop.PARAMKEY_STATION_TYPE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Drop.PARAMKEY_STATION_NAME
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Drop.PARAMKEY_LOAD_TYPE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Drop.PARAMKEY_LOAD_ID
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Drop.PARAMKEY_HEIGHT
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Drop.PARAMKEY_DEPTH
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_ACTION_PREFIX + ".<INDEX>.parameter." + Drop.PARAMKEY_SIDE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".drop.parameter." + Drop.PARAMKEY_LOAD_HANDLING_DEVICE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".drop.parameter." + Drop.PARAMKEY_STATION_TYPE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".drop.parameter." + Drop.PARAMKEY_STATION_NAME
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".drop.parameter." + Drop.PARAMKEY_LOAD_TYPE
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".drop.parameter." + Drop.PARAMKEY_LOAD_ID
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".drop.parameter." + Drop.PARAMKEY_HEIGHT
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".drop.parameter." + Drop.PARAMKEY_DEPTH
+    );
+    keySuggestions.add(
+        PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".drop.parameter." + Drop.PARAMKEY_SIDE
+    );
 
     for (ActionTrigger trigger : ActionTrigger.values()) {
       actionTriggers.add(trigger.name());

@@ -7,6 +7,11 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.ordermapping;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_CUSTOM_ACTION_PREFIX;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_EXECUTABLE_ACTIONS_TAGS;
+
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -14,12 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_CUSTOM_ACTION_PREFIX;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_EXECUTABLE_ACTIONS_TAGS;
 import org.opentcs.data.model.Point;
 
 /**
@@ -205,8 +206,9 @@ public class PropertyActionsFilterTest {
   private Predicate<String> makeFilter(String... tags) {
     Map<String, String> properties = new HashMap<>();
     if (tags.length > 0) {
-      properties.put(PROPKEY_EXECUTABLE_ACTIONS_TAGS,
-                     Arrays.stream(tags).collect(Collectors.joining(" | "))
+      properties.put(
+          PROPKEY_EXECUTABLE_ACTIONS_TAGS,
+          Arrays.stream(tags).collect(Collectors.joining(" | "))
       );
     }
     return new ExecutableActionsTagsPredicate(properties);

@@ -7,20 +7,22 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInRange;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
-import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInRange;
 
 /**
  * Defines the position on a map in world coordinates. Each floor has its own map.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AgvPosition
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * X-position on the map in reference to the map coordinate system.
@@ -80,11 +82,22 @@ public class AgvPosition
   // CHECKSTYLE:OFF (Long lines because some of these parameter declarations are very long.)
   @JsonCreator
   public AgvPosition(
-      @Nonnull @JsonProperty(required = true, value = "x") Double x,
-      @Nonnull @JsonProperty(required = true, value = "y") Double y,
-      @Nonnull @JsonProperty(required = true, value = "theta") Double theta,
-      @Nonnull @JsonProperty(required = true, value = "mapId") String mapId,
-      @Nonnull @JsonProperty(required = true, value = "positionInitialized") Boolean positionInitialized) {
+      @Nonnull
+      @JsonProperty(required = true, value = "x")
+      Double x,
+      @Nonnull
+      @JsonProperty(required = true, value = "y")
+      Double y,
+      @Nonnull
+      @JsonProperty(required = true, value = "theta")
+      Double theta,
+      @Nonnull
+      @JsonProperty(required = true, value = "mapId")
+      String mapId,
+      @Nonnull
+      @JsonProperty(required = true, value = "positionInitialized")
+      Boolean positionInitialized
+  ) {
     this.x = requireNonNull(x, "x");
     this.y = requireNonNull(y, "y");
     this.theta = checkInRange(requireNonNull(theta, "theta"), -Math.PI, Math.PI, "theta");
@@ -97,7 +110,10 @@ public class AgvPosition
     return x;
   }
 
-  public AgvPosition setX(@Nonnull Double x) {
+  public AgvPosition setX(
+      @Nonnull
+      Double x
+  ) {
     this.x = requireNonNull(x, "x");
     return this;
   }
@@ -106,7 +122,10 @@ public class AgvPosition
     return y;
   }
 
-  public AgvPosition setY(@Nonnull Double y) {
+  public AgvPosition setY(
+      @Nonnull
+      Double y
+  ) {
     this.y = requireNonNull(y, "y");
     return this;
   }
@@ -115,7 +134,10 @@ public class AgvPosition
     return theta;
   }
 
-  public AgvPosition setTheta(@Nonnull Double theta) {
+  public AgvPosition setTheta(
+      @Nonnull
+      Double theta
+  ) {
     this.theta = checkInRange(requireNonNull(theta, "theta"), -Math.PI, Math.PI, "theta");
     return this;
   }
@@ -124,7 +146,10 @@ public class AgvPosition
     return mapId;
   }
 
-  public AgvPosition setMapId(@Nonnull String mapId) {
+  public AgvPosition setMapId(
+      @Nonnull
+      String mapId
+  ) {
     this.mapId = requireNonNull(mapId, "mapId");
     return this;
   }
@@ -142,7 +167,10 @@ public class AgvPosition
     return positionInitialized;
   }
 
-  public AgvPosition setPositionInitialized(@Nonnull Boolean positionInitialized) {
+  public AgvPosition setPositionInitialized(
+      @Nonnull
+      Boolean positionInitialized
+  ) {
     this.positionInitialized = requireNonNull(positionInitialized, "positionInitialized");
     return this;
   }

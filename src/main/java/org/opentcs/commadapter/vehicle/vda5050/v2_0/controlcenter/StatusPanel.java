@@ -7,18 +7,19 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.I18nCommAdapter.BUNDLE_PATH;
+
 import com.google.inject.assistedinject.Assisted;
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.Objects;
-import static java.util.Objects.requireNonNull;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import javax.inject.Inject;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.ProcessModelImpl;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.I18nCommAdapter.BUNDLE_PATH;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.commands.SendInstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
@@ -41,7 +42,8 @@ import org.slf4j.LoggerFactory;
 /**
  */
 public class StatusPanel
-    extends VehicleCommAdapterPanel {
+    extends
+      VehicleCommAdapterPanel {
 
   /**
    * This class's logger.
@@ -80,9 +82,14 @@ public class StatusPanel
    * @param callWrapper The call wrapper to use for service calls.
    */
   @Inject
-  public StatusPanel(@Assisted ProcessModelImplTO processModel,
-                     @Assisted VehicleService vehicleService,
-                     @ServiceCallWrapper CallWrapper callWrapper) {
+  public StatusPanel(
+      @Assisted
+      ProcessModelImplTO processModel,
+      @Assisted
+      VehicleService vehicleService,
+      @ServiceCallWrapper
+      CallWrapper callWrapper
+  ) {
     this.processModel = requireNonNull(processModel, "processModel");
     this.vehicleService = requireNonNull(vehicleService, "vehicleService");
     this.callWrapper = requireNonNull(callWrapper, "callWrapper");
@@ -112,20 +119,28 @@ public class StatusPanel
 
     processModel = (ProcessModelImplTO) newProcessModel;
 
-    if (Objects.equals(attributeChanged,
-                       VehicleProcessModel.Attribute.COMM_ADAPTER_CONNECTED.name())) {
+    if (Objects.equals(
+        attributeChanged,
+        VehicleProcessModel.Attribute.COMM_ADAPTER_CONNECTED.name()
+    )) {
       updateCommAdapterConnected(processModel.isCommAdapterConnected());
     }
-    else if (Objects.equals(attributeChanged,
-                            ProcessModelImpl.Attribute.CURRENT_STATE.name())) {
+    else if (Objects.equals(
+        attributeChanged,
+        ProcessModelImpl.Attribute.CURRENT_STATE.name()
+    )) {
       updateCurrentState(processModel.getCurrentState());
     }
-    else if (Objects.equals(attributeChanged,
-                            ProcessModelImpl.Attribute.CONNECTION_MESSAGE.name())) {
+    else if (Objects.equals(
+        attributeChanged,
+        ProcessModelImpl.Attribute.CONNECTION_MESSAGE.name()
+    )) {
       updateConnection(processModel.getCurrentConnection());
     }
-    else if (Objects.equals(attributeChanged,
-                            ProcessModelImpl.Attribute.VISUALIZATION_MESSAGE.name())) {
+    else if (Objects.equals(
+        attributeChanged,
+        ProcessModelImpl.Attribute.VISUALIZATION_MESSAGE.name()
+    )) {
       updateVisualization(processModel.getCurrentVisualization());
     }
   }
@@ -191,9 +206,10 @@ public class StatusPanel
     drivingTextField.setText(String.valueOf(stateMessage.isDriving()));
     pausedTextField.setText(String.valueOf(stateMessage.isPaused()));
     newBaseRequestTextField.setText(String.valueOf(stateMessage.isNewBaseRequest()));
-    distSinceLastNodeTextField.setText(stateMessage.getDistanceSinceLastNode() == null
-        ? "-"
-        : String.format("%.2f", stateMessage.getDistanceSinceLastNode())
+    distSinceLastNodeTextField.setText(
+        stateMessage.getDistanceSinceLastNode() == null
+            ? "-"
+            : String.format("%.2f", stateMessage.getDistanceSinceLastNode())
     );
     operatingModeTextField.setText(stateMessage.getOperatingMode().name());
 
@@ -295,11 +311,14 @@ public class StatusPanel
     }
     else {
       visualizationVelocityXTextField.setText(
-          String.format("%.2f", visMessage.getVelocity().getVx()));
+          String.format("%.2f", visMessage.getVelocity().getVx())
+      );
       visualizationVelocityYTextField.setText(
-          String.format("%.2f", visMessage.getVelocity().getVy()));
+          String.format("%.2f", visMessage.getVelocity().getVy())
+      );
       visualizationVelocityOmegaTextField.setText(
-          String.format("%.2f", visMessage.getVelocity().getOmega()));
+          String.format("%.2f", visMessage.getVelocity().getOmega())
+      );
     }
 
     if (visMessage.getAgvPosition() == null) {
@@ -310,17 +329,22 @@ public class StatusPanel
     }
     else {
       visualizationAgvPosInitializedTextField.setText(
-          String.valueOf(visMessage.getAgvPosition().isPositionInitialized()));
+          String.valueOf(visMessage.getAgvPosition().isPositionInitialized())
+      );
       visualizationAgvPosXTextField.setText(
-          String.format("%.2f", visMessage.getAgvPosition().getX()));
+          String.format("%.2f", visMessage.getAgvPosition().getX())
+      );
       visualizationAgvPosYTextField.setText(
-          String.format("%.2f", visMessage.getAgvPosition().getY()));
+          String.format("%.2f", visMessage.getAgvPosition().getY())
+      );
       visualizationAgvPosThetaTextField.setText(
-          String.format("%.2f", visMessage.getAgvPosition().getTheta()));
+          String.format("%.2f", visMessage.getAgvPosition().getTheta())
+      );
     }
 
   }
 
+  // FORMATTER:OFF
   // CHECKSTYLE:OFF
   /**
    * This method is called from within the constructor to
@@ -1456,6 +1480,8 @@ public class StatusPanel
 
     getAccessibleContext().setAccessibleName(bundle.getString("statusPanel.accessibleName")); // NOI18N
   }// </editor-fold>//GEN-END:initComponents
+  // CHECKSTYLE:ON
+  // FORMATTER:ON
 
   private void buttonShowLastReportedStateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonShowLastReportedStateActionPerformed
     if (processModel.getCurrentState() == null) {
@@ -1474,12 +1500,13 @@ public class StatusPanel
   private void buttonGetStateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGetStateActionPerformed
     sendAdapterCommand(new SendInstantActions(createStateRequestInstantAction()));
   }//GEN-LAST:event_buttonGetStateActionPerformed
-  // CHECKSTYLE:ON
 
   private InstantActions createStateRequestInstantAction() {
-    Action instantAction = new Action("stateRequest",
-                                      UUID.randomUUID().toString(),
-                                      BlockingType.NONE);
+    Action instantAction = new Action(
+        "stateRequest",
+        UUID.randomUUID().toString(),
+        BlockingType.NONE
+    );
 
     InstantActions action = new InstantActions();
     action.setActions(Arrays.asList(instantAction));
@@ -1488,14 +1515,19 @@ public class StatusPanel
 
   private void sendAdapterCommand(AdapterCommand command) {
     try {
-      callWrapper.call(() -> vehicleService.sendCommAdapterCommand(processModel.getVehicleRef(),
-                                                                   command));
+      callWrapper.call(
+          () -> vehicleService.sendCommAdapterCommand(
+              processModel.getVehicleRef(),
+              command
+          )
+      );
     }
     catch (Exception ex) {
       LOG.warn("Error sending comm adapter command '{}'", command, ex);
     }
   }
 
+  // FORMATTER:OFF
   // CHECKSTYLE:OFF
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel agvPosInitializedLabel;
@@ -1605,4 +1637,5 @@ public class StatusPanel
   private javax.swing.JTextField zoneSetIdTextField;
   // End of variables declaration//GEN-END:variables
   // CHECKSTYLE:ON
+  // FORMATTER:ON
 }

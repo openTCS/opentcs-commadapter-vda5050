@@ -25,11 +25,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 import org.opentcs.commadapter.vehicle.vda5050.common.JsonBinder;
-import org.opentcs.commadapter.vehicle.vda5050.v2_0.CommAdapterImpl;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.ConnectionEventListener;
-import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.MqttClientManager;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.IncomingMessage;
+import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.MqttClientManager;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.QualityOfService;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.CommAdapterImpl;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.AgvPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.connection.Connection;
@@ -54,7 +54,8 @@ import org.slf4j.LoggerFactory;
  * vehicle.
  */
 public class VehicleSimulator
-    implements ConnectionEventListener {
+    implements
+      ConnectionEventListener {
 
   /**
    * This class's logger.
@@ -156,18 +157,22 @@ public class VehicleSimulator
     clientManager.subscribe(TOPIC_BASE + "/order", QualityOfService.AT_LEAST_ONCE, this);
     // set connection broke last will
     try {
-      String message = jsonBinder.toJson(new Connection(
-          headerId++,
-          Instant.now(),
-          VERSION,
-          MANUFACTURER,
-          SERIAL_NUMBER,
-          ConnectionState.CONNECTIONBROKEN
-      ));
-      clientManager.setLastWill(TOPIC_BASE + "/connection",
-                                message,
-                                QualityOfService.AT_LEAST_ONCE,
-                                true);
+      String message = jsonBinder.toJson(
+          new Connection(
+              headerId++,
+              Instant.now(),
+              VERSION,
+              MANUFACTURER,
+              SERIAL_NUMBER,
+              ConnectionState.CONNECTIONBROKEN
+          )
+      );
+      clientManager.setLastWill(
+          TOPIC_BASE + "/connection",
+          message,
+          QualityOfService.AT_LEAST_ONCE,
+          true
+      );
     }
     catch (IllegalArgumentException exc) {
       LOG.error("Failed to set last will {}", exc);
@@ -179,14 +184,16 @@ public class VehicleSimulator
    */
   private void terminate() {
     if (clientManager.isConnected()) {
-      sendConnection(new Connection(
-          headerId++,
-          Instant.now(),
-          VERSION,
-          MANUFACTURER,
-          SERIAL_NUMBER,
-          ConnectionState.OFFLINE
-      ));
+      sendConnection(
+          new Connection(
+              headerId++,
+              Instant.now(),
+              VERSION,
+              MANUFACTURER,
+              SERIAL_NUMBER,
+              ConnectionState.OFFLINE
+          )
+      );
     }
   }
 
@@ -200,8 +207,10 @@ public class VehicleSimulator
   public void onIncomingMessage(IncomingMessage message) {
     if (message.getTopic().endsWith("/instantActions")) {
       try {
-        InstantActions instantAction = jsonBinder.fromJson(message.getMessage(),
-                                                           InstantActions.class);
+        InstantActions instantAction = jsonBinder.fromJson(
+            message.getMessage(),
+            InstantActions.class
+        );
         instantAction.getActions().forEach(action -> newInstantAction(action));
       }
       catch (IllegalArgumentException ex) {
@@ -223,8 +232,10 @@ public class VehicleSimulator
   private void newInstantAction(Action action) {
     ActionTuple tuple = new ActionTuple();
     tuple.action = action;
-    tuple.state = new ActionState(action.getActionId(),
-                                  ActionStatus.WAITING)
+    tuple.state = new ActionState(
+        action.getActionId(),
+        ActionStatus.WAITING
+    )
         .setActionType(action.getActionType());
     actionMap.put(action.getActionId(), tuple);
 
@@ -260,10 +271,14 @@ public class VehicleSimulator
     else {
       if (order.getOrderUpdateId() > currentOrder.getOrderUpdateId()) {
         if (currentOrderFinished()) {
-          if (Objects.equals(vehicleState.getLastNodeId(),
-                             order.getNodes().get(0).getNodeId())
-              && Objects.equals(vehicleState.getLastNodeSequenceId(),
-                                order.getNodes().get(0).getSequenceId())) {
+          if (Objects.equals(
+              vehicleState.getLastNodeId(),
+              order.getNodes().get(0).getNodeId()
+          )
+              && Objects.equals(
+                  vehicleState.getLastNodeSequenceId(),
+                  order.getNodes().get(0).getSequenceId()
+              )) {
             acceptNewOrder(order);
           }
         }
@@ -307,15 +322,20 @@ public class VehicleSimulator
       if (!node.isReleased()) {
         return;
       }
-      NodeState state = new NodeState(node.getNodeId(),
-                                      node.getSequenceId(),
-                                      node.isReleased());
+      NodeState state = new NodeState(
+          node.getNodeId(),
+          node.getSequenceId(),
+          node.isReleased()
+      );
       state.setNodePosition(node.getNodePosition());
       vehicleState.getNodeStates().add(state);
       node.getActions().forEach(action -> {
-        vehicleState.getActionStates().add(new ActionState(action.getActionId(),
-                                                           ActionStatus.WAITING)
-            .setActionType(action.getActionType())
+        vehicleState.getActionStates().add(
+            new ActionState(
+                action.getActionId(),
+                ActionStatus.WAITING
+            )
+                .setActionType(action.getActionType())
         );
       });
     });
@@ -324,13 +344,20 @@ public class VehicleSimulator
       if (!edge.isReleased()) {
         return;
       }
-      vehicleState.getEdgeStates().add(new EdgeState(edge.getEdgeId(),
-                                                     edge.getSequenceId(),
-                                                     edge.isReleased()));
+      vehicleState.getEdgeStates().add(
+          new EdgeState(
+              edge.getEdgeId(),
+              edge.getSequenceId(),
+              edge.isReleased()
+          )
+      );
       edge.getActions().forEach(action -> {
-        vehicleState.getActionStates().add(new ActionState(action.getActionId(),
-                                                           ActionStatus.WAITING)
-            .setActionType(action.getActionType())
+        vehicleState.getActionStates().add(
+            new ActionState(
+                action.getActionId(),
+                ActionStatus.WAITING
+            )
+                .setActionType(action.getActionType())
         );
       });
     });
@@ -339,9 +366,11 @@ public class VehicleSimulator
     if (movementTask != null) {
       movementTask.cancel(false);
     }
-    movementTask = taskExecutor.schedule(this::simulateMovement,
-                                         MOVEMENTSPEED,
-                                         TimeUnit.MILLISECONDS);
+    movementTask = taskExecutor.schedule(
+        this::simulateMovement,
+        MOVEMENTSPEED,
+        TimeUnit.MILLISECONDS
+    );
   }
 
   private void acceptOrderUpdate(Order order) {
@@ -354,15 +383,20 @@ public class VehicleSimulator
       if (!node.isReleased()) {
         return;
       }
-      NodeState state = new NodeState(node.getNodeId(),
-                                      node.getSequenceId(),
-                                      node.isReleased());
+      NodeState state = new NodeState(
+          node.getNodeId(),
+          node.getSequenceId(),
+          node.isReleased()
+      );
       state.setNodePosition(node.getNodePosition());
       vehicleState.getNodeStates().add(state);
       node.getActions().forEach(action -> {
-        vehicleState.getActionStates().add(new ActionState(action.getActionId(),
-                                                           ActionStatus.WAITING)
-            .setActionType(action.getActionType())
+        vehicleState.getActionStates().add(
+            new ActionState(
+                action.getActionId(),
+                ActionStatus.WAITING
+            )
+                .setActionType(action.getActionType())
         );
       });
     });
@@ -370,13 +404,20 @@ public class VehicleSimulator
       if (!edge.isReleased()) {
         return;
       }
-      vehicleState.getEdgeStates().add(new EdgeState(edge.getEdgeId(),
-                                                     edge.getSequenceId(),
-                                                     edge.isReleased()));
+      vehicleState.getEdgeStates().add(
+          new EdgeState(
+              edge.getEdgeId(),
+              edge.getSequenceId(),
+              edge.isReleased()
+          )
+      );
       edge.getActions().forEach(action -> {
-        vehicleState.getActionStates().add(new ActionState(action.getActionId(),
-                                                           ActionStatus.WAITING)
-            .setActionType(action.getActionType())
+        vehicleState.getActionStates().add(
+            new ActionState(
+                action.getActionId(),
+                ActionStatus.WAITING
+            )
+                .setActionType(action.getActionType())
         );
       });
     });
@@ -405,9 +446,11 @@ public class VehicleSimulator
 
       sendState();
       if (!vehicleState.getNodeStates().isEmpty()) {
-        movementTask = taskExecutor.schedule(this::simulateMovement,
-                                             MOVEMENTSPEED,
-                                             TimeUnit.MILLISECONDS);
+        movementTask = taskExecutor.schedule(
+            this::simulateMovement,
+            MOVEMENTSPEED,
+            TimeUnit.MILLISECONDS
+        );
       }
     }
   }
@@ -415,14 +458,16 @@ public class VehicleSimulator
   @Override
   public void onConnect() {
     LOG.info("Simulator connected to broker.");
-    sendConnection(new Connection(
-        headerId++,
-        Instant.now(),
-        VERSION,
-        MANUFACTURER,
-        SERIAL_NUMBER,
-        ConnectionState.ONLINE
-    ));
+    sendConnection(
+        new Connection(
+            headerId++,
+            Instant.now(),
+            VERSION,
+            MANUFACTURER,
+            SERIAL_NUMBER,
+            ConnectionState.ONLINE
+        )
+    );
   }
 
   @Override
@@ -443,10 +488,12 @@ public class VehicleSimulator
   private void sendConnection(Connection connection) {
     try {
       String message = jsonBinder.toJson(connection);
-      clientManager.publish(TOPIC_BASE + "/connection",
-                            QualityOfService.AT_LEAST_ONCE,
-                            message,
-                            true);
+      clientManager.publish(
+          TOPIC_BASE + "/connection",
+          QualityOfService.AT_LEAST_ONCE,
+          message,
+          true
+      );
     }
     catch (IllegalArgumentException exc) {
       LOG.error("Failed to convert Connection to JSON {}", exc);
@@ -461,15 +508,19 @@ public class VehicleSimulator
     vehicleState.setManufacturer(MANUFACTURER);
     vehicleState.setSerialNumber(SERIAL_NUMBER);
     // update action states.
-    vehicleState.setActionStates(actionMap.values().stream()
-        .map(tuple -> tuple.state)
-        .collect(Collectors.toList()));
+    vehicleState.setActionStates(
+        actionMap.values().stream()
+            .map(tuple -> tuple.state)
+            .collect(Collectors.toList())
+    );
     try {
       String message = jsonBinder.toJson(vehicleState);
-      clientManager.publish(TOPIC_BASE + "/state",
-                            QualityOfService.AT_MOST_ONCE,
-                            message,
-                            false);
+      clientManager.publish(
+          TOPIC_BASE + "/state",
+          QualityOfService.AT_MOST_ONCE,
+          message,
+          false
+      );
     }
     catch (IllegalArgumentException ex) {
       LOG.error("Failed to convert connection to JSON {}", ex);
@@ -548,12 +599,18 @@ public class VehicleSimulator
     LogManager logManager = LogManager.getLogManager();
     try {
       Properties prop = new Properties();
-      prop.put("handlers",
-               "java.util.logging.ConsoleHandler");
-      prop.put("java.util.logging.ConsoleHandler.level",
-               "INFO");
-      prop.put("java.util.logging.ConsoleHandler.formatter",
-               "org.opentcs.util.logging.SingleLineFormatter");
+      prop.put(
+          "handlers",
+          "java.util.logging.ConsoleHandler"
+      );
+      prop.put(
+          "java.util.logging.ConsoleHandler.level",
+          "INFO"
+      );
+      prop.put(
+          "java.util.logging.ConsoleHandler.formatter",
+          "org.opentcs.util.logging.SingleLineFormatter"
+      );
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       prop.store(out, "");
       logManager.readConfiguration(new ByteArrayInputStream(out.toByteArray()));

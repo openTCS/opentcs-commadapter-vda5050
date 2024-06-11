@@ -7,11 +7,12 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Trajectory;
 
@@ -20,7 +21,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Trajectory;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EdgeState
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * Unique edge identification.
@@ -54,9 +56,16 @@ public class EdgeState
 
   @JsonCreator
   public EdgeState(
-      @Nonnull @JsonProperty(required = true, value = "edgeId") String edgeId,
-      @Nonnull @JsonProperty(required = true, value = "sequenceId") Long sequenceId,
-      @Nonnull @JsonProperty(required = true, value = "released") Boolean released) {
+      @Nonnull
+      @JsonProperty(required = true, value = "edgeId")
+      String edgeId,
+      @Nonnull
+      @JsonProperty(required = true, value = "sequenceId")
+      Long sequenceId,
+      @Nonnull
+      @JsonProperty(required = true, value = "released")
+      Boolean released
+  ) {
     this.edgeId = requireNonNull(edgeId, "edgeId");
     this.sequenceId = requireNonNull(sequenceId, "sequenceId");
     this.released = requireNonNull(released, "released");
@@ -66,7 +75,10 @@ public class EdgeState
     return edgeId;
   }
 
-  public EdgeState setEdgeId(@Nonnull String edgeId) {
+  public EdgeState setEdgeId(
+      @Nonnull
+      String edgeId
+  ) {
     this.edgeId = requireNonNull(edgeId, "edgeId");
     return this;
   }
@@ -84,7 +96,10 @@ public class EdgeState
     return released;
   }
 
-  public EdgeState setReleased(@Nonnull Boolean released) {
+  public EdgeState setReleased(
+      @Nonnull
+      Boolean released
+  ) {
     this.released = requireNonNull(released, "released");
     return this;
   }
@@ -93,7 +108,10 @@ public class EdgeState
     return sequenceId;
   }
 
-  public EdgeState setSequenceId(@Nonnull Long sequenceId) {
+  public EdgeState setSequenceId(
+      @Nonnull
+      Long sequenceId
+  ) {
     this.sequenceId = requireNonNull(sequenceId, "sequenceId");
     return this;
   }

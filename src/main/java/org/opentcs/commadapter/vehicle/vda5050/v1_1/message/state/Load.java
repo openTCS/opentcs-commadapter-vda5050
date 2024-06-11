@@ -7,18 +7,20 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state;
 
+import static org.opentcs.commadapter.vehicle.vda5050.common.Limits.UINT32_MAX_VALUE;
+import static org.opentcs.util.Assertions.checkInRange;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
-import static org.opentcs.commadapter.vehicle.vda5050.common.Limits.UINT32_MAX_VALUE;
-import static org.opentcs.util.Assertions.checkInRange;
 
 /**
  * Load object that describes the load if the AGV has information about it.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Load
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * [Optional] Unique identification number of the load. (E.g. barcode or RFID).

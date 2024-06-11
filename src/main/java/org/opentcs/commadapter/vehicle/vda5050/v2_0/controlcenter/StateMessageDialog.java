@@ -7,8 +7,9 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter;
 
-import java.awt.Component;
 import static java.util.Objects.requireNonNull;
+
+import java.awt.Component;
 import javax.annotation.Nonnull;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -21,7 +22,8 @@ import org.slf4j.LoggerFactory;
  * A non-modal dialog that shows the JSON representation of {@link State} message.
  */
 public class StateMessageDialog
-    extends JDialog {
+    extends
+      JDialog {
 
   /**
    * This class's logger.
@@ -42,7 +44,11 @@ public class StateMessageDialog
    * @param parentComponent The parent component.
    * @param state The state to show the JSON representation for.
    */
-  public StateMessageDialog(Component parentComponent, @Nonnull State state) {
+  public StateMessageDialog(
+      Component parentComponent,
+      @Nonnull
+      State state
+  ) {
     super(JOptionPane.getFrameForComponent(parentComponent), false);
     this.state = requireNonNull(state, "state");
 
@@ -59,6 +65,7 @@ public class StateMessageDialog
     }
   }
 
+  // FORMATTER:OFF
   // CHECKSTYLE:OFF
   /**
    * This method is called from within the constructor to
@@ -99,11 +106,14 @@ public class StateMessageDialog
     pack();
   }// </editor-fold>//GEN-END:initComponents
   // CHECKSTYLE:ON
+  // FORMATTER:ON
 
+  // FORMATTER:OFF
   // CHECKSTYLE:OFF
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JScrollPane scrollPane;
   private javax.swing.JTextArea textAreaState;
   // End of variables declaration//GEN-END:variables
   // CHECKSTYLE:ON
+  // FORMATTER:ON
 }

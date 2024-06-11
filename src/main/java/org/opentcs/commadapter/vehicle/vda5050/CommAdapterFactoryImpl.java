@@ -7,26 +7,28 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static java.util.Objects.requireNonNull;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterFactory.V1dot1;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.CommAdapterFactory.V2dot0;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.VehicleCommAdapter;
 import org.opentcs.drivers.vehicle.VehicleCommAdapterDescription;
 import org.opentcs.drivers.vehicle.VehicleCommAdapterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.opentcs.commadapter.vehicle.vda5050.v2_0.CommAdapterFactory.V2dot0;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterFactory.V1dot1;
 
 /**
  * A Factory for creating a vda5050 capable comm adapter.
  */
 public class CommAdapterFactoryImpl
-    implements VehicleCommAdapterFactory {
+    implements
+      VehicleCommAdapterFactory {
 
   /**
    * This class's Logger.
@@ -57,9 +59,13 @@ public class CommAdapterFactoryImpl
    * @param commAdapterFactory2dot0 The factory to create a comm adapter version 2.0.
    */
   @Inject
-  public CommAdapterFactoryImpl(CommAdapterConfiguration configuration,
-                                @V1dot1 Vda5050CommAdapterFactory commAdapterFactory1dot1,
-                                @V2dot0 Vda5050CommAdapterFactory commAdapterFactory2dot0) {
+  public CommAdapterFactoryImpl(
+      CommAdapterConfiguration configuration,
+      @V1dot1
+      Vda5050CommAdapterFactory commAdapterFactory1dot1,
+      @V2dot0
+      Vda5050CommAdapterFactory commAdapterFactory2dot0
+  ) {
     requireNonNull(configuration, "configuration");
     requireNonNull(commAdapterFactory1dot1, "commAdapterFactory1dot1");
     requireNonNull(commAdapterFactory2dot0, "commAdapterFactory2dot0");

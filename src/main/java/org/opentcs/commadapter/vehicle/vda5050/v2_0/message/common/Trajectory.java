@@ -7,21 +7,23 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInRange;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
-import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInRange;
 
 /**
  * The trajectory of an AGV described as NURBS.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Trajectory
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * Defines the number of control points that influence any given point on the curve.
@@ -46,9 +48,16 @@ public class Trajectory
   // CHECKSTYLE:OFF (Long lines because some of these parameter declarations are very long.)
   @JsonCreator
   public Trajectory(
-      @Nonnull @JsonProperty(required = true, value = "degree") Double degree,
-      @Nonnull @JsonProperty(required = true, value = "knotVector") List<Double> knotVector,
-      @Nonnull @JsonProperty(required = true, value = "controlPoints") List<ControlPoint> controlPoints) {
+      @Nonnull
+      @JsonProperty(required = true, value = "degree")
+      Double degree,
+      @Nonnull
+      @JsonProperty(required = true, value = "knotVector")
+      List<Double> knotVector,
+      @Nonnull
+      @JsonProperty(required = true, value = "controlPoints")
+      List<ControlPoint> controlPoints
+  ) {
     this.degree
         = checkInRange(requireNonNull(degree, "degree"), 1.0, Double.MAX_VALUE, "degree");
     requireNonNull(knotVector, "knotVector");
@@ -65,7 +74,10 @@ public class Trajectory
     return degree;
   }
 
-  public Trajectory setDegree(@Nonnull Double degree) {
+  public Trajectory setDegree(
+      @Nonnull
+      Double degree
+  ) {
     this.degree
         = checkInRange(requireNonNull(degree, "degree"), 1.0, Double.MAX_VALUE, "degree");
     return this;
@@ -75,7 +87,10 @@ public class Trajectory
     return knotVector;
   }
 
-  public Trajectory setKnotVector(@Nonnull List<Double> knotVector) {
+  public Trajectory setKnotVector(
+      @Nonnull
+      List<Double> knotVector
+  ) {
     requireNonNull(knotVector, "knotVector");
     knotVector.forEach(value -> {
       requireNonNull(value, "knotVector value");
@@ -89,7 +104,10 @@ public class Trajectory
     return controlPoints;
   }
 
-  public Trajectory setControlPoints(@Nonnull List<ControlPoint> controlPoints) {
+  public Trajectory setControlPoints(
+      @Nonnull
+      List<ControlPoint> controlPoints
+  ) {
     this.controlPoints = requireNonNull(controlPoints, "controlPoints");
     return this;
   }

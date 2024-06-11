@@ -28,25 +28,29 @@ public interface CommAdapterConfiguration {
   @ConfigurationEntry(
       type = "List of VDA5050 version numbers",
       description = "See driver documentation.",
-      orderKey = "0_enable")
+      orderKey = "0_enable"
+  )
   List<String> enabledVersions();
 
   @ConfigurationEntry(
       type = "Map of operating modes to the integration level",
       description = "See driver documentation.",
-      orderKey = "1_1_changeLevel")
+      orderKey = "1_1_changeLevel"
+  )
   Map<ConfigOperatingMode, ConfigIntegrationLevel> onOpModeChangeDoUpdateIntegrationLevel();
 
   @ConfigurationEntry(
       type = "Map of operating modes to a boolean",
       description = "See driver documentation.",
-      orderKey = "1_2_withdrawOrder")
+      orderKey = "1_2_withdrawOrder"
+  )
   Map<ConfigOperatingMode, Boolean> onOpModeChangeDoWithdrawOrder();
 
   @ConfigurationEntry(
       type = "Map of operating modes to a boolean",
       description = "See driver documentation.",
-      orderKey = "1_3_resetPosition")
+      orderKey = "1_3_resetPosition"
+  )
   Map<ConfigOperatingMode, Boolean> onOpModeChangeDoResetPosition();
 
   /**

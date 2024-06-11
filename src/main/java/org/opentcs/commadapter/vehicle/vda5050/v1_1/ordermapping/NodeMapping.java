@@ -8,18 +8,19 @@
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping;
 
 import static java.lang.Math.toRadians;
-import java.util.List;
 import static java.util.Objects.requireNonNull;
-import java.util.Optional;
-import javax.annotation.Nonnull;
 import static org.opentcs.commadapter.vehicle.vda5050.common.AngleMath.toRelativeConvexAngle;
-import org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyDouble;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_DEVIATION_XY;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MAP_ID;
+
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Nonnull;
+import org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.NodePosition;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Node;
@@ -54,11 +55,13 @@ public class NodeMapping {
    * include the vehicle's position.
    * @return A mapped Node.
    */
-  public static Node toBaseNode(Point point,
-                                long sequenceId,
-                                Vehicle vehicle,
-                                List<Action> actions,
-                                boolean extendDeviationToIncludeVehicle) {
+  public static Node toBaseNode(
+      Point point,
+      long sequenceId,
+      Vehicle vehicle,
+      List<Action> actions,
+      boolean extendDeviationToIncludeVehicle
+  ) {
     requireNonNull(point, "point");
     requireNonNull(vehicle, "vehicle");
     requireNonNull(actions, "actions");
@@ -84,10 +87,12 @@ public class NodeMapping {
    * include the vehicle's position.
    * @return A mapped Node.
    */
-  public static Node toHorizonNode(Point point,
-                                   long sequenceId,
-                                   Vehicle vehicle,
-                                   List<Action> actions) {
+  public static Node toHorizonNode(
+      Point point,
+      long sequenceId,
+      Vehicle vehicle,
+      List<Action> actions
+  ) {
     requireNonNull(point, "point");
     requireNonNull(vehicle, "vehicle");
 
@@ -111,9 +116,13 @@ public class NodeMapping {
    * include the vehicle's position.
    * @return A node position.
    */
-  public static NodePosition toNodePosition(@Nonnull Point point,
-                                            @Nonnull Vehicle vehicle,
-                                            boolean extendDeviationToIncludeVehicle) {
+  public static NodePosition toNodePosition(
+      @Nonnull
+      Point point,
+      @Nonnull
+      Vehicle vehicle,
+      boolean extendDeviationToIncludeVehicle
+  ) {
     requireNonNull(point, "point");
     requireNonNull(vehicle, "vehicle");
 

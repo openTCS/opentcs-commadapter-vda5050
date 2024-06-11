@@ -8,24 +8,26 @@
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
 import static java.lang.annotation.ElementType.PARAMETER;
-import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import java.lang.annotation.Target;
 import static java.util.Objects.requireNonNull;
-import javax.inject.Inject;
-import javax.inject.Qualifier;
-import org.opentcs.commadapter.vehicle.vda5050.Vda5050CommAdapterFactory;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_VERSION;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import javax.inject.Inject;
+import javax.inject.Qualifier;
+import org.opentcs.commadapter.vehicle.vda5050.Vda5050CommAdapterFactory;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.VehicleCommAdapter;
 
 /**
  */
 public class CommAdapterFactory
-    implements Vda5050CommAdapterFactory {
+    implements
+      Vda5050CommAdapterFactory {
 
   /**
    * Annotation to identify this implementation.

@@ -7,20 +7,22 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInRange;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
-import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInRange;
 
 /**
  * Defines the control points of NURBS.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ControlPoint
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * X coordinate described in the world coordinate system (in m).
@@ -39,8 +41,13 @@ public class ControlPoint
 
   @JsonCreator
   public ControlPoint(
-      @Nonnull @JsonProperty(required = true, value = "x") Double x,
-      @Nonnull @JsonProperty(required = true, value = "y") Double y) {
+      @Nonnull
+      @JsonProperty(required = true, value = "x")
+      Double x,
+      @Nonnull
+      @JsonProperty(required = true, value = "y")
+      Double y
+  ) {
     this.x = requireNonNull(x, "x");
     this.y = requireNonNull(y, "y");
   }
@@ -58,7 +65,10 @@ public class ControlPoint
     return x;
   }
 
-  public ControlPoint setX(@Nonnull Double x) {
+  public ControlPoint setX(
+      @Nonnull
+      Double x
+  ) {
     this.x = requireNonNull(x, "x");
     return this;
   }
@@ -67,7 +77,10 @@ public class ControlPoint
     return y;
   }
 
-  public ControlPoint setY(@Nonnull Double y) {
+  public ControlPoint setY(
+      @Nonnull
+      Double y
+  ) {
     this.y = requireNonNull(y, "y");
     return this;
   }

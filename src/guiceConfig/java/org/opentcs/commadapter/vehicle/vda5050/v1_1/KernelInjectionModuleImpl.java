@@ -10,11 +10,12 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import javax.inject.Singleton;
 import org.opentcs.commadapter.vehicle.vda5050.Vda5050CommAdapterFactory;
-import org.opentcs.customizations.kernel.KernelInjectionModule;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterFactory.V1dot1;
+import org.opentcs.customizations.kernel.KernelInjectionModule;
 
 public class KernelInjectionModuleImpl
-    extends KernelInjectionModule {
+    extends
+      KernelInjectionModule {
 
   /**
    * Creates a new instance.

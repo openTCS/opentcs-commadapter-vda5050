@@ -221,15 +221,17 @@ public class StateTest {
                     .setWeight(0L)
             )
         )
-        .setInformation(List.of(
-            new InfoEntry("some-info", InfoLevel.DEBUG)
-                .setInfoDescription("some-info-description")
-                .setInfoReferences(
-                    List.of(
-                        new InfoReference("some-ref-key", "some-ref-value")
+        .setInformation(
+            List.of(
+                new InfoEntry("some-info", InfoLevel.DEBUG)
+                    .setInfoDescription("some-info-description")
+                    .setInfoReferences(
+                        List.of(
+                            new InfoReference("some-ref-key", "some-ref-value")
+                        )
                     )
-                )
-        ))
+            )
+        )
         .setPaused(Boolean.FALSE)
         .setNewBaseRequest(Boolean.FALSE)
         .setDistanceSinceLastNode(12.0);

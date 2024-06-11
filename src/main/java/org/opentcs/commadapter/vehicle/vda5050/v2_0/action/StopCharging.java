@@ -15,15 +15,20 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
  * The VDA5050 {@code stopCharging} action.
  */
 public class StopCharging
-    extends Action {
+    extends
+      Action {
 
   /**
    * This action's action type.
    */
   public static final String ACTION_TYPE = "stopCharging";
 
-  public StopCharging(@Nonnull String actionId,
-                      @Nonnull BlockingType blockingType) {
+  public StopCharging(
+      @Nonnull
+      String actionId,
+      @Nonnull
+      BlockingType blockingType
+  ) {
     super(ACTION_TYPE, actionId, blockingType);
   }
 }

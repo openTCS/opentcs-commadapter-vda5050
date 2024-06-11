@@ -7,13 +7,14 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.message.instantactions;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.Header;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
@@ -23,7 +24,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InstantActions
-    extends Header {
+    extends
+      Header {
 
   /**
    * The path to the JSON schema file.
@@ -50,12 +52,25 @@ public class InstantActions
 
   @JsonCreator
   public InstantActions(
-      @Nonnull @JsonProperty(required = true, value = "headerId") Long headerId,
-      @Nonnull @JsonProperty(required = true, value = "timestamp") Instant timestamp,
-      @Nonnull @JsonProperty(required = true, value = "version") String version,
-      @Nonnull @JsonProperty(required = true, value = "manufacturer") String manufacturer,
-      @Nonnull @JsonProperty(required = true, value = "serialNumber") String serialNumber,
-      @Nonnull @JsonProperty(required = true, value = "instantActions") List<Action> actions) {
+      @Nonnull
+      @JsonProperty(required = true, value = "headerId")
+      Long headerId,
+      @Nonnull
+      @JsonProperty(required = true, value = "timestamp")
+      Instant timestamp,
+      @Nonnull
+      @JsonProperty(required = true, value = "version")
+      String version,
+      @Nonnull
+      @JsonProperty(required = true, value = "manufacturer")
+      String manufacturer,
+      @Nonnull
+      @JsonProperty(required = true, value = "serialNumber")
+      String serialNumber,
+      @Nonnull
+      @JsonProperty(required = true, value = "instantActions")
+      List<Action> actions
+  ) {
     super(headerId, timestamp, version, manufacturer, serialNumber);
     this.instantActions = requireNonNull(actions, "actions");
   }

@@ -7,23 +7,25 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.Limits.UINT32_MAX_VALUE;
+import static org.opentcs.util.Assertions.checkInRange;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
-import static org.opentcs.commadapter.vehicle.vda5050.common.Limits.UINT32_MAX_VALUE;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.Header;
-import static org.opentcs.util.Assertions.checkInRange;
 
 /**
  * Defines an order sent from master control to the AGV.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Order
-    extends Header {
+    extends
+      Header {
 
   /**
    * The path to the JSON schema file.
@@ -78,28 +80,54 @@ public class Order
    * @param edges List of {@link Edge} objects to be traversed for fulfilling the order.
    */
   public Order(
-      @Nonnull String orderId,
-      @Nonnull Long orderUpdateId,
-      @Nonnull List<Node> nodes,
-      @Nonnull List<Edge> edges) {
+      @Nonnull
+      String orderId,
+      @Nonnull
+      Long orderUpdateId,
+      @Nonnull
+      List<Node> nodes,
+      @Nonnull
+      List<Edge> edges
+  ) {
     this(0L, Instant.EPOCH, "", "", "", orderId, orderUpdateId, nodes, edges);
   }
 
   @JsonCreator
   public Order(
-      @Nonnull @JsonProperty(required = true, value = "headerId") Long headerId,
-      @Nonnull @JsonProperty(required = true, value = "timestamp") Instant timestamp,
-      @Nonnull @JsonProperty(required = true, value = "version") String version,
-      @Nonnull @JsonProperty(required = true, value = "manufacturer") String manufacturer,
-      @Nonnull @JsonProperty(required = true, value = "serialNumber") String serialNumber,
-      @Nonnull @JsonProperty(required = true, value = "orderId") String orderId,
-      @Nonnull @JsonProperty(required = true, value = "orderUpdateId") Long orderUpdateId,
-      @Nonnull @JsonProperty(required = true, value = "nodes") List<Node> nodes,
-      @Nonnull @JsonProperty(required = true, value = "edges") List<Edge> edges) {
+      @Nonnull
+      @JsonProperty(required = true, value = "headerId")
+      Long headerId,
+      @Nonnull
+      @JsonProperty(required = true, value = "timestamp")
+      Instant timestamp,
+      @Nonnull
+      @JsonProperty(required = true, value = "version")
+      String version,
+      @Nonnull
+      @JsonProperty(required = true, value = "manufacturer")
+      String manufacturer,
+      @Nonnull
+      @JsonProperty(required = true, value = "serialNumber")
+      String serialNumber,
+      @Nonnull
+      @JsonProperty(required = true, value = "orderId")
+      String orderId,
+      @Nonnull
+      @JsonProperty(required = true, value = "orderUpdateId")
+      Long orderUpdateId,
+      @Nonnull
+      @JsonProperty(required = true, value = "nodes")
+      List<Node> nodes,
+      @Nonnull
+      @JsonProperty(required = true, value = "edges")
+      List<Edge> edges
+  ) {
     super(headerId, timestamp, version, manufacturer, serialNumber);
     this.orderId = requireNonNull(orderId, "orderId");
-    this.orderUpdateId = checkInRange(requireNonNull(orderUpdateId, "orderUpdateId"),
-                                      0, UINT32_MAX_VALUE, "orderUpdateId");
+    this.orderUpdateId = checkInRange(
+        requireNonNull(orderUpdateId, "orderUpdateId"),
+        0, UINT32_MAX_VALUE, "orderUpdateId"
+    );
     this.nodes = requireNonNull(nodes, "nodes");
     this.edges = requireNonNull(edges, "edges");
   }
@@ -108,7 +136,10 @@ public class Order
     return orderId;
   }
 
-  public Order setOrderId(@Nonnull String orderId) {
+  public Order setOrderId(
+      @Nonnull
+      String orderId
+  ) {
     this.orderId = requireNonNull(orderId, "orderId");
     return this;
   }
@@ -117,9 +148,14 @@ public class Order
     return orderUpdateId;
   }
 
-  public Order setOrderUpdateId(@Nonnull Long orderUpdateId) {
-    this.orderUpdateId = checkInRange(requireNonNull(orderUpdateId, "orderUpdateId"),
-                                      0, UINT32_MAX_VALUE, "orderUpdateId");
+  public Order setOrderUpdateId(
+      @Nonnull
+      Long orderUpdateId
+  ) {
+    this.orderUpdateId = checkInRange(
+        requireNonNull(orderUpdateId, "orderUpdateId"),
+        0, UINT32_MAX_VALUE, "orderUpdateId"
+    );
     return this;
   }
 
@@ -136,7 +172,10 @@ public class Order
     return nodes;
   }
 
-  public Order setNodes(@Nonnull List<Node> nodes) {
+  public Order setNodes(
+      @Nonnull
+      List<Node> nodes
+  ) {
     this.nodes = requireNonNull(nodes, "nodes");
     return this;
   }
@@ -145,7 +184,10 @@ public class Order
     return edges;
   }
 
-  public Order setEdges(@Nonnull List<Edge> edges) {
+  public Order setEdges(
+      @Nonnull
+      List<Edge> edges
+  ) {
     this.edges = requireNonNull(edges, "edges");
     return this;
   }

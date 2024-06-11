@@ -7,7 +7,6 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
-import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.emptyString;
@@ -15,6 +14,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.nullValue;
+
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.ActionState;
@@ -60,10 +61,12 @@ public class StateMappingsTest {
 
     state.setNodeStates(List.of());
     state.setEdgeStates(List.of());
-    state.setActionStates(List.of(
-        new ActionState("some-id", ActionStatus.RUNNING)
-            .setActionType("some-type")
-    ));
+    state.setActionStates(
+        List.of(
+            new ActionState("some-id", ActionStatus.RUNNING)
+                .setActionType("some-type")
+        )
+    );
     assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.EXECUTING));
 
     state.setBatteryState(new BatteryState(100.0, true));
@@ -75,20 +78,24 @@ public class StateMappingsTest {
     state.setOperatingMode(OperatingMode.MANUAL);
     assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.UNAVAILABLE));
 
-    state.setErrors(List.of(
-        new ErrorEntry(
-            "some-error",
-            ErrorLevel.WARNING
+    state.setErrors(
+        List.of(
+            new ErrorEntry(
+                "some-error",
+                ErrorLevel.WARNING
+            )
         )
-    ));
+    );
     assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.UNAVAILABLE));
 
-    state.setErrors(List.of(
-        new ErrorEntry(
-            "some-error",
-            ErrorLevel.FATAL
+    state.setErrors(
+        List.of(
+            new ErrorEntry(
+                "some-error",
+                ErrorLevel.FATAL
+            )
         )
-    ));
+    );
     assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.ERROR));
   }
 
@@ -151,27 +158,39 @@ public class StateMappingsTest {
     state.setErrors(List.of());
     assertThat(StateMappings.toErrorPropertyValue(state, ErrorLevel.FATAL), is(emptyString()));
 
-    state.setErrors(List.of(
-        new ErrorEntry(
-            "tire blown",
-            ErrorLevel.WARNING
+    state.setErrors(
+        List.of(
+            new ErrorEntry(
+                "tire blown",
+                ErrorLevel.WARNING
+            )
         )
-    ));
+    );
     assertThat(StateMappings.toErrorPropertyValue(state, ErrorLevel.FATAL), is(emptyString()));
   }
 
   @Test
   public void mapOnlySelectedErrorLevels() {
-    state.setErrors(List.of(
-        new ErrorEntry("tire blown",
-                       ErrorLevel.FATAL),
-        new ErrorEntry("motor on fire",
-                       ErrorLevel.WARNING),
-        new ErrorEntry("brakes nonfunctional",
-                       ErrorLevel.WARNING),
-        new ErrorEntry("reactor overheated",
-                       ErrorLevel.FATAL)
-    ));
+    state.setErrors(
+        List.of(
+            new ErrorEntry(
+                "tire blown",
+                ErrorLevel.FATAL
+            ),
+            new ErrorEntry(
+                "motor on fire",
+                ErrorLevel.WARNING
+            ),
+            new ErrorEntry(
+                "brakes nonfunctional",
+                ErrorLevel.WARNING
+            ),
+            new ErrorEntry(
+                "reactor overheated",
+                ErrorLevel.FATAL
+            )
+        )
+    );
 
     String result = StateMappings.toErrorPropertyValue(state, ErrorLevel.FATAL);
     assertThat(result, is("reactor overheated, tire blown"));
@@ -182,16 +201,26 @@ public class StateMappingsTest {
 
   @Test
   public void mapErrorTypesInLexicographicOrder() {
-    state.setErrors(List.of(
-        new ErrorEntry("tire blown",
-                       ErrorLevel.FATAL),
-        new ErrorEntry("motor on fire",
-                       ErrorLevel.FATAL),
-        new ErrorEntry("brakes nonfunctional",
-                       ErrorLevel.FATAL),
-        new ErrorEntry("reactor overheated",
-                       ErrorLevel.FATAL)
-    ));
+    state.setErrors(
+        List.of(
+            new ErrorEntry(
+                "tire blown",
+                ErrorLevel.FATAL
+            ),
+            new ErrorEntry(
+                "motor on fire",
+                ErrorLevel.FATAL
+            ),
+            new ErrorEntry(
+                "brakes nonfunctional",
+                ErrorLevel.FATAL
+            ),
+            new ErrorEntry(
+                "reactor overheated",
+                ErrorLevel.FATAL
+            )
+        )
+    );
 
     String result = StateMappings.toErrorPropertyValue(state, ErrorLevel.FATAL);
     assertThat(result, is("brakes nonfunctional, motor on fire, reactor overheated, tire blown"));
@@ -202,27 +231,39 @@ public class StateMappingsTest {
     state.setInformation(List.of());
     assertThat(StateMappings.toInfoPropertyValue(state, InfoLevel.DEBUG), is(emptyString()));
 
-    state.setInformation(List.of(
-        new InfoEntry(
-            "visualization type 1",
-            InfoLevel.INFO
+    state.setInformation(
+        List.of(
+            new InfoEntry(
+                "visualization type 1",
+                InfoLevel.INFO
+            )
         )
-    ));
+    );
     assertThat(StateMappings.toInfoPropertyValue(state, InfoLevel.DEBUG), is(emptyString()));
   }
 
   @Test
   public void mapOnlySelectedInfoLevels() {
-    state.setInformation(List.of(
-        new InfoEntry("visualization type 1",
-                      InfoLevel.INFO),
-        new InfoEntry("debug level 1",
-                      InfoLevel.DEBUG),
-        new InfoEntry("some flag true",
-                      InfoLevel.DEBUG),
-        new InfoEntry("visualization color green",
-                      InfoLevel.INFO)
-    ));
+    state.setInformation(
+        List.of(
+            new InfoEntry(
+                "visualization type 1",
+                InfoLevel.INFO
+            ),
+            new InfoEntry(
+                "debug level 1",
+                InfoLevel.DEBUG
+            ),
+            new InfoEntry(
+                "some flag true",
+                InfoLevel.DEBUG
+            ),
+            new InfoEntry(
+                "visualization color green",
+                InfoLevel.INFO
+            )
+        )
+    );
 
     String result = StateMappings.toInfoPropertyValue(state, InfoLevel.INFO);
     assertThat(result, is("visualization color green, visualization type 1"));
@@ -233,16 +274,26 @@ public class StateMappingsTest {
 
   @Test
   public void mapInfoTypesInLexicographicOrder() {
-    state.setInformation(List.of(
-        new InfoEntry("visualization type 1",
-                      InfoLevel.INFO),
-        new InfoEntry("debug level 1",
-                      InfoLevel.INFO),
-        new InfoEntry("some flag true",
-                      InfoLevel.INFO),
-        new InfoEntry("visualization color green",
-                      InfoLevel.INFO)
-    ));
+    state.setInformation(
+        List.of(
+            new InfoEntry(
+                "visualization type 1",
+                InfoLevel.INFO
+            ),
+            new InfoEntry(
+                "debug level 1",
+                InfoLevel.INFO
+            ),
+            new InfoEntry(
+                "some flag true",
+                InfoLevel.INFO
+            ),
+            new InfoEntry(
+                "visualization color green",
+                InfoLevel.INFO
+            )
+        )
+    );
 
     String result = StateMappings.toInfoPropertyValue(state, InfoLevel.INFO);
     assertThat(
@@ -268,17 +319,19 @@ public class StateMappingsTest {
   }
 
   private State createState() {
-    return new State("",
-                     0L,
-                     "",
-                     0L,
-                     List.of(),
-                     List.of(),
-                     false,
-                     List.of(),
-                     new BatteryState(100.0, false),
-                     OperatingMode.AUTOMATIC,
-                     List.of(),
-                     new SafetyState(EStop.NONE, false));
+    return new State(
+        "",
+        0L,
+        "",
+        0L,
+        List.of(),
+        List.of(),
+        false,
+        List.of(),
+        new BatteryState(100.0, false),
+        OperatingMode.AUTOMATIC,
+        List.of(),
+        new SafetyState(EStop.NONE, false)
+    );
   }
 }

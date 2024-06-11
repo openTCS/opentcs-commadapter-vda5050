@@ -7,12 +7,14 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION;
+
 import com.google.inject.assistedinject.Assisted;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import static java.util.Objects.requireNonNull;
 import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -20,7 +22,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import org.opentcs.commadapter.vehicle.vda5050.common.MovementCommandCompletedCondition;
 import org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Edge;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Node;
@@ -57,7 +58,10 @@ public class MovementCommandManager {
    * @param vehicle The vehicle to create the manager for.
    */
   @Inject
-  public MovementCommandManager(@Assisted Vehicle vehicle) {
+  public MovementCommandManager(
+      @Assisted
+      Vehicle vehicle
+  ) {
     requireNonNull(vehicle, "vehicle");
     this.completedCondition = PropertyExtractions.getMovementCommandCompletedCondition(
         PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION, vehicle
@@ -69,7 +73,10 @@ public class MovementCommandManager {
    *
    * @param orderAssociation The order association to track.
    */
-  public void enqueue(@Nonnull OrderAssociation orderAssociation) {
+  public void enqueue(
+      @Nonnull
+      OrderAssociation orderAssociation
+  ) {
     requireNonNull(orderAssociation, "orderAssociation");
 
     trackedOrders.add(orderAssociation);
@@ -89,8 +96,12 @@ public class MovementCommandManager {
    * @param currentState The current state message.
    * @param callback The callback for completed movement commands.
    */
-  public void onStateMessage(@Nonnull State currentState,
-                             @Nonnull Consumer<MovementCommand> callback) {
+  public void onStateMessage(
+      @Nonnull
+      State currentState,
+      @Nonnull
+      Consumer<MovementCommand> callback
+  ) {
     requireNonNull(currentState, "currentState");
     requireNonNull(callback, "callback");
 
@@ -109,7 +120,10 @@ public class MovementCommandManager {
    *
    * @param callback The callback for failed movement commands.
    */
-  public void failCurrentCommand(@Nonnull Consumer<MovementCommand> callback) {
+  public void failCurrentCommand(
+      @Nonnull
+      Consumer<MovementCommand> callback
+  ) {
     if (!trackedOrders.isEmpty()) {
       callback.accept(trackedOrders.poll().getCommand());
     }
@@ -118,9 +132,11 @@ public class MovementCommandManager {
     }
   }
 
-  private boolean checkForCompletionAndReport(OrderAssociation association,
-                                              State state,
-                                              Consumer<MovementCommand> callback) {
+  private boolean checkForCompletionAndReport(
+      OrderAssociation association,
+      State state,
+      Consumer<MovementCommand> callback
+  ) {
     if (orderComplete(association, state)) {
       callback.accept(association.getCommand());
       return true;
@@ -180,8 +196,10 @@ public class MovementCommandManager {
   }
 
   private boolean actionsComplete(Order order, State state) {
-    return Stream.concat(order.getNodes().stream().flatMap(node -> node.getActions().stream()),
-                         order.getEdges().stream().flatMap(edge -> edge.getActions().stream()))
+    return Stream.concat(
+        order.getNodes().stream().flatMap(node -> node.getActions().stream()),
+        order.getEdges().stream().flatMap(edge -> edge.getActions().stream())
+    )
         .allMatch(action -> actionComplete(action, state.getActionStates()));
   }
 
@@ -198,7 +216,10 @@ public class MovementCommandManager {
         || actionStatus == ActionStatus.FINISHED;
   }
 
-  private boolean reportsOrderIdForCurrentDriveOrder(@Nonnull State state) {
+  private boolean reportsOrderIdForCurrentDriveOrder(
+      @Nonnull
+      State state
+  ) {
     return Objects.equals(
         state.getOrderId(),
         trackedOrders.stream()

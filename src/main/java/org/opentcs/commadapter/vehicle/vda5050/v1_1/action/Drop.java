@@ -19,7 +19,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
  * The VDA5050 {@code drop} action.
  */
 public class Drop
-    extends Action {
+    extends
+      Action {
 
   /**
    * This action's action type.
@@ -58,22 +59,38 @@ public class Drop
    */
   public static final String PARAMKEY_SIDE = "side";
 
-  public Drop(@Nonnull String actionId,
-              @Nonnull BlockingType blockingType,
-              @Nullable String paramValueLoadHandlingDevice,
-              @Nullable String paramValueStationType,
-              @Nullable String paramValueStationName,
-              @Nullable String paramValueLoadType,
-              @Nullable String paramValueLoadId,
-              @Nullable Float paramValueHeight,
-              @Nullable Float paramValueDepth,
-              @Nullable String paramValueSide) {
+  public Drop(
+      @Nonnull
+      String actionId,
+      @Nonnull
+      BlockingType blockingType,
+      @Nullable
+      String paramValueLoadHandlingDevice,
+      @Nullable
+      String paramValueStationType,
+      @Nullable
+      String paramValueStationName,
+      @Nullable
+      String paramValueLoadType,
+      @Nullable
+      String paramValueLoadId,
+      @Nullable
+      Float paramValueHeight,
+      @Nullable
+      Float paramValueDepth,
+      @Nullable
+      String paramValueSide
+  ) {
     super(ACTION_TYPE, actionId, blockingType);
 
     List<ActionParameter> actionParameters = new ArrayList<>();
     if (paramValueLoadHandlingDevice != null) {
-      actionParameters.add(new ActionParameter(PARAMKEY_LOAD_HANDLING_DEVICE,
-                                               paramValueLoadHandlingDevice));
+      actionParameters.add(
+          new ActionParameter(
+              PARAMKEY_LOAD_HANDLING_DEVICE,
+              paramValueLoadHandlingDevice
+          )
+      );
     }
     if (paramValueStationType != null) {
       actionParameters.add(new ActionParameter(PARAMKEY_STATION_TYPE, paramValueStationType));

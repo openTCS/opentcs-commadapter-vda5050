@@ -13,7 +13,8 @@ import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.MqttConfiguration;
  * An implementation of the configuration for vehicle simulation.
  */
 public class ConfigurationImpl
-    implements MqttConfiguration {
+    implements
+      MqttConfiguration {
 
   /**
    * Creates a new instance.

@@ -7,12 +7,13 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 
 /**
@@ -22,7 +23,8 @@ import javax.annotation.Nonnull;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InfoEntry
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * The type/name of the information.
@@ -43,8 +45,13 @@ public class InfoEntry
 
   @JsonCreator
   public InfoEntry(
-      @Nonnull @JsonProperty(required = true, value = "infoType") String infoType,
-      @Nonnull @JsonProperty(required = true, value = "infoLevel") InfoLevel infoLevel) {
+      @Nonnull
+      @JsonProperty(required = true, value = "infoType")
+      String infoType,
+      @Nonnull
+      @JsonProperty(required = true, value = "infoLevel")
+      InfoLevel infoLevel
+  ) {
     this.infoType = requireNonNull(infoType, "infoType");
     this.infoLevel = requireNonNull(infoLevel, "infoLevel");
   }
@@ -53,7 +60,10 @@ public class InfoEntry
     return infoType;
   }
 
-  public InfoEntry setInfoType(@Nonnull String infoType) {
+  public InfoEntry setInfoType(
+      @Nonnull
+      String infoType
+  ) {
     this.infoType = requireNonNull(infoType, "infoType");
     return this;
   }
@@ -71,7 +81,10 @@ public class InfoEntry
     return infoLevel;
   }
 
-  public InfoEntry setInfoLevel(@Nonnull InfoLevel infoLevel) {
+  public InfoEntry setInfoLevel(
+      @Nonnull
+      InfoLevel infoLevel
+  ) {
     this.infoLevel = requireNonNull(infoLevel, "infoLevel");
     return this;
   }

@@ -7,9 +7,10 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.ordermapping;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.EnumSet;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import java.util.Set;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
@@ -54,12 +55,14 @@ public class PropertyAction {
    * @param trigger The execution trigger of the action.
    * @param tags The tags for this action.
    */
-  public PropertyAction(String actionType,
-                        String actionId,
-                        BlockingType blockingType,
-                        List<ActionParameter> actionParameters,
-                        EnumSet<ActionTrigger> trigger,
-                        Set<String> tags) {
+  public PropertyAction(
+      String actionType,
+      String actionId,
+      BlockingType blockingType,
+      List<ActionParameter> actionParameters,
+      EnumSet<ActionTrigger> trigger,
+      Set<String> tags
+  ) {
     this.actionType = requireNonNull(actionType, "actionType");
     this.actionId = requireNonNull(actionId, "actionId");
     this.blockingType = requireNonNull(blockingType, "blockingType");

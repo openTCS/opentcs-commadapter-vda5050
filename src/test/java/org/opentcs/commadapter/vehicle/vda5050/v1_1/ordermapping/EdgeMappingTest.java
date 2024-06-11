@@ -7,16 +7,17 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping;
 
-import java.util.List;
-import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_PATH_ORIENTATION_FORWARD;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_PATH_ORIENTATION_REVERSE;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_PATH_ROTATION_ALLOWED_FORWARD;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_PATH_ROTATION_ALLOWED_REVERSE;
+
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Edge;
 import org.opentcs.data.model.Path;
 import org.opentcs.data.model.Point;
@@ -66,10 +67,12 @@ public class EdgeMappingTest {
     path = path
         .withMaxVelocity(700)
         .withMaxReverseVelocity(350)
-        .withProperties(Map.of(
-            PROPKEY_PATH_ORIENTATION_FORWARD, String.valueOf(12.34),
-            PROPKEY_PATH_ROTATION_ALLOWED_FORWARD, String.valueOf(true)
-        ));
+        .withProperties(
+            Map.of(
+                PROPKEY_PATH_ORIENTATION_FORWARD, String.valueOf(12.34),
+                PROPKEY_PATH_ROTATION_ALLOWED_FORWARD, String.valueOf(true)
+            )
+        );
 
     Step step = new Route.Step(
         path,
@@ -90,10 +93,12 @@ public class EdgeMappingTest {
     path = path
         .withMaxVelocity(700)
         .withMaxReverseVelocity(350)
-        .withProperties(Map.of(
-            PROPKEY_PATH_ORIENTATION_REVERSE, String.valueOf(12.34),
-            PROPKEY_PATH_ROTATION_ALLOWED_REVERSE, String.valueOf(true)
-        ));
+        .withProperties(
+            Map.of(
+                PROPKEY_PATH_ORIENTATION_REVERSE, String.valueOf(12.34),
+                PROPKEY_PATH_ROTATION_ALLOWED_REVERSE, String.valueOf(true)
+            )
+        );
     Step step = new Route.Step(
         path,
         source,

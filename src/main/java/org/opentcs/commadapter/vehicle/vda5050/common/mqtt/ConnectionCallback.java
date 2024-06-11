@@ -7,10 +7,11 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.common.mqtt;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
@@ -21,7 +22,8 @@ import org.slf4j.LoggerFactory;
  * A callback for connecting/disconnecting to a server.
  */
 public class ConnectionCallback
-    implements IMqttActionListener {
+    implements
+      IMqttActionListener {
 
   /**
    * The context object for connecting to a server.
@@ -85,7 +87,10 @@ public class ConnectionCallback
    *
    * @param listener The listener to register.
    */
-  public void registerConnectionEventListener(@Nonnull ConnectionEventListener listener) {
+  public void registerConnectionEventListener(
+      @Nonnull
+      ConnectionEventListener listener
+  ) {
     requireNonNull(listener, "listener");
     connectionEventListeners.add(listener);
   }
@@ -95,7 +100,10 @@ public class ConnectionCallback
    *
    * @param listener The listener to unregister.
    */
-  public void unregisterConnectionEventListener(@Nonnull ConnectionEventListener listener) {
+  public void unregisterConnectionEventListener(
+      @Nonnull
+      ConnectionEventListener listener
+  ) {
     requireNonNull(listener, "listener");
     connectionEventListeners.remove(listener);
   }

@@ -10,8 +10,9 @@ package org.opentcs.commadapter.vehicle.vda5050.common;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.Test;
 import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInRange;
+
+import org.junit.jupiter.api.Test;
 
 /**
  */

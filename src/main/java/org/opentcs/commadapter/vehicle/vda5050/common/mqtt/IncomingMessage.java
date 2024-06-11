@@ -8,6 +8,7 @@
 package org.opentcs.commadapter.vehicle.vda5050.common.mqtt;
 
 import static java.util.Objects.requireNonNull;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -30,7 +31,12 @@ public class IncomingMessage {
    * @param topic The topic the message was received on.
    * @param message The message.
    */
-  public IncomingMessage(@Nonnull String topic, @Nonnull String message) {
+  public IncomingMessage(
+      @Nonnull
+      String topic,
+      @Nonnull
+      String message
+  ) {
     this.topic = requireNonNull(topic, "topic");
     this.message = requireNonNull(message, "message");
   }

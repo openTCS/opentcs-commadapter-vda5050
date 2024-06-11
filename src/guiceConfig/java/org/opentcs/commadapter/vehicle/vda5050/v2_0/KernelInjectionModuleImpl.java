@@ -13,7 +13,8 @@ import org.opentcs.commadapter.vehicle.vda5050.Vda5050CommAdapterFactory;
 import org.opentcs.customizations.kernel.KernelInjectionModule;
 
 public class KernelInjectionModuleImpl
-    extends KernelInjectionModule {
+    extends
+      KernelInjectionModule {
 
   /**
    * Creates a new instance.

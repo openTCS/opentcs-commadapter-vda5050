@@ -8,6 +8,7 @@
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.commands;
 
 import static java.util.Objects.requireNonNull;
+
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.CommAdapterImpl;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Order;
 import org.opentcs.drivers.vehicle.AdapterCommand;
@@ -17,7 +18,8 @@ import org.opentcs.drivers.vehicle.VehicleCommAdapter;
  * A command for sending a {@link Order} to a vehicle.
  */
 public class SendOrderCommand
-    implements AdapterCommand {
+    implements
+      AdapterCommand {
 
   /**
    * The Order to send.

@@ -7,13 +7,14 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.NodePosition;
@@ -23,7 +24,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.NodePosition;
  */
 @JsonInclude(Include.NON_NULL)
 public class Node
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * Unique node identification.
@@ -67,10 +69,19 @@ public class Node
 
   @JsonCreator
   public Node(
-      @Nonnull @JsonProperty(required = true, value = "nodeId") String nodeId,
-      @Nonnull @JsonProperty(required = true, value = "sequenceId") Long sequenceId,
-      @Nonnull @JsonProperty(required = true, value = "released") Boolean released,
-      @Nonnull @JsonProperty(required = true, value = "actions") List<Action> actions) {
+      @Nonnull
+      @JsonProperty(required = true, value = "nodeId")
+      String nodeId,
+      @Nonnull
+      @JsonProperty(required = true, value = "sequenceId")
+      Long sequenceId,
+      @Nonnull
+      @JsonProperty(required = true, value = "released")
+      Boolean released,
+      @Nonnull
+      @JsonProperty(required = true, value = "actions")
+      List<Action> actions
+  ) {
     this.nodeId = requireNonNull(nodeId, "nodeId");
     this.sequenceId = requireNonNull(sequenceId, "sequenceId");
     this.released = requireNonNull(released, "released");
@@ -81,7 +92,10 @@ public class Node
     return nodeId;
   }
 
-  public Node setNodeId(@Nonnull String nodeId) {
+  public Node setNodeId(
+      @Nonnull
+      String nodeId
+  ) {
     this.nodeId = requireNonNull(nodeId, "nodeId");
     return this;
   }
@@ -90,7 +104,10 @@ public class Node
     return sequenceId;
   }
 
-  public Node setSequenceId(@Nonnull Long sequenceId) {
+  public Node setSequenceId(
+      @Nonnull
+      Long sequenceId
+  ) {
     this.sequenceId = requireNonNull(sequenceId, "sequenceId");
     return this;
   }
@@ -108,7 +125,10 @@ public class Node
     return released;
   }
 
-  public Node setReleased(@Nonnull Boolean released) {
+  public Node setReleased(
+      @Nonnull
+      Boolean released
+  ) {
     this.released = requireNonNull(released, "released");
     return this;
   }
@@ -126,7 +146,10 @@ public class Node
     return actions;
   }
 
-  public Node setActions(@Nonnull List<Action> actions) {
+  public Node setActions(
+      @Nonnull
+      List<Action> actions
+  ) {
     this.actions = requireNonNull(actions, "actions");
     return this;
   }

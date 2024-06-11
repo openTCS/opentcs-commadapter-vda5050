@@ -23,7 +23,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Velocity;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Visualization
-    extends Header {
+    extends
+      Header {
 
   /**
    * The path to the JSON schema file.
@@ -43,11 +44,22 @@ public class Visualization
   }
 
   public Visualization(
-      @Nonnull @JsonProperty(required = true, value = "headerId") Long headerId,
-      @Nonnull @JsonProperty(required = true, value = "timestamp") Instant timestamp,
-      @Nonnull @JsonProperty(required = true, value = "version") String version,
-      @Nonnull @JsonProperty(required = true, value = "manufacturer") String manufacturer,
-      @Nonnull @JsonProperty(required = true, value = "serialNumber") String serialNumber) {
+      @Nonnull
+      @JsonProperty(required = true, value = "headerId")
+      Long headerId,
+      @Nonnull
+      @JsonProperty(required = true, value = "timestamp")
+      Instant timestamp,
+      @Nonnull
+      @JsonProperty(required = true, value = "version")
+      String version,
+      @Nonnull
+      @JsonProperty(required = true, value = "manufacturer")
+      String manufacturer,
+      @Nonnull
+      @JsonProperty(required = true, value = "serialNumber")
+      String serialNumber
+  ) {
     super(headerId, timestamp, version, manufacturer, serialNumber);
   }
 

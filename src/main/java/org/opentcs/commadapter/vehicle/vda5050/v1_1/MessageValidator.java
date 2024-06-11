@@ -20,7 +20,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.visualization.Visual
  * A {@link JsonValidator} for VDA5050 1.1 messages.
  */
 public class MessageValidator
-    extends JsonValidator {
+    extends
+      JsonValidator {
 
   /**
    * Creates a new instance.

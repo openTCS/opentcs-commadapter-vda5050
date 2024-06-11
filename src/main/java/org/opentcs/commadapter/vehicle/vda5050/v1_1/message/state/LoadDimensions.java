@@ -7,11 +7,12 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 
 /**
@@ -19,7 +20,8 @@ import javax.annotation.Nonnull;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoadDimensions
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * Absolute length of the loads bounding box (in m).
@@ -36,8 +38,13 @@ public class LoadDimensions
 
   @JsonCreator
   public LoadDimensions(
-      @Nonnull @JsonProperty(required = true, value = "length") Double length,
-      @Nonnull @JsonProperty(required = true, value = "width") Double width) {
+      @Nonnull
+      @JsonProperty(required = true, value = "length")
+      Double length,
+      @Nonnull
+      @JsonProperty(required = true, value = "width")
+      Double width
+  ) {
     this.length = requireNonNull(length, "length");
     this.width = requireNonNull(width, "width");
   }
@@ -46,7 +53,10 @@ public class LoadDimensions
     return length;
   }
 
-  public LoadDimensions setLength(@Nonnull Double length) {
+  public LoadDimensions setLength(
+      @Nonnull
+      Double length
+  ) {
     this.length = requireNonNull(length, "length");
     return this;
   }
@@ -55,7 +65,10 @@ public class LoadDimensions
     return width;
   }
 
-  public LoadDimensions setWidth(@Nonnull Double width) {
+  public LoadDimensions setWidth(
+      @Nonnull
+      Double width
+  ) {
     this.width = requireNonNull(width, "width");
     return this;
   }

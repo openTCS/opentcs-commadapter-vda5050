@@ -10,7 +10,8 @@ package org.opentcs.commadapter.vehicle.vda5050;
 import org.opentcs.customizations.plantoverview.PlantOverviewInjectionModule;
 
 public class ModelEditorInjectionModule
-    extends PlantOverviewInjectionModule {
+    extends
+      PlantOverviewInjectionModule {
 
   /**
    * Creates a new instance.

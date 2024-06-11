@@ -7,15 +7,8 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.action.prefill;
 
-import com.google.inject.assistedinject.Assisted;
-import java.awt.Component;
 import static java.lang.Math.toRadians;
-import java.util.HashMap;
-import java.util.Map;
 import static java.util.Objects.requireNonNull;
-import java.util.Optional;
-import javax.inject.Inject;
-import org.opentcs.access.KernelServicePortal;
 import static org.opentcs.commadapter.vehicle.vda5050.common.AngleMath.toRelativeConvexAngle;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_POINT_MAP_ID;
@@ -24,6 +17,14 @@ import static org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition.P
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition.PARAMKEY_THETA;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition.PARAMKEY_X;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition.PARAMKEY_Y;
+
+import com.google.inject.assistedinject.Assisted;
+import java.awt.Component;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import javax.inject.Inject;
+import org.opentcs.access.KernelServicePortal;
 import org.opentcs.components.kernel.services.VehicleService;
 import org.opentcs.data.model.Point;
 import org.opentcs.util.Comparators;
@@ -33,7 +34,8 @@ import org.opentcs.util.gui.StringListCellRenderer;
  * A prefill dialog for InitPosition actions.
  */
 public class InitPositionPrefillDialog
-    extends ActionPrefillDialog {
+    extends
+      ActionPrefillDialog {
 
   /**
    * Wether or not the dialog was closed with ok.
@@ -48,9 +50,13 @@ public class InitPositionPrefillDialog
    * @param modal Wether or not this dialog is modal
    */
   @Inject
-  public InitPositionPrefillDialog(KernelServicePortal servicePortal,
-                                   @Assisted Component parentComponent,
-                                   @Assisted boolean modal) {
+  public InitPositionPrefillDialog(
+      KernelServicePortal servicePortal,
+      @Assisted
+      Component parentComponent,
+      @Assisted
+      boolean modal
+  ) {
     super(parentComponent, modal);
 
     initComponents();
@@ -79,9 +85,10 @@ public class InitPositionPrefillDialog
     parameters.put(PARAMKEY_X, String.valueOf(p.getPose().getPosition().getX() / 1000.0));
     parameters.put(PARAMKEY_Y, String.valueOf(p.getPose().getPosition().getY() / 1000.0));
     if (!Double.isNaN(p.getPose().getOrientationAngle())) {
-      parameters.put(PARAMKEY_THETA, String.valueOf(
-                     toRadians(toRelativeConvexAngle(p.getPose().getOrientationAngle()))
-                 ));
+      parameters.put(
+          PARAMKEY_THETA,
+          String.valueOf(toRadians(toRelativeConvexAngle(p.getPose().getOrientationAngle())))
+      );
     }
     Optional<String> mapID = getProperty(PROPKEY_POINT_MAP_ID, p);
     if (mapID.isPresent()) {
@@ -91,6 +98,7 @@ public class InitPositionPrefillDialog
     return Optional.of(parameters);
   }
 
+  // FORMATTER:OFF
   // CHECKSTYLE:OFF
   /**
    * This method is called from within the constructor to
@@ -170,6 +178,7 @@ public class InitPositionPrefillDialog
     pack();
   }// </editor-fold>//GEN-END:initComponents
   // CHECKSTYLE:ON
+  // FORMATTER:ON
 
   private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
     wasClosedWithOK = true;
@@ -181,6 +190,7 @@ public class InitPositionPrefillDialog
     dispose();
   }//GEN-LAST:event_cancelButtonActionPerformed
 
+  // FORMATTER:OFF
   // CHECKSTYLE:OFF
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton cancelButton;
@@ -190,4 +200,5 @@ public class InitPositionPrefillDialog
   private javax.swing.JLabel selectPointLabel;
   // End of variables declaration//GEN-END:variables
   // CHECKSTYLE:ON
+  // FORMATTER:ON
 }

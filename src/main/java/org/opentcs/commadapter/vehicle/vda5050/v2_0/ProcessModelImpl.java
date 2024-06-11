@@ -7,9 +7,10 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
+import static java.util.Objects.requireNonNull;
+
 import java.time.Instant;
 import java.util.ArrayList;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.connection.Connection;
@@ -30,7 +31,8 @@ import org.opentcs.drivers.vehicle.VehicleProcessModel;
  * about the connected vehicle.
  */
 public class ProcessModelImpl
-    extends VehicleProcessModel {
+    extends
+      VehicleProcessModel {
 
   /**
    * The current/most recent state reported by the vehicle.
@@ -138,13 +140,18 @@ public class ProcessModelImpl
    *
    * @param currentState The current/most recent state reported by the vehicle.
    */
-  public void setCurrentState(@Nonnull State currentState) {
+  public void setCurrentState(
+      @Nonnull
+      State currentState
+  ) {
     State oldValue = this.currentState;
     this.currentState = requireNonNull(currentState, "currentState");
 
-    getPropertyChangeSupport().firePropertyChange(Attribute.CURRENT_STATE.name(),
-                                                  oldValue,
-                                                  currentState);
+    getPropertyChangeSupport().firePropertyChange(
+        Attribute.CURRENT_STATE.name(),
+        oldValue,
+        currentState
+    );
   }
 
   /**
@@ -162,13 +169,18 @@ public class ProcessModelImpl
    *
    * @param previousState The previous state reported by the vehicle
    */
-  public void setPreviousState(@Nonnull State previousState) {
+  public void setPreviousState(
+      @Nonnull
+      State previousState
+  ) {
     State oldValue = this.previousState;
     this.previousState = requireNonNull(previousState, "previousState");
 
-    getPropertyChangeSupport().firePropertyChange(Attribute.PREVIOUS_STATE.name(),
-                                                  oldValue,
-                                                  previousState);
+    getPropertyChangeSupport().firePropertyChange(
+        Attribute.PREVIOUS_STATE.name(),
+        oldValue,
+        previousState
+    );
   }
 
   /**
@@ -187,13 +199,18 @@ public class ProcessModelImpl
    *
    * @param lastOrderSent The last order sent to the vehicle
    */
-  public synchronized void setLastOrderSent(@Nullable Order lastOrderSent) {
+  public synchronized void setLastOrderSent(
+      @Nullable
+      Order lastOrderSent
+  ) {
     Order oldValue = this.lastOrderSent;
     this.lastOrderSent = lastOrderSent;
 
-    getPropertyChangeSupport().firePropertyChange(Attribute.LAST_ORDER.name(),
-                                                  oldValue,
-                                                  lastOrderSent);
+    getPropertyChangeSupport().firePropertyChange(
+        Attribute.LAST_ORDER.name(),
+        oldValue,
+        lastOrderSent
+    );
   }
 
   /**
@@ -213,14 +230,17 @@ public class ProcessModelImpl
    * @param lastInstantActionsSent The last instant actions sent to the vehicle
    */
   public synchronized void setLastInstantActionsSent(
-      @Nullable InstantActions lastInstantActionsSent
+      @Nullable
+      InstantActions lastInstantActionsSent
   ) {
     InstantActions oldValue = this.lastInstantActionsSent;
     this.lastInstantActionsSent = lastInstantActionsSent;
 
-    getPropertyChangeSupport().firePropertyChange(Attribute.LAST_INSTANT_ACTIONS.name(),
-                                                  oldValue,
-                                                  lastInstantActionsSent);
+    getPropertyChangeSupport().firePropertyChange(
+        Attribute.LAST_INSTANT_ACTIONS.name(),
+        oldValue,
+        lastInstantActionsSent
+    );
   }
 
   /**
@@ -241,9 +261,11 @@ public class ProcessModelImpl
     boolean oldValue = this.vehicleIdle;
     this.vehicleIdle = idle;
 
-    getPropertyChangeSupport().firePropertyChange(Attribute.VEHICLE_IDLE.name(),
-                                                  oldValue,
-                                                  idle);
+    getPropertyChangeSupport().firePropertyChange(
+        Attribute.VEHICLE_IDLE.name(),
+        oldValue,
+        idle
+    );
   }
 
   /**
@@ -264,9 +286,11 @@ public class ProcessModelImpl
     boolean oldValue = this.brokerConnected;
     this.brokerConnected = brokerConnected;
 
-    getPropertyChangeSupport().firePropertyChange(Attribute.BROKER_CONNECTED.name(),
-                                                  oldValue,
-                                                  brokerConnected);
+    getPropertyChangeSupport().firePropertyChange(
+        Attribute.BROKER_CONNECTED.name(),
+        oldValue,
+        brokerConnected
+    );
   }
 
   /**
@@ -284,13 +308,18 @@ public class ProcessModelImpl
    *
    * @param topicPrefix The prefix used for MQTT topic names.
    */
-  public void setTopicPrefix(@Nonnull String topicPrefix) {
+  public void setTopicPrefix(
+      @Nonnull
+      String topicPrefix
+  ) {
     String oldValue = this.topicPrefix;
     this.topicPrefix = requireNonNull(topicPrefix, "topicPrefix");
 
-    getPropertyChangeSupport().firePropertyChange(Attribute.TOPIC_PREFIX.name(),
-                                                  oldValue,
-                                                  topicPrefix);
+    getPropertyChangeSupport().firePropertyChange(
+        Attribute.TOPIC_PREFIX.name(),
+        oldValue,
+        topicPrefix
+    );
   }
 
   /**
@@ -311,9 +340,11 @@ public class ProcessModelImpl
     Connection oldValue = currentConnection;
     currentConnection = connection;
 
-    getPropertyChangeSupport().firePropertyChange(Attribute.CONNECTION_MESSAGE.name(),
-                                                  oldValue,
-                                                  connection);
+    getPropertyChangeSupport().firePropertyChange(
+        Attribute.CONNECTION_MESSAGE.name(),
+        oldValue,
+        connection
+    );
   }
 
   /**
@@ -334,9 +365,11 @@ public class ProcessModelImpl
     Visualization oldValue = currentVisualization;
     currentVisualization = visualization;
 
-    getPropertyChangeSupport().firePropertyChange(Attribute.VISUALIZATION_MESSAGE.name(),
-                                                  oldValue,
-                                                  visualization);
+    getPropertyChangeSupport().firePropertyChange(
+        Attribute.VISUALIZATION_MESSAGE.name(),
+        oldValue,
+        visualization
+    );
   }
 
   /**

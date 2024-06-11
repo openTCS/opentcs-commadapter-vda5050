@@ -23,7 +23,8 @@ import org.opentcs.drivers.vehicle.management.VehicleProcessModelTO;
  * like the control center or the plant overview.
  */
 public class ProcessModelImplTO
-    extends VehicleProcessModelTO {
+    extends
+      VehicleProcessModelTO {
 
   private TCSObjectReference<Vehicle> vehicleRef;
   private State currentState;
@@ -77,8 +78,7 @@ public class ProcessModelImplTO
     return currentState;
   }
 
-  public ProcessModelImplTO setCurrentState(
-      State currentState) {
+  public ProcessModelImplTO setCurrentState(State currentState) {
     this.currentState = currentState;
     return this;
   }
@@ -87,8 +87,7 @@ public class ProcessModelImplTO
     return previousState;
   }
 
-  public ProcessModelImplTO setPreviousState(
-      State previousState) {
+  public ProcessModelImplTO setPreviousState(State previousState) {
     this.previousState = previousState;
     return this;
   }

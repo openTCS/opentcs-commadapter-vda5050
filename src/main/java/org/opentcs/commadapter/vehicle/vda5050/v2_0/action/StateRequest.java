@@ -15,15 +15,20 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
  * The VDA5050 {@code stateRequest} action.
  */
 public class StateRequest
-    extends Action {
+    extends
+      Action {
 
   /**
    * This action's action type.
    */
   public static final String ACTION_TYPE = "stateRequest";
 
-  public StateRequest(@Nonnull String actionId,
-                      @Nonnull BlockingType blockingType) {
+  public StateRequest(
+      @Nonnull
+      String actionId,
+      @Nonnull
+      BlockingType blockingType
+  ) {
     super(ACTION_TYPE, actionId, blockingType);
   }
 }

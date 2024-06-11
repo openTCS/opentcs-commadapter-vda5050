@@ -15,15 +15,20 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
  * The VDA5050 {@code startPause} action.
  */
 public class StartPause
-    extends Action {
+    extends
+      Action {
 
   /**
    * This action's action type.
    */
   public static final String ACTION_TYPE = "startPause";
 
-  public StartPause(@Nonnull String actionId,
-                    @Nonnull BlockingType blockingType) {
+  public StartPause(
+      @Nonnull
+      String actionId,
+      @Nonnull
+      BlockingType blockingType
+  ) {
     super(ACTION_TYPE, actionId, blockingType);
   }
 }

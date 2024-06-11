@@ -32,27 +32,38 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
  * templates.
  */
 public class ActionComboBoxModel
-    extends DefaultComboBoxModel<Action> {
+    extends
+      DefaultComboBoxModel<Action> {
 
   /**
    * The actions (including their action parameters) to provide as templates.
    */
-  private static final Map<String, Action> ACTION_TEMPLATES = new TreeMap<>(Map.ofEntries(
-      Map.entry(CancelOrder.ACTION_TYPE, new CancelOrder("", BlockingType.NONE)),
-      Map.entry(DetectObject.ACTION_TYPE, new DetectObject("", BlockingType.NONE, "")),
-      Map.entry(Drop.ACTION_TYPE, new Drop("", BlockingType.NONE, "", "", "", "", "", 0F, 0F, "")),
-      Map.entry(FinePositioning.ACTION_TYPE, new FinePositioning("", BlockingType.NONE, "", "")),
-      Map.entry(InitPosition.ACTION_TYPE,
-                new InitPosition("", BlockingType.NONE, "", "", "", "", "")),
-      Map.entry(LogReport.ACTION_TYPE, new LogReport("", BlockingType.NONE, "")),
-      Map.entry(Pick.ACTION_TYPE, new Pick("", BlockingType.NONE, "", "", "", "", "", 0F, 0F, "")),
-      Map.entry(StartCharging.ACTION_TYPE, new StartCharging("", BlockingType.NONE)),
-      Map.entry(StartPause.ACTION_TYPE, new StartPause("", BlockingType.NONE)),
-      Map.entry(StateRequest.ACTION_TYPE, new StateRequest("", BlockingType.NONE)),
-      Map.entry(StopCharging.ACTION_TYPE, new StopCharging("", BlockingType.NONE)),
-      Map.entry(StopPause.ACTION_TYPE, new StopPause("", BlockingType.NONE)),
-      Map.entry(WaitForTrigger.ACTION_TYPE, new WaitForTrigger("", BlockingType.NONE, ""))
-  ));
+  private static final Map<String, Action> ACTION_TEMPLATES = new TreeMap<>(
+      Map.ofEntries(
+          Map.entry(CancelOrder.ACTION_TYPE, new CancelOrder("", BlockingType.NONE)),
+          Map.entry(DetectObject.ACTION_TYPE, new DetectObject("", BlockingType.NONE, "")),
+          Map.entry(
+              Drop.ACTION_TYPE, new Drop("", BlockingType.NONE, "", "", "", "", "", 0F, 0F, "")
+          ),
+          Map.entry(
+              FinePositioning.ACTION_TYPE, new FinePositioning("", BlockingType.NONE, "", "")
+          ),
+          Map.entry(
+              InitPosition.ACTION_TYPE,
+              new InitPosition("", BlockingType.NONE, "", "", "", "", "")
+          ),
+          Map.entry(LogReport.ACTION_TYPE, new LogReport("", BlockingType.NONE, "")),
+          Map.entry(
+              Pick.ACTION_TYPE, new Pick("", BlockingType.NONE, "", "", "", "", "", 0F, 0F, "")
+          ),
+          Map.entry(StartCharging.ACTION_TYPE, new StartCharging("", BlockingType.NONE)),
+          Map.entry(StartPause.ACTION_TYPE, new StartPause("", BlockingType.NONE)),
+          Map.entry(StateRequest.ACTION_TYPE, new StateRequest("", BlockingType.NONE)),
+          Map.entry(StopCharging.ACTION_TYPE, new StopCharging("", BlockingType.NONE)),
+          Map.entry(StopPause.ACTION_TYPE, new StopPause("", BlockingType.NONE)),
+          Map.entry(WaitForTrigger.ACTION_TYPE, new WaitForTrigger("", BlockingType.NONE, ""))
+      )
+  );
 
   public ActionComboBoxModel() {
     addAll(ACTION_TEMPLATES.values());

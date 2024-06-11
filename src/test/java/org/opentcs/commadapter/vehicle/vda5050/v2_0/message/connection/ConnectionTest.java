@@ -27,12 +27,14 @@ public class ConnectionTest {
   public void setUp() {
     messageValidator = new MessageValidator();
     jsonBinder = new JsonBinder();
-    connection = new Connection(0L,
-                                Instant.EPOCH,
-                                "version",
-                                "manufacturer",
-                                "serial-number",
-                                ConnectionState.ONLINE);
+    connection = new Connection(
+        0L,
+        Instant.EPOCH,
+        "version",
+        "manufacturer",
+        "serial-number",
+        ConnectionState.ONLINE
+    );
   }
 
   @Test

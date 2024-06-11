@@ -13,7 +13,8 @@ import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.MqttConfiguration;
 import org.opentcs.customizations.kernel.KernelInjectionModule;
 
 public class KernelInjectionModuleImpl
-    extends KernelInjectionModule {
+    extends
+      KernelInjectionModule {
 
   /**
    * Creates a new instance.
@@ -26,8 +27,12 @@ public class KernelInjectionModuleImpl
     configureMqtt();
 
     bind(CommAdapterConfiguration.class)
-        .toInstance(getConfigBindingProvider().get(CommAdapterConfiguration.PREFIX,
-                                                   CommAdapterConfiguration.class));
+        .toInstance(
+            getConfigBindingProvider().get(
+                CommAdapterConfiguration.PREFIX,
+                CommAdapterConfiguration.class
+            )
+        );
 
     install(new org.opentcs.commadapter.vehicle.vda5050.v1_1.KernelInjectionModuleImpl());
     install(new org.opentcs.commadapter.vehicle.vda5050.v2_0.KernelInjectionModuleImpl());

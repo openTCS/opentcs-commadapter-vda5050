@@ -7,13 +7,15 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.common;
 
-import java.util.Map;
 import static java.util.Objects.requireNonNull;
-import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -23,7 +25,6 @@ import org.opentcs.data.model.Point;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.data.order.Route;
 import org.opentcs.drivers.vehicle.MovementCommand;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for object properties-related utility methods.
@@ -280,7 +281,8 @@ public class PropertyExtractionsTest {
   }
 
   private class DummyMovementCommand
-      implements MovementCommand {
+      implements
+        MovementCommand {
 
     private final Location location;
     private final Map<String, String> properties;

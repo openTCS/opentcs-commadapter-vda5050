@@ -14,7 +14,8 @@ import org.opentcs.drivers.vehicle.VehicleCommAdapterDescription;
  * The example adapter's {@link VehicleCommAdapterDescription}.
  */
 public class CommAdapterDescriptionImpl
-    extends VehicleCommAdapterDescription {
+    extends
+      VehicleCommAdapterDescription {
 
   /**
    * Creates a new instance.
@@ -24,8 +25,8 @@ public class CommAdapterDescriptionImpl
 
   @Override
   public String getDescription() {
-    return ResourceBundle.getBundle("i18n/org/opentcs/commadapter/vehicle/vda5050/Bundle").
-        getString("commAdapterDescriptionImpl.adapterFactoryDescription");
+    return ResourceBundle.getBundle("i18n/org/opentcs/commadapter/vehicle/vda5050/Bundle")
+        .getString("commAdapterDescriptionImpl.adapterFactoryDescription");
   }
 
   @Override

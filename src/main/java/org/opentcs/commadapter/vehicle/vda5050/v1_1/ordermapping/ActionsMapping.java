@@ -7,6 +7,11 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_CUSTOM_ACTION_PREFIX;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_CUSTOM_DEST_ACTION_PREFIX;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_RECHARGE_OPERATION;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -14,7 +19,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,9 +29,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.DestinationOperations;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_CUSTOM_ACTION_PREFIX;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_CUSTOM_DEST_ACTION_PREFIX;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_RECHARGE_OPERATION;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.ActionParameter;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
@@ -85,15 +86,20 @@ public class ActionsMapping {
         .map(property -> extractActionIndex(property.getKey()))
         .filter(actionIndex -> actionIndex != null)
         .sorted()
-        .map(actionIndex -> createPropertyAction(actionIndex,
-                                                 actionCounter.getAndIncrement(),
-                                                 res)
+        .map(
+            actionIndex -> createPropertyAction(
+                actionIndex,
+                actionCounter.getAndIncrement(),
+                res
+            )
         )
         .collect(Collectors.toCollection(ArrayList::new));
   }
 
-  public static Action fromPropertyAction(Vehicle vehicle,
-                                          PropertyAction propertyAction) {
+  public static Action fromPropertyAction(
+      Vehicle vehicle,
+      PropertyAction propertyAction
+  ) {
     requireNonNull(vehicle, "vehicle");
     requireNonNull(propertyAction, "propertyAction");
 
@@ -115,9 +121,12 @@ public class ActionsMapping {
         .map(property -> extractActionIndex(property.getKey()))
         .filter(actionIndex -> actionIndex != null)
         .sorted()
-        .map(actionIndex -> createPropertyAction(actionIndex,
-                                                 actionCounter.getAndIncrement(),
-                                                 command)
+        .map(
+            actionIndex -> createPropertyAction(
+                actionIndex,
+                actionCounter.getAndIncrement(),
+                command
+            )
         )
         .collect(Collectors.toCollection(ArrayList::new));
   }
@@ -131,10 +140,12 @@ public class ActionsMapping {
    * @param destinationType The destination location type.
    * @return The mapped {@link PropertyAction}.
    */
-  public static Optional<PropertyAction> fromMovementCommand(Vehicle vehicle,
-                                                             MovementCommand command,
-                                                             Location destinationLocation,
-                                                             LocationType destinationType) {
+  public static Optional<PropertyAction> fromMovementCommand(
+      Vehicle vehicle,
+      MovementCommand command,
+      Location destinationLocation,
+      LocationType destinationType
+  ) {
     requireNonNull(vehicle, "vehicle");
     requireNonNull(command, "command");
     requireNonNull(destinationLocation, "destinationLocation");
@@ -149,7 +160,8 @@ public class ActionsMapping {
     PropertyAction action;
     if (command.getOperation().equals(
         PropertyExtractions.getProperty(PROPKEY_VEHICLE_RECHARGE_OPERATION, vehicle)
-            .orElse(DestinationOperations.CHARGE))) {
+            .orElse(DestinationOperations.CHARGE)
+    )) {
       action = mapChargeOperation("startCharging", actionId);
     }
     else {
@@ -160,18 +172,22 @@ public class ActionsMapping {
   }
 
   private static PropertyAction mapChargeOperation(String actionType, String actionId) {
-    return new PropertyAction(actionType,
-                              actionId,
-                              BlockingType.SOFT,
-                              List.of(),
-                              EnumSet.allOf(ActionTrigger.class),
-                              Set.of());
+    return new PropertyAction(
+        actionType,
+        actionId,
+        BlockingType.SOFT,
+        List.of(),
+        EnumSet.allOf(ActionTrigger.class),
+        Set.of()
+    );
   }
 
-  private static PropertyAction mapMovementCommandAction(MovementCommand command,
-                                                         Location location,
-                                                         LocationType locationType,
-                                                         String actionId) {
+  private static PropertyAction mapMovementCommandAction(
+      MovementCommand command,
+      Location location,
+      LocationType locationType,
+      String actionId
+  ) {
     LOG.debug("Mapping action for movement command: {}", command);
     return new PropertyAction(
         command.getOperation(),
@@ -186,9 +202,11 @@ public class ActionsMapping {
     );
   }
 
-  private static List<ActionParameter> extractDestActionParameters(MovementCommand command,
-                                                                   Location location,
-                                                                   LocationType locationType) {
+  private static List<ActionParameter> extractDestActionParameters(
+      MovementCommand command,
+      Location location,
+      LocationType locationType
+  ) {
     Map<String, String> combinedParameters = new HashMap<>();
     combinedParameters.putAll(
         extractDestActionParameters(command.getOperation(), locationType.getProperties())
@@ -204,8 +222,11 @@ public class ActionsMapping {
   }
 
   private static Map<String, String> extractDestActionParameters(
-      @Nullable String actionType,
-      @Nonnull Map<String, String> properties) {
+      @Nullable
+      String actionType,
+      @Nonnull
+      Map<String, String> properties
+  ) {
     String patternStr = Optional.ofNullable(actionType)
         .map(at -> PROPKEY_CUSTOM_DEST_ACTION_PREFIX + "\\." + at + "\\.parameter\\.(.+)")
         .orElse(PROPKEY_CUSTOM_DEST_ACTION_PREFIX + "\\.parameter\\.(.+)");
@@ -219,15 +240,20 @@ public class ActionsMapping {
           };
         })
         .filter(element -> element.matcher.matches())
-        .collect(Collectors.toMap(
-            element -> element.matcher.group(1),
-            element -> element.property.getValue())
+        .collect(
+            Collectors.toMap(
+                element -> element.matcher.group(1),
+                element -> element.property.getValue()
+            )
         );
   }
 
   private static Optional<BlockingType> extractDestBlockingType(
-      @Nullable String actionType,
-      @Nonnull Map<String, String> properties) {
+      @Nullable
+      String actionType,
+      @Nonnull
+      Map<String, String> properties
+  ) {
     String blockingTypePropKey = Optional.ofNullable(actionType)
         .map(at -> PROPKEY_CUSTOM_DEST_ACTION_PREFIX + "." + at + ".blockingType")
         .orElse(PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".blockingType");
@@ -243,8 +269,11 @@ public class ActionsMapping {
   }
 
   private static Optional<BlockingType> extractBlockingType(
-      @Nonnull String actionIndex,
-      @Nonnull Map<String, String> properties) {
+      @Nonnull
+      String actionIndex,
+      @Nonnull
+      Map<String, String> properties
+  ) {
     String blockingTypePropKey = PROPKEY_CUSTOM_ACTION_PREFIX + "." + actionIndex + ".blockingType";
 
     try {
@@ -260,7 +289,8 @@ public class ActionsMapping {
   @Nullable
   private static List<ActionParameter> extractActionParameters(
       String actionIndex,
-      Map<String, String> properties) {
+      Map<String, String> properties
+  ) {
     Pattern pattern = Pattern.compile(
         PROPKEY_CUSTOM_ACTION_PREFIX + "\\." + actionIndex + "\\.parameter\\.(.+)"
     );
@@ -273,13 +303,20 @@ public class ActionsMapping {
           };
         })
         .filter(element -> element.matcher.matches())
-        .map(element -> new ActionParameter(element.matcher.group(1),
-                                            parseParameter(element.property.getValue())))
+        .map(
+            element -> new ActionParameter(
+                element.matcher.group(1),
+                parseParameter(element.property.getValue())
+            )
+        )
         .collect(Collectors.toList());
   }
 
   @Nullable
-  private static Object parseParameter(@Nullable String value) {
+  private static Object parseParameter(
+      @Nullable
+      String value
+  ) {
     if (value == null) {
       return null;
     }
@@ -297,7 +334,10 @@ public class ActionsMapping {
     }
   }
 
-  private static Optional<Object> tryParseParameterAsFloat(@Nonnull String value)
+  private static Optional<Object> tryParseParameterAsFloat(
+      @Nonnull
+      String value
+  )
       throws IllegalArgumentException {
     Matcher matcher = ACTION_PARAM_FLOAT_PATTERN.matcher(value);
     if (matcher.matches()) {
@@ -308,7 +348,10 @@ public class ActionsMapping {
     }
   }
 
-  private static Optional<Object> tryParseParameterAsInteger(@Nonnull String value)
+  private static Optional<Object> tryParseParameterAsInteger(
+      @Nonnull
+      String value
+  )
       throws IllegalArgumentException {
     Matcher matcher = ACTION_PARAM_INTEGER_PATTERN.matcher(value);
     if (matcher.matches()) {
@@ -319,7 +362,10 @@ public class ActionsMapping {
     }
   }
 
-  private static Optional<Object> tryParseParameterAsBoolean(@Nonnull String value) {
+  private static Optional<Object> tryParseParameterAsBoolean(
+      @Nonnull
+      String value
+  ) {
     Matcher matcher = ACTION_PARAM_BOOLEAN_PATTERN.matcher(value);
     if (matcher.matches()) {
       return Optional.of(Boolean.valueOf(matcher.group(1)));
@@ -329,7 +375,10 @@ public class ActionsMapping {
     }
   }
 
-  private static Optional<Object> tryParseParameterAsString(@Nonnull String value) {
+  private static Optional<Object> tryParseParameterAsString(
+      @Nonnull
+      String value
+  ) {
     Matcher matcher = ACTION_PARAM_STRING_PATTERN.matcher(value);
     if (matcher.matches()) {
       return Optional.of(matcher.group(1));
@@ -339,8 +388,10 @@ public class ActionsMapping {
     }
   }
 
-  private static EnumSet<ActionTrigger> extractTrigger(String actionIndex,
-                                                       Map<String, String> properties) {
+  private static EnumSet<ActionTrigger> extractTrigger(
+      String actionIndex,
+      Map<String, String> properties
+  ) {
     String triggerKey = PROPKEY_CUSTOM_ACTION_PREFIX + "." + actionIndex + ".when";
     String triggerValue = properties.get(triggerKey);
 
@@ -349,8 +400,10 @@ public class ActionsMapping {
         : parseTrigger(triggerValue, triggerKey);
   }
 
-  private static EnumSet<ActionTrigger> parseTrigger(String value,
-                                                     String key) {
+  private static EnumSet<ActionTrigger> parseTrigger(
+      String value,
+      String key
+  ) {
     EnumSet<ActionTrigger> trigger = EnumSet.noneOf(ActionTrigger.class);
 
     for (String triggerString : value.split("\\|")) {
@@ -358,16 +411,20 @@ public class ActionsMapping {
         trigger.add(ActionTrigger.valueOf(triggerString.strip()));
       }
       catch (IllegalArgumentException e) {
-        LOG.warn("Could not parse execution trigger for action '{}': {}. ",
-                 key,
-                 e.getMessage());
+        LOG.warn(
+            "Could not parse execution trigger for action '{}': {}. ",
+            key,
+            e.getMessage()
+        );
       }
     }
     return trigger;
   }
 
-  private static Set<String> extractTags(String actionIndex,
-                                         Map<String, String> properties) {
+  private static Set<String> extractTags(
+      String actionIndex,
+      Map<String, String> properties
+  ) {
     String tagsKey = PROPKEY_CUSTOM_ACTION_PREFIX + "." + actionIndex + ".tags";
     String tagsValue = properties.getOrDefault(tagsKey, "default");
 
@@ -381,9 +438,11 @@ public class ActionsMapping {
     return matcher.matches() ? matcher.group(1) : null;
   }
 
-  private static PropertyAction createPropertyAction(String actionIndex,
-                                                     int actionNumber,
-                                                     MovementCommand command) {
+  private static PropertyAction createPropertyAction(
+      String actionIndex,
+      int actionNumber,
+      MovementCommand command
+  ) {
     LOG.debug("Start mapping actions for movement command: {}", command);
     return new PropertyAction(
         command.getProperties().get(PROPKEY_CUSTOM_ACTION_PREFIX + "." + actionIndex),
@@ -395,9 +454,11 @@ public class ActionsMapping {
     );
   }
 
-  private static PropertyAction createPropertyAction(String actionIndex,
-                                                     int actionNumber,
-                                                     TCSResource<?> res) {
+  private static PropertyAction createPropertyAction(
+      String actionIndex,
+      int actionNumber,
+      TCSResource<?> res
+  ) {
     LOG.debug("Start mapping actions for resource '{}'", res.getName());
     return new PropertyAction(
         res.getProperty(PROPKEY_CUSTOM_ACTION_PREFIX + "." + actionIndex),

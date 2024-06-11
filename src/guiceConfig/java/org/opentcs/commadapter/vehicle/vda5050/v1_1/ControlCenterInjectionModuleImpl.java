@@ -7,9 +7,9 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.CommAdapterPanelFactoryImpl;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.AdapterPanelComponentsFactory;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.AdapterPanelComponentsFactory;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.CommAdapterPanelFactoryImpl;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.action.prefill.PrefillDialogFactory;
 import org.opentcs.customizations.controlcenter.ControlCenterInjectionModule;
 
@@ -17,7 +17,8 @@ import org.opentcs.customizations.controlcenter.ControlCenterInjectionModule;
  * A custom Guice module for project-specific configuration.
  */
 public class ControlCenterInjectionModuleImpl
-    extends ControlCenterInjectionModule {
+    extends
+      ControlCenterInjectionModule {
 
   /**
    * Creates a new instance.

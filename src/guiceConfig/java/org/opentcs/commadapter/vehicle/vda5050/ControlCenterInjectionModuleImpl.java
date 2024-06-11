@@ -13,7 +13,8 @@ import org.opentcs.customizations.controlcenter.ControlCenterInjectionModule;
  * A custom Guice module for project-specific configuration.
  */
 public class ControlCenterInjectionModuleImpl
-    extends ControlCenterInjectionModule {
+    extends
+      ControlCenterInjectionModule {
 
   /**
    * Creates a new instance.

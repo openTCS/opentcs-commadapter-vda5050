@@ -16,6 +16,10 @@ buildscript {
   }
 }
 
+plugins {
+  id 'com.diffplug.spotless' version '6.25.0'
+}
+
 apply from: "${rootDir}/gradle/dependency-versions.gradle"
 apply from: "${rootDir}/gradle/common.gradle"
 apply from: "${rootDir}/gradle/java-project.gradle"

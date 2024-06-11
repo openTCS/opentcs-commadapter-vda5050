@@ -19,7 +19,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
  * The VDA5050 {@code finePositioning} action.
  */
 public class FinePositioning
-    extends Action {
+    extends
+      Action {
 
   /**
    * This action's action type.
@@ -34,10 +35,16 @@ public class FinePositioning
    */
   public static final String PARAMKEY_STATION_NAME = "stationName";
 
-  public FinePositioning(@Nonnull String actionId,
-                         @Nonnull BlockingType blockingType,
-                         @Nullable String paramValueStationType,
-                         @Nullable String paramValueStationName) {
+  public FinePositioning(
+      @Nonnull
+      String actionId,
+      @Nonnull
+      BlockingType blockingType,
+      @Nullable
+      String paramValueStationType,
+      @Nullable
+      String paramValueStationName
+  ) {
     super(ACTION_TYPE, actionId, blockingType);
 
     List<ActionParameter> actionParameters = new ArrayList<>();

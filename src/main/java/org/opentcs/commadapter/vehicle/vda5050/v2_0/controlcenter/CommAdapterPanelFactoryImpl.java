@@ -7,9 +7,10 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import org.opentcs.access.KernelServicePortal;
@@ -27,7 +28,8 @@ import org.slf4j.LoggerFactory;
  * A factory for creating project specific comm adapter panel instances.
  */
 public class CommAdapterPanelFactoryImpl
-    implements VehicleCommAdapterPanelFactory {
+    implements
+      VehicleCommAdapterPanelFactory {
 
   /**
    * This class's logger.
@@ -53,8 +55,10 @@ public class CommAdapterPanelFactoryImpl
    * @param componentsFactory The components factory.
    */
   @Inject
-  public CommAdapterPanelFactoryImpl(KernelServicePortal servicePortal,
-                                     AdapterPanelComponentsFactory componentsFactory) {
+  public CommAdapterPanelFactoryImpl(
+      KernelServicePortal servicePortal,
+      AdapterPanelComponentsFactory componentsFactory
+  ) {
     this.servicePortal = requireNonNull(servicePortal, "servicePortal");
     this.componentsFactory = requireNonNull(componentsFactory, "componentsFactory");
   }
@@ -84,9 +88,13 @@ public class CommAdapterPanelFactoryImpl
 
   @Override
   public List<VehicleCommAdapterPanel> getPanelsFor(
-      @Nonnull VehicleCommAdapterDescription description,
-      @Nonnull TCSObjectReference<Vehicle> vehicle,
-      @Nonnull VehicleProcessModelTO processModel) {
+      @Nonnull
+      VehicleCommAdapterDescription description,
+      @Nonnull
+      TCSObjectReference<Vehicle> vehicle,
+      @Nonnull
+      VehicleProcessModelTO processModel
+  ) {
     requireNonNull(description, "description");
     requireNonNull(vehicle, "vehicle");
     requireNonNull(processModel, "processModel");
@@ -96,10 +104,18 @@ public class CommAdapterPanelFactoryImpl
       return new ArrayList<>();
     }
     List<VehicleCommAdapterPanel> panels = new ArrayList<>();
-    panels.add(componentsFactory.createControlPanel((ProcessModelImplTO) processModel,
-                                                    servicePortal.getVehicleService()));
-    panels.add(componentsFactory.createStatusPanel((ProcessModelImplTO) processModel,
-                                                   servicePortal.getVehicleService()));
+    panels.add(
+        componentsFactory.createControlPanel(
+            (ProcessModelImplTO) processModel,
+            servicePortal.getVehicleService()
+        )
+    );
+    panels.add(
+        componentsFactory.createStatusPanel(
+            (ProcessModelImplTO) processModel,
+            servicePortal.getVehicleService()
+        )
+    );
     return panels;
   }
 
@@ -112,8 +128,10 @@ public class CommAdapterPanelFactoryImpl
    * @return {@code true} if, and only if, this factory can provide comm adapter panels for the
    * given description and the given type of process model.
    */
-  private boolean providesPanelsFor(VehicleCommAdapterDescription description,
-                                    VehicleProcessModelTO processModel) {
+  private boolean providesPanelsFor(
+      VehicleCommAdapterDescription description,
+      VehicleProcessModelTO processModel
+  ) {
     return (description instanceof CommAdapterDescriptionImpl)
         && (processModel instanceof ProcessModelImplTO);
   }

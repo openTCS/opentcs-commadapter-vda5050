@@ -16,7 +16,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParamet
  * A model for a table of action parameters.
  */
 public class ActionParametersTableModel
-    extends AbstractTableModel {
+    extends
+      AbstractTableModel {
 
   /**
    * List of entries in the table.

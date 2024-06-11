@@ -7,25 +7,27 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.Limits.UINT32_MAX_VALUE;
+import static org.opentcs.util.Assertions.checkInRange;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import static org.opentcs.commadapter.vehicle.vda5050.common.Limits.UINT32_MAX_VALUE;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.Header;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.AgvPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Velocity;
-import static org.opentcs.util.Assertions.checkInRange;
 
 /**
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class State
-    extends Header {
+    extends
+      Header {
 
   /**
    * The path to the JSON schema file.
@@ -183,50 +185,105 @@ public class State
    * @param errors List of {@link ErrorEntry} objects.
    * @param safetyState Contains all safety-related information.
    */
-  public State(@Nonnull String orderId,
-               @Nonnull Long orderUpdateId,
-               @Nonnull String lastNodeId,
-               @Nonnull Long lastNodeSequenceId,
-               @Nonnull List<NodeState> nodeStates,
-               @Nonnull List<EdgeState> edgeStates,
-               @Nonnull Boolean driving,
-               @Nonnull List<ActionState> actionStates,
-               @Nonnull BatteryState batteryState,
-               @Nonnull OperatingMode operatingMode,
-               @Nonnull List<ErrorEntry> errors,
-               @Nonnull SafetyState safetyState) {
-    this(0L, Instant.EPOCH, "", "", "", orderId, orderUpdateId, lastNodeId, lastNodeSequenceId,
-         nodeStates, edgeStates, driving, actionStates, batteryState, operatingMode, errors,
-         safetyState);
+  public State(
+      @Nonnull
+      String orderId,
+      @Nonnull
+      Long orderUpdateId,
+      @Nonnull
+      String lastNodeId,
+      @Nonnull
+      Long lastNodeSequenceId,
+      @Nonnull
+      List<NodeState> nodeStates,
+      @Nonnull
+      List<EdgeState> edgeStates,
+      @Nonnull
+      Boolean driving,
+      @Nonnull
+      List<ActionState> actionStates,
+      @Nonnull
+      BatteryState batteryState,
+      @Nonnull
+      OperatingMode operatingMode,
+      @Nonnull
+      List<ErrorEntry> errors,
+      @Nonnull
+      SafetyState safetyState
+  ) {
+    this(
+        0L, Instant.EPOCH, "", "", "", orderId, orderUpdateId, lastNodeId, lastNodeSequenceId,
+        nodeStates, edgeStates, driving, actionStates, batteryState, operatingMode, errors,
+        safetyState
+    );
   }
 
   // CHECKSTYLE:OFF (Long lines because some of these parameter declarations are very long.)
   @JsonCreator
   public State(
-      @Nonnull @JsonProperty(required = true, value = "headerId") Long headerId,
-      @Nonnull @JsonProperty(required = true, value = "timestamp") Instant timestamp,
-      @Nonnull @JsonProperty(required = true, value = "version") String version,
-      @Nonnull @JsonProperty(required = true, value = "manufacturer") String manufacturer,
-      @Nonnull @JsonProperty(required = true, value = "serialNumber") String serialNumber,
-      @Nonnull @JsonProperty(required = true, value = "orderId") String orderId,
-      @Nonnull @JsonProperty(required = true, value = "orderUpdateId") Long orderUpdateId,
-      @Nonnull @JsonProperty(required = true, value = "lastNodeId") String lastNodeId,
-      @Nonnull @JsonProperty(required = true, value = "lastNodeSequenceId") Long lastNodeSequenceId,
-      @Nonnull @JsonProperty(required = true, value = "nodeStates") List<NodeState> nodeStates,
-      @Nonnull @JsonProperty(required = true, value = "edgeStates") List<EdgeState> edgeStates,
-      @Nonnull @JsonProperty(required = true, value = "driving") Boolean driving,
-      @Nonnull @JsonProperty(required = true, value = "actionStates") List<ActionState> actionStates,
-      @Nonnull @JsonProperty(required = true, value = "batteryState") BatteryState batteryState,
-      @Nonnull @JsonProperty(required = true, value = "operatingMode") OperatingMode operatingMode,
-      @Nonnull @JsonProperty(required = true, value = "errors") List<ErrorEntry> errors,
-      @Nonnull @JsonProperty(required = true, value = "safetyState") SafetyState safetyState) {
+      @Nonnull
+      @JsonProperty(required = true, value = "headerId")
+      Long headerId,
+      @Nonnull
+      @JsonProperty(required = true, value = "timestamp")
+      Instant timestamp,
+      @Nonnull
+      @JsonProperty(required = true, value = "version")
+      String version,
+      @Nonnull
+      @JsonProperty(required = true, value = "manufacturer")
+      String manufacturer,
+      @Nonnull
+      @JsonProperty(required = true, value = "serialNumber")
+      String serialNumber,
+      @Nonnull
+      @JsonProperty(required = true, value = "orderId")
+      String orderId,
+      @Nonnull
+      @JsonProperty(required = true, value = "orderUpdateId")
+      Long orderUpdateId,
+      @Nonnull
+      @JsonProperty(required = true, value = "lastNodeId")
+      String lastNodeId,
+      @Nonnull
+      @JsonProperty(required = true, value = "lastNodeSequenceId")
+      Long lastNodeSequenceId,
+      @Nonnull
+      @JsonProperty(required = true, value = "nodeStates")
+      List<NodeState> nodeStates,
+      @Nonnull
+      @JsonProperty(required = true, value = "edgeStates")
+      List<EdgeState> edgeStates,
+      @Nonnull
+      @JsonProperty(required = true, value = "driving")
+      Boolean driving,
+      @Nonnull
+      @JsonProperty(required = true, value = "actionStates")
+      List<ActionState> actionStates,
+      @Nonnull
+      @JsonProperty(required = true, value = "batteryState")
+      BatteryState batteryState,
+      @Nonnull
+      @JsonProperty(required = true, value = "operatingMode")
+      OperatingMode operatingMode,
+      @Nonnull
+      @JsonProperty(required = true, value = "errors")
+      List<ErrorEntry> errors,
+      @Nonnull
+      @JsonProperty(required = true, value = "safetyState")
+      SafetyState safetyState
+  ) {
     super(headerId, timestamp, version, manufacturer, serialNumber);
     this.orderId = requireNonNull(orderId, "orderId");
-    this.orderUpdateId = checkInRange(requireNonNull(orderUpdateId, "orderUpdateId"),
-                                      0, UINT32_MAX_VALUE, "orderUpdateId");
+    this.orderUpdateId = checkInRange(
+        requireNonNull(orderUpdateId, "orderUpdateId"),
+        0, UINT32_MAX_VALUE, "orderUpdateId"
+    );
     this.lastNodeId = requireNonNull(lastNodeId, "lastNodeId");
-    this.lastNodeSequenceId = checkInRange(requireNonNull(lastNodeSequenceId, "lastNodeSequenceId"),
-                                           0, UINT32_MAX_VALUE, "lastNodeSequenceId");
+    this.lastNodeSequenceId = checkInRange(
+        requireNonNull(lastNodeSequenceId, "lastNodeSequenceId"),
+        0, UINT32_MAX_VALUE, "lastNodeSequenceId"
+    );
     this.nodeStates = requireNonNull(nodeStates, "nodeStates");
     this.edgeStates = requireNonNull(edgeStates, "edgeStates");
     this.driving = requireNonNull(driving, "driving");
@@ -242,7 +299,10 @@ public class State
     return orderId;
   }
 
-  public State setOrderId(@Nonnull String orderId) {
+  public State setOrderId(
+      @Nonnull
+      String orderId
+  ) {
     this.orderId = requireNonNull(orderId, "orderId");
     return this;
   }
@@ -251,9 +311,13 @@ public class State
     return orderUpdateId;
   }
 
-  public State setOrderUpdateId(@Nonnull Long orderUpdateId) {
+  public State setOrderUpdateId(
+      @Nonnull
+      Long orderUpdateId
+  ) {
     this.orderUpdateId = checkInRange(
-        requireNonNull(orderUpdateId, "orderUpdateId"), 0, UINT32_MAX_VALUE, "orderUpdateId");
+        requireNonNull(orderUpdateId, "orderUpdateId"), 0, UINT32_MAX_VALUE, "orderUpdateId"
+    );
     return this;
   }
 
@@ -261,7 +325,10 @@ public class State
     return lastNodeId;
   }
 
-  public State setLastNodeId(@Nonnull String lastNodeId) {
+  public State setLastNodeId(
+      @Nonnull
+      String lastNodeId
+  ) {
     this.lastNodeId = requireNonNull(lastNodeId, "lastNodeId");
     return this;
   }
@@ -279,9 +346,14 @@ public class State
     return lastNodeSequenceId;
   }
 
-  public State setLastNodeSequenceId(@Nonnull Long lastNodeSequenceId) {
-    this.lastNodeSequenceId = checkInRange(requireNonNull(lastNodeSequenceId, "lastNodeSequenceId"),
-                                           0, UINT32_MAX_VALUE, "lastNodeSequenceId");
+  public State setLastNodeSequenceId(
+      @Nonnull
+      Long lastNodeSequenceId
+  ) {
+    this.lastNodeSequenceId = checkInRange(
+        requireNonNull(lastNodeSequenceId, "lastNodeSequenceId"),
+        0, UINT32_MAX_VALUE, "lastNodeSequenceId"
+    );
     return this;
   }
 
@@ -289,7 +361,10 @@ public class State
     return driving;
   }
 
-  public State setDriving(@Nonnull Boolean driving) {
+  public State setDriving(
+      @Nonnull
+      Boolean driving
+  ) {
     this.driving = requireNonNull(driving, "driving");
     return this;
   }
@@ -298,7 +373,10 @@ public class State
     return paused;
   }
 
-  public State setPaused(@Nullable Boolean paused) {
+  public State setPaused(
+      @Nullable
+      Boolean paused
+  ) {
     this.paused = paused;
     return this;
   }
@@ -325,7 +403,10 @@ public class State
     return operatingMode;
   }
 
-  public State setOperatingMode(@Nonnull OperatingMode operatingMode) {
+  public State setOperatingMode(
+      @Nonnull
+      OperatingMode operatingMode
+  ) {
     this.operatingMode = requireNonNull(operatingMode, "operatingMode");
     return this;
   }
@@ -334,7 +415,10 @@ public class State
     return nodeStates;
   }
 
-  public State setNodeStates(@Nonnull List<NodeState> nodeStates) {
+  public State setNodeStates(
+      @Nonnull
+      List<NodeState> nodeStates
+  ) {
     this.nodeStates = requireNonNull(nodeStates, "nodeStates");
     return this;
   }
@@ -343,7 +427,10 @@ public class State
     return edgeStates;
   }
 
-  public State setEdgeStates(@Nonnull List<EdgeState> edgeStates) {
+  public State setEdgeStates(
+      @Nonnull
+      List<EdgeState> edgeStates
+  ) {
     this.edgeStates = requireNonNull(edgeStates, "edgeStates");
     return this;
   }
@@ -379,7 +466,10 @@ public class State
     return actionStates;
   }
 
-  public State setActionStates(@Nonnull List<ActionState> actionStates) {
+  public State setActionStates(
+      @Nonnull
+      List<ActionState> actionStates
+  ) {
     this.actionStates = requireNonNull(actionStates, "actionStates");
     return this;
   }
@@ -388,7 +478,10 @@ public class State
     return batteryState;
   }
 
-  public State setBatteryState(@Nonnull BatteryState batteryState) {
+  public State setBatteryState(
+      @Nonnull
+      BatteryState batteryState
+  ) {
     this.batteryState = requireNonNull(batteryState, "batteryState");
     return this;
   }
@@ -397,7 +490,10 @@ public class State
     return errors;
   }
 
-  public State setErrors(@Nonnull List<ErrorEntry> errors) {
+  public State setErrors(
+      @Nonnull
+      List<ErrorEntry> errors
+  ) {
     this.errors = requireNonNull(errors, "errors");
     return this;
   }
@@ -415,7 +511,10 @@ public class State
     return safetyState;
   }
 
-  public State setSafetyState(@Nonnull SafetyState safetyState) {
+  public State setSafetyState(
+      @Nonnull
+      SafetyState safetyState
+  ) {
     this.safetyState = requireNonNull(safetyState, "safetyState");
     return this;
   }

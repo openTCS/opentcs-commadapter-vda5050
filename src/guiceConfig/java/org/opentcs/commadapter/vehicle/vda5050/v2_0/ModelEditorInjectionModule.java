@@ -7,12 +7,13 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
-import org.opentcs.commadapter.vehicle.vda5050.v2_0.modeleditor.ModelEditorPropertySuggestions;
 import javax.inject.Singleton;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.modeleditor.ModelEditorPropertySuggestions;
 import org.opentcs.customizations.plantoverview.PlantOverviewInjectionModule;
 
 public class ModelEditorInjectionModule
-    extends PlantOverviewInjectionModule {
+    extends
+      PlantOverviewInjectionModule {
 
   /**
    * Creates a new instance.

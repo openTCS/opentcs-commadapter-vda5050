@@ -7,17 +7,19 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common;
 
+import static java.util.Objects.requireNonNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 
 /**
  * Additional parameters for an {@link Action}.
  */
 public class ActionParameter
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * The key of the action parameter.
@@ -31,8 +33,13 @@ public class ActionParameter
 
   @JsonCreator
   public ActionParameter(
-      @Nonnull @JsonProperty(required = true, value = "key") String key,
-      @Nonnull @JsonProperty(required = true, value = "value") Object value) {
+      @Nonnull
+      @JsonProperty(required = true, value = "key")
+      String key,
+      @Nonnull
+      @JsonProperty(required = true, value = "value")
+      Object value
+  ) {
     this.key = requireNonNull(key, "key");
     this.value = requireNonNull(value, "value");
   }
@@ -41,7 +48,10 @@ public class ActionParameter
     return key;
   }
 
-  public ActionParameter setKey(@Nonnull String key) {
+  public ActionParameter setKey(
+      @Nonnull
+      String key
+  ) {
     this.key = requireNonNull(key, "key");
     return this;
   }
@@ -50,7 +60,10 @@ public class ActionParameter
     return value;
   }
 
-  public ActionParameter setValue(@Nonnull Object value) {
+  public ActionParameter setValue(
+      @Nonnull
+      Object value
+  ) {
     this.value = requireNonNull(value, "value");
     return this;
   }

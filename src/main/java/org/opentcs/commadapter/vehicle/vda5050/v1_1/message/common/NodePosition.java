@@ -7,13 +7,14 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInRange;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
-import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInRange;
 
 /**
  * Defines the position on a map in world coordinates.
@@ -22,7 +23,8 @@ import static org.opentcs.commadapter.vehicle.vda5050.common.Assertions.checkInR
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class NodePosition
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * X-position on the map in reference to the map coordinate system (in m).
@@ -80,9 +82,16 @@ public class NodePosition
 
   @JsonCreator
   public NodePosition(
-      @Nonnull @JsonProperty(required = true, value = "x") Double x,
-      @Nonnull @JsonProperty(required = true, value = "y") Double y,
-      @Nonnull @JsonProperty(required = true, value = "mapId") String mapId) {
+      @Nonnull
+      @JsonProperty(required = true, value = "x")
+      Double x,
+      @Nonnull
+      @JsonProperty(required = true, value = "y")
+      Double y,
+      @Nonnull
+      @JsonProperty(required = true, value = "mapId")
+      String mapId
+  ) {
     this.x = requireNonNull(x, "x");
     this.y = requireNonNull(y, "y");
     this.mapId = requireNonNull(mapId, "mapId");
@@ -92,7 +101,10 @@ public class NodePosition
     return x;
   }
 
-  public NodePosition setX(@Nonnull Double x) {
+  public NodePosition setX(
+      @Nonnull
+      Double x
+  ) {
     this.x = requireNonNull(x, "x");
     return this;
   }
@@ -101,7 +113,10 @@ public class NodePosition
     return y;
   }
 
-  public NodePosition setY(@Nonnull Double y) {
+  public NodePosition setY(
+      @Nonnull
+      Double y
+  ) {
     this.y = requireNonNull(y, "y");
     return this;
   }
@@ -143,7 +158,10 @@ public class NodePosition
     return mapId;
   }
 
-  public NodePosition setMapId(@Nonnull String mapId) {
+  public NodePosition setMapId(
+      @Nonnull
+      String mapId
+  ) {
     this.mapId = requireNonNull(mapId, "mapId");
     return this;
   }

@@ -15,7 +15,8 @@ import org.opentcs.data.TCSObject;
  * This class extends the BasicComboBoxEditor to display TCSObjects in editable JComboBoxs.
  */
 public class TCSObjectComboBoxEditor
-    extends BasicComboBoxEditor {
+    extends
+      BasicComboBoxEditor {
 
   /**
    * The last selected item in the combo box.

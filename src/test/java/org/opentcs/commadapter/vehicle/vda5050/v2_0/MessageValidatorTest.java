@@ -8,6 +8,7 @@
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.connection.Connection;

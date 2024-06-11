@@ -7,20 +7,22 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1.message;
 
+import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.Limits.UINT32_MAX_VALUE;
+import static org.opentcs.util.Assertions.checkInRange;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.time.Instant;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
-import static org.opentcs.commadapter.vehicle.vda5050.common.Limits.UINT32_MAX_VALUE;
-import static org.opentcs.util.Assertions.checkInRange;
 
 /**
  * Defines basic information contained in all VDA5050 messages.
  */
 public abstract class Header
-    implements Serializable {
+    implements
+      Serializable {
 
   /**
    * {@code headerId} of a message.
@@ -51,15 +53,28 @@ public abstract class Header
 
   @JsonCreator
   public Header(
-      @Nonnull @JsonProperty(required = true, value = "headerId") Long headerId,
-      @Nonnull @JsonProperty(required = true, value = "timestamp") Instant timestamp,
-      @Nonnull @JsonProperty(required = true, value = "version") String version,
-      @Nonnull @JsonProperty(required = true, value = "manufacturer") String manufacturer,
-      @Nonnull @JsonProperty(required = true, value = "serialNumber") String serialNumber) {
-    this.headerId = checkInRange(requireNonNull(headerId, "headerId"),
-                                 0,
-                                 UINT32_MAX_VALUE,
-                                 "headerId");
+      @Nonnull
+      @JsonProperty(required = true, value = "headerId")
+      Long headerId,
+      @Nonnull
+      @JsonProperty(required = true, value = "timestamp")
+      Instant timestamp,
+      @Nonnull
+      @JsonProperty(required = true, value = "version")
+      String version,
+      @Nonnull
+      @JsonProperty(required = true, value = "manufacturer")
+      String manufacturer,
+      @Nonnull
+      @JsonProperty(required = true, value = "serialNumber")
+      String serialNumber
+  ) {
+    this.headerId = checkInRange(
+        requireNonNull(headerId, "headerId"),
+        0,
+        UINT32_MAX_VALUE,
+        "headerId"
+    );
     this.timestamp = requireNonNull(timestamp, "timestamp");
     this.version = requireNonNull(version, "version");
     this.manufacturer = requireNonNull(manufacturer, "manufacturer");
@@ -70,18 +85,26 @@ public abstract class Header
     return headerId;
   }
 
-  public void setHeaderId(@Nonnull Long headerId) {
-    this.headerId = checkInRange(requireNonNull(headerId, "headerId"),
-                                 0,
-                                 UINT32_MAX_VALUE,
-                                 "headerId");
+  public void setHeaderId(
+      @Nonnull
+      Long headerId
+  ) {
+    this.headerId = checkInRange(
+        requireNonNull(headerId, "headerId"),
+        0,
+        UINT32_MAX_VALUE,
+        "headerId"
+    );
   }
 
   public Instant getTimestamp() {
     return timestamp;
   }
 
-  public void setTimestamp(@Nonnull Instant timestamp) {
+  public void setTimestamp(
+      @Nonnull
+      Instant timestamp
+  ) {
     this.timestamp = requireNonNull(timestamp, "timestamp");
   }
 
@@ -89,7 +112,10 @@ public abstract class Header
     return version;
   }
 
-  public void setVersion(@Nonnull String version) {
+  public void setVersion(
+      @Nonnull
+      String version
+  ) {
     this.version = requireNonNull(version, "version");
   }
 
@@ -97,7 +123,10 @@ public abstract class Header
     return manufacturer;
   }
 
-  public void setManufacturer(@Nonnull String manufacturer) {
+  public void setManufacturer(
+      @Nonnull
+      String manufacturer
+  ) {
     this.manufacturer = requireNonNull(manufacturer, "manufacturer");
   }
 
@@ -105,7 +134,10 @@ public abstract class Header
     return serialNumber;
   }
 
-  public void setSerialNumber(@Nonnull String serialNumber) {
+  public void setSerialNumber(
+      @Nonnull
+      String serialNumber
+  ) {
     this.serialNumber = requireNonNull(serialNumber, "serialNumber");
   }
 

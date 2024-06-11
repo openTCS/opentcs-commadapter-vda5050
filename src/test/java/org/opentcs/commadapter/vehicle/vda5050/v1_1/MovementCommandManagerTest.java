@@ -7,6 +7,14 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.opentcs.commadapter.vehicle.vda5050.common.MovementCommandCompletedCondition.EDGE;
+import static org.opentcs.commadapter.vehicle.vda5050.common.MovementCommandCompletedCondition.EDGE_AND_NODE;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,14 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import org.opentcs.commadapter.vehicle.vda5050.common.MovementCommandCompletedCondition;
-import static org.opentcs.commadapter.vehicle.vda5050.common.MovementCommandCompletedCondition.EDGE;
-import static org.opentcs.commadapter.vehicle.vda5050.common.MovementCommandCompletedCondition.EDGE_AND_NODE;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Edge;
@@ -73,10 +74,12 @@ public class MovementCommandManagerTest {
   public void finishMovementWhenNodeAndEdgeStatesAreEmpty(
       MovementCommandCompletedCondition completedCondition
   ) {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source-point",
-                                                    "dest-point",
-                                                    false)
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        false
+    )
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId()).build();
 
@@ -93,10 +96,12 @@ public class MovementCommandManagerTest {
   public void keepMovementWhenEdgeStatesAreNotEmtpy(
       MovementCommandCompletedCondition completedCondition
   ) {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source-point",
-                                                    "dest-point",
-                                                    false)
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        false
+    )
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId())
         .withEdgeStatesFrom(association.getOrder())
@@ -112,10 +117,12 @@ public class MovementCommandManagerTest {
 
   @Test
   public void keepMovementWhenNodeStatesAreNotEmptyForEdgeAndNodeCondition() {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source-point",
-                                                    "dest-point",
-                                                    false)
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        false
+    )
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId())
         .withNodeStatesFrom(association.getOrder())
@@ -130,10 +137,12 @@ public class MovementCommandManagerTest {
 
   @Test
   public void finishMovementWhenEdgeStatesAreEmptyForEdgeCondition() {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source-point",
-                                                    "dest-point",
-                                                    false)
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        false
+    )
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId())
         .withNodeStatesFrom(association.getOrder())
@@ -149,11 +158,14 @@ public class MovementCommandManagerTest {
   @ParameterizedTest
   @EnumSource(MovementCommandCompletedCondition.class)
   public void keepFinalMovementWhenEdgeStatsAreNotEmpty(
-      MovementCommandCompletedCondition condition) {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source_point",
-                                                    "dest-point",
-                                                    true).build();
+      MovementCommandCompletedCondition condition
+  ) {
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source_point",
+        "dest-point",
+        true
+    ).build();
     State state = new StateBuilder(association.getOrder().getOrderId())
         .withEdgeStatesFrom(association.getOrder())
         .build();
@@ -168,11 +180,14 @@ public class MovementCommandManagerTest {
   @ParameterizedTest
   @EnumSource(MovementCommandCompletedCondition.class)
   public void keepFinalMovementWhenNodeStatsAreNotEmpty(
-      MovementCommandCompletedCondition condition) {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source_point",
-                                                    "dest-point",
-                                                    true).build();
+      MovementCommandCompletedCondition condition
+  ) {
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source_point",
+        "dest-point",
+        true
+    ).build();
     State state = new StateBuilder(association.getOrder().getOrderId())
         .withNodeStatesFrom(association.getOrder())
         .build();
@@ -187,11 +202,14 @@ public class MovementCommandManagerTest {
   @ParameterizedTest
   @EnumSource(MovementCommandCompletedCondition.class)
   public void finishFinalMovementOnlyWhenBothEdgeAndNodeStatesAreEmtpy(
-      MovementCommandCompletedCondition condition) {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source_point",
-                                                    "dest-point",
-                                                    true).build();
+      MovementCommandCompletedCondition condition
+  ) {
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source_point",
+        "dest-point",
+        true
+    ).build();
     State state = new StateBuilder(association.getOrder().getOrderId())
         .build();
 
@@ -203,10 +221,12 @@ public class MovementCommandManagerTest {
 
   @Test
   public void finishMovementIfStateContainsNodesAndEdgesWithDifferentSequenceIds() {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source-point",
-                                                    "dest-point",
-                                                    false)
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        false
+    )
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId())
         .withNodeState(new NodeState("source-point", 3L, true))
@@ -223,10 +243,12 @@ public class MovementCommandManagerTest {
 
   @Test
   public void keepMovementWithDifferentOrderId() {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source-point",
-                                                    "dest-point",
-                                                    false)
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        false
+    )
         .build();
     State state = new StateBuilder("some-OTHER-order-id")
         .build();
@@ -240,10 +262,12 @@ public class MovementCommandManagerTest {
   @ParameterizedTest
   @EnumSource(ActionStatus.class)
   public void finishMovementWithRelatedAction(ActionStatus actionStatus) {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source-point",
-                                                    "dest-point",
-                                                    false)
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        false
+    )
         .withActionAtDestPoint("some-action-type", "some-action-id", BlockingType.NONE)
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId())
@@ -260,15 +284,19 @@ public class MovementCommandManagerTest {
   @ParameterizedTest
   @EnumSource(ActionStatus.class)
   public void finishMovementWithUnrelatedAction(ActionStatus actionStatus) {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source-point",
-                                                    "dest-point",
-                                                    false)
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        false
+    )
         .withActionAtDestPoint("some-action-type", "some-action-id", BlockingType.NONE)
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId())
-        .withActionState(new ActionState("some-OTHER-action-id", actionStatus)
-            .setActionType("some-action-type"))
+        .withActionState(
+            new ActionState("some-OTHER-action-id", actionStatus)
+                .setActionType("some-action-type")
+        )
         .build();
     // Actions that are unrelated to the movement command should not block it from completing.
     manager.enqueue(association);
@@ -280,10 +308,12 @@ public class MovementCommandManagerTest {
   @ParameterizedTest
   @EnumSource(value = ActionStatus.class, names = {"INITIALIZING", "RUNNING", "WAITING"})
   public void keepFinalMovementWithRelatedUnfinishedAction(ActionStatus actionStatus) {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source-point",
-                                                    "dest-point",
-                                                    true)
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        true
+    )
         .withActionAtDestPoint("some-action-type", "some-action-id", BlockingType.NONE)
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId())
@@ -301,10 +331,12 @@ public class MovementCommandManagerTest {
   @ParameterizedTest
   @EnumSource(value = ActionStatus.class, names = {"FINISHED", "FAILED"})
   public void finishFinalMovementWithRelatedFinishedAction(ActionStatus actionStatus) {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source-point",
-                                                    "dest-point",
-                                                    true)
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        true
+    )
         .withActionAtDestPoint("some-action-type", "some-action-id", BlockingType.NONE)
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId())
@@ -322,10 +354,12 @@ public class MovementCommandManagerTest {
   @ParameterizedTest
   @EnumSource(ActionStatus.class)
   public void finishFinalMovementWithUnrelatedAction(ActionStatus actionStatus) {
-    OrderAssociation association = new OrderBuilder("some-order-id",
-                                                    "source-point",
-                                                    "dest-point",
-                                                    true)
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        true
+    )
         .build();
     State state = new StateBuilder(association.getOrder().getOrderId())
         .withActionState(
@@ -356,14 +390,18 @@ public class MovementCommandManagerTest {
 
     OrderBuilder(String orderId, String sourcePoint, String destPoint, boolean isFinalMovement) {
       this.orderId = orderId;
-      command = new DummyMovementCommand(new Point(sourcePoint),
-                                         new Point(destPoint),
-                                         isFinalMovement);
+      command = new DummyMovementCommand(
+          new Point(sourcePoint),
+          new Point(destPoint),
+          isFinalMovement
+      );
     }
 
-    public OrderBuilder withActionAtDestPoint(String actionType,
-                                              String actionId,
-                                              BlockingType blockingType) {
+    public OrderBuilder withActionAtDestPoint(
+        String actionType,
+        String actionId,
+        BlockingType blockingType
+    ) {
       destActions.add(new Action(actionType, actionId, blockingType));
       return this;
     }
@@ -378,10 +416,12 @@ public class MovementCommandManagerTest {
                   new Node(command.getStep().getDestinationPoint().getName(), 2L, true, destActions)
               ),
               List.of(
-                  new Edge("some-path", 1L, true,
-                           command.getStep().getSourcePoint().getName(),
-                           command.getStep().getDestinationPoint().getName(),
-                           List.of())
+                  new Edge(
+                      "some-path", 1L, true,
+                      command.getStep().getSourcePoint().getName(),
+                      command.getStep().getDestinationPoint().getName(),
+                      List.of()
+                  )
               )
           );
       return new OrderAssociation(order, command);
@@ -393,16 +433,18 @@ public class MovementCommandManagerTest {
     private State state;
 
     StateBuilder(String orderId) {
-      state = new State(orderId, 0L, "", 0L,
-                        new ArrayList<>(),
-                        new ArrayList<>(),
-                        false,
-                        new ArrayList<>(),
-                        new BatteryState(0.0, false),
-                        OperatingMode.AUTOMATIC,
-                        List.of(),
-                        List.of(),
-                        new SafetyState(EStop.NONE, false));
+      state = new State(
+          orderId, 0L, "", 0L,
+          new ArrayList<>(),
+          new ArrayList<>(),
+          false,
+          new ArrayList<>(),
+          new BatteryState(0.0, false),
+          OperatingMode.AUTOMATIC,
+          List.of(),
+          List.of(),
+          new SafetyState(EStop.NONE, false)
+      );
     }
 
     public StateBuilder withNodeStatesFrom(Order order) {
@@ -455,7 +497,8 @@ public class MovementCommandManagerTest {
   }
 
   private class DummyMovementCommand
-      implements MovementCommand {
+      implements
+        MovementCommand {
 
     private final Route.Step dummyStep;
 

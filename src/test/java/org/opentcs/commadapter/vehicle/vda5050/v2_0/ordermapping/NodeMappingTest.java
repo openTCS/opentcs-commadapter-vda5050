@@ -12,9 +12,10 @@ import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING;
+
 import org.junit.jupiter.api.Test;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.NodePosition;
 import org.opentcs.data.model.Point;
 import org.opentcs.data.model.Triple;
@@ -54,8 +55,10 @@ public class NodeMappingTest {
     NodePosition np = NodeMapping.toNodePosition(point, vehicle, false);
 
     assertThat(np.getAllowedDeviationXY(), is(closeTo(1.2, 0.001)));
-    assertThat(np.getAllowedDeviationTheta(),
-               is(closeTo(Math.PI / 2, 0.00001)));
+    assertThat(
+        np.getAllowedDeviationTheta(),
+        is(closeTo(Math.PI / 2, 0.00001))
+    );
     assertThat(np.getMapId(), is("mapid-point"));
   }
 
@@ -73,8 +76,9 @@ public class NodeMappingTest {
 
     // Assert that the computed deviation is the distance between vehicle position and point,
     // with an extra tolerance added.
-    assertThat(np.getAllowedDeviationXY(),
-               is(closeTo(5.65685 + NodeMapping.EXTENDED_DEVIATION_RANGE_PADDING_DEFAULT, 0.00001))
+    assertThat(
+        np.getAllowedDeviationXY(),
+        is(closeTo(5.65685 + NodeMapping.EXTENDED_DEVIATION_RANGE_PADDING_DEFAULT, 0.00001))
     );
     assertThat(np.getAllowedDeviationTheta(), is(Math.PI));
   }

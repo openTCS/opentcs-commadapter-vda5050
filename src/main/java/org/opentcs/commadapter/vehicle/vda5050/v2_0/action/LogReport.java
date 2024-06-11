@@ -7,9 +7,10 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0.action;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.List;
-import static java.util.Objects.requireNonNull;
 import javax.annotation.Nonnull;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter;
@@ -19,7 +20,8 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
  * The VDA5050 {@code logReport} action.
  */
 public class LogReport
-    extends Action {
+    extends
+      Action {
 
   /**
    * This action's action type.
@@ -30,9 +32,14 @@ public class LogReport
    */
   public static final String PARAMKEY_REASON = "reason";
 
-  public LogReport(@Nonnull String actionId,
-                   @Nonnull BlockingType blockingType,
-                   @Nonnull String paramValueReason) {
+  public LogReport(
+      @Nonnull
+      String actionId,
+      @Nonnull
+      BlockingType blockingType,
+      @Nonnull
+      String paramValueReason
+  ) {
     super(ACTION_TYPE, actionId, blockingType);
 
     List<ActionParameter> actionParameters = new ArrayList<>();
