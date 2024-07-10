@@ -95,6 +95,11 @@ public interface ObjectProperties {
    */
   String PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING = "vda5050:extendedDeviationRangePadding";
   /**
+   * The prefix for vehicle properties that define the support status of optional parameters in
+   * order messages.
+   */
+  String PROPKEY_VEHICLE_OPTIONAL_ORDER_PARAMETER_PREFIX = "vda5050:optionalParams.order";
+  /**
    * The key property containing a list of executable action tags.
    */
   String PROPKEY_EXECUTABLE_ACTIONS_TAGS = "vda5050:actionTags";

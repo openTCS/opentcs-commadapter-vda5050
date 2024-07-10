@@ -139,6 +139,10 @@ The general behaviour with sending order messages is the following:
   This means that a vehicle that is currently at point _A_ and is supposed to move via points _B_ and _C_ to point _D_ will always receive three VDA5050 order messages.
 * The order messages sent by this vehicle driver contain both the _base_ and the _horizon_ of the vehicle's route.
   How many steps of the route are sent as _base_ and _horizon_ can be configured using the vehicle properties `vda5050:maxStepsBase` and `vda5050:maxStepsHorizon` -- see xref:configuration.adoc[].
+* VDA5050 order messages have fields that are optional, and order messages sent to a vehicle should not contain any optional fields that are not supported by that vehicle.
+  The support status for optional fields can be set via vehicle properties by using the prefix `vda5050:optionalParams` followed by the path to the optional field in the order message separated by dots.
+  The possible values are `REQUIRED`, `SUPPORTED` and `NOT_SUPPORTED`, with all optional fields being considered to be `SUPPORTED` by default.
+  For example, setting the optional field `allowedDeviationTheta` in `order/nodes/nodePosition` as not supported would require you to set the vehicle property `vda5050:optionalParams.order.nodes.nodePosition.allowedDeviationTheta` to the value `NOT_SUPPORTED`.
 * The vehicle driver sends the next order message (for the next step on the vehicle's route) only after a state message from the vehicle indicates that it has received the previous order message (by reflecting the order message's `orderId` and `orderUpdateId`.)
 ** In case the vehicle driver has sent an order message and receives a state message from the vehicle _not_ indicating that the vehicle has received the order message, the vehicle driver repeats the order message.
 ** In case the vehicle driver receives a state message from the vehicle indicating that the vehicle rejects an order, it does not repeat the order message or send further ones.

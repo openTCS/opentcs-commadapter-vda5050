@@ -7,7 +7,11 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
+import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import org.opentcs.commadapter.vehicle.vda5050.common.OptionalParameterSupport;
+import org.opentcs.commadapter.vehicle.vda5050.common.UnsupportedPropertiesFilter;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.ordermapping.OrderMapper;
 import org.opentcs.data.TCSObjectReference;
 import org.opentcs.data.model.Vehicle;
@@ -54,4 +58,16 @@ public interface CommAdapterComponentsFactory {
    * @return A new instance.
    */
   MovementCommandManager createMovementCommandManager(Vehicle vehicle);
+
+  /**
+   * Creates a new {@link UnsupportedPropertiesFilter}.
+   *
+   * @param vehicle The vehicle.
+   * @param propertiesExtractor The function to extract unsupported properties from the vehicle.
+   * @return A new instance.
+   */
+  UnsupportedPropertiesFilter createUnsupportedPropertiesFilter(
+      Vehicle vehicle,
+      Function<Vehicle, Map<String, OptionalParameterSupport>> propertiesExtractor
+  );
 }

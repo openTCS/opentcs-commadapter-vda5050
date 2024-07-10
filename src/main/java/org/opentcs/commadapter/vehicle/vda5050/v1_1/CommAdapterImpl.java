@@ -64,6 +64,7 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.State;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.visualization.Visualization;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.ExecutableActionsTagsPredicate;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.OrderMapper;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.UnsupportedPropertiesExtractor;
 import org.opentcs.customizations.kernel.KernelExecutor;
 import org.opentcs.data.model.Triple;
 import org.opentcs.data.model.Vehicle;
@@ -183,6 +184,7 @@ public class CommAdapterImpl
    * @param messageValidator Validates messages against JSON schemas.
    * @param jsonBinder Binds JSON strings to objects and vice versa.
    * @param configuration The adapter configuration.
+   * @param unsupportedPropertiesExtractor Extracts unsupported optional fields from the vehicle.
    */
   @Inject
   public CommAdapterImpl(
@@ -194,7 +196,8 @@ public class CommAdapterImpl
       MqttClientManager clientManager,
       MessageValidator messageValidator,
       JsonBinder jsonBinder,
-      CommAdapterConfiguration configuration
+      CommAdapterConfiguration configuration,
+      UnsupportedPropertiesExtractor unsupportedPropertiesExtractor
   ) {
     super(
         new ProcessModelImpl(vehicle),
@@ -215,8 +218,14 @@ public class CommAdapterImpl
     this.messageValidator = requireNonNull(messageValidator, "messageValidator");
     this.jsonBinder = requireNonNull(jsonBinder, "jsonBinder");
     this.configuration = requireNonNull(configuration, "configuration");
+    requireNonNull(unsupportedPropertiesExtractor, "unsupportedPropertiesExtractor");
 
     movementCommandManager = componentsFactory.createMovementCommandManager(vehicle);
+    this.jsonBinder.setFilter(
+        componentsFactory.createUnsupportedPropertiesFilter(
+            vehicle, unsupportedPropertiesExtractor
+        )
+    );
 
     messageResponseMatcher = new MessageResponseMatcher(
         this.getName(),
