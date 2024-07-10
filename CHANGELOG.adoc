@@ -15,7 +15,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.20 (2024-07-10)
 
 * New features and enhancements:
 ** Allow `null` for optional properties in JSON messages.
