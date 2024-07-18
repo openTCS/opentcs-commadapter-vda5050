@@ -100,6 +100,11 @@ public interface ObjectProperties {
    */
   String PROPKEY_VEHICLE_OPTIONAL_ORDER_PARAMETER_PREFIX = "vda5050:optionalParams.order";
   /**
+   * The key of the vehicle property containing the maximum distance (in mm)) that should be covered
+   * by the movement commands the vehicle receives in advance.
+   */
+  String PROPKEY_VEHICLE_MAX_DISTANCE_IN_ADVANCE = "vda5050:maxDistanceBase";
+  /**
    * The key property containing a list of executable action tags.
    */
   String PROPKEY_EXECUTABLE_ACTIONS_TAGS = "vda5050:actionTags";

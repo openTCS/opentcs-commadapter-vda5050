@@ -17,7 +17,9 @@ toc::[]
 
 == Unreleased
 
-...
+* New features and enhancements:
+** Implement distance check before sending new movement commands to a vehicle.
+   A new vehicle property (`vda5050:maxDistanceBase`) defines the maximum distance that may be covered by currently queued commands.
 
 == Version 0.20 (2024-07-10)
 

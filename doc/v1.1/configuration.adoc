@@ -30,6 +30,10 @@ The property value contains a string that should be used as the vehicle's rechar
 `vda5050:maxStepsBase` (optional)::
 The property value contains the decimal representation of the vehicle's base capacity, i.e. the maximum number of unfinished route steps in the VDA5050 order base that the vehicle can take, e.g. `10`.
 (Default value: `2`.)
+`vda5050:maxDistanceBase` (optional)::
+The property value contains the maximum distance in mm that may be covered by currently queued movement commands.
+Once the sum of all currently queued movement commands for a vehicle reaches the defined value, no additional commands are accepted.
+(Default value: `Long.MAX_VALUE` (approximately one lightyear))
 `vda5050:maxStepsHorizon` (optional)::
 The property value contains the decimal representation of the vehicle's horizon capacity, i.e. the maximum number of route steps in the VDA5050 order horizon that the vehicle can take, e.g. `10`.
 (Default: unlimited, i.e. all horizon steps on the prospective route.)

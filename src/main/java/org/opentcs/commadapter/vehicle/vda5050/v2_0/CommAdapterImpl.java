@@ -10,6 +10,7 @@ package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 import static java.util.Objects.requireNonNull;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyInteger;
+import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyLong;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_BASE;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_ERRORS_FATAL;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_ERRORS_WARNING;
@@ -19,6 +20,7 @@ import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROP
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_LENGTH_LOADED;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_LENGTH_UNLOADED;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MAX_DISTANCE_IN_ADVANCE;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MIN_VISU_INTERVAL;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_PAUSED;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_RECHARGE_OPERATION;
@@ -26,6 +28,7 @@ import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROP
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.StateMappings.toLoadHandlingDevices;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.StateMappings.toVehicleLength;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.StateMappings.toVehicleState;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.OperatingMode.AUTOMATIC;
 
 import com.google.inject.assistedinject.Assisted;
 import java.beans.PropertyChangeEvent;
@@ -38,11 +41,13 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration;
 import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration.ConfigIntegrationLevel;
 import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration.ConfigOperatingMode;
+import org.opentcs.commadapter.vehicle.vda5050.common.DistanceInAdvanceController;
 import org.opentcs.commadapter.vehicle.vda5050.common.JsonBinder;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.ConnectionEventListener;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.IncomingMessage;
@@ -173,6 +178,10 @@ public class CommAdapterImpl
    * The comm adapter configuration.
    */
   private final CommAdapterConfiguration configuration;
+  /**
+   * Limits the amount of orders sent to the vehicle in advance.
+   */
+  private final DistanceInAdvanceController distanceInAdvanceController;
 
   /**
    * Creates a new instance.
@@ -225,6 +234,9 @@ public class CommAdapterImpl
         componentsFactory.createUnsupportedPropertiesFilter(
             vehicle, unsupportedPropertiesExtractor
         )
+    );
+    distanceInAdvanceController = componentsFactory.createDistanceInAdvanceController(
+        getPropertyLong(PROPKEY_VEHICLE_MAX_DISTANCE_IN_ADVANCE, vehicle).orElse(Long.MAX_VALUE)
     );
 
     messageResponseMatcher = new MessageResponseMatcher(
@@ -385,6 +397,15 @@ public class CommAdapterImpl
     Order order = orderMapper.toOrder(cmd);
 
     messageResponseMatcher.enqueueCommand(order, cmd);
+  }
+
+  @Override
+  public boolean canAcceptNextCommand() {
+    return super.canAcceptNextCommand() && distanceInAdvanceController.canAcceptNextCommand(
+        Stream
+            .concat(getCommandQueue().stream(), getSentQueue().stream())
+            .collect(Collectors.toList())
+    );
   }
 
   @Override

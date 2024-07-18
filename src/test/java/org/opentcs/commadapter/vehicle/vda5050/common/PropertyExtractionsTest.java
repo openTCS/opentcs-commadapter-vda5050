@@ -175,6 +175,43 @@ public class PropertyExtractionsTest {
   }
 
   @Test
+  public void returnPropertyValueIfPresentLong() {
+    Point point = new Point("some-point").withProperty("some-property", "42");
+
+    Optional<Long> result;
+
+    result = PropertyExtractions.getPropertyLong("some-property", point);
+
+    assertTrue(result.isPresent());
+    assertThat(result.get(), is(42L));
+
+    point = point.withProperty("some-other-property", "23");
+
+    result = PropertyExtractions.getPropertyLong("some-other-property", point);
+
+    assertTrue(result.isPresent());
+    assertThat(result.get(), is(23L));
+  }
+
+  @Test
+  public void preferObjectsInGivenOrderLong() {
+    Point point1 = new Point("point1").withProperty("some-property", "42");
+    Point point2 = new Point("point2").withProperty("some-property", "23");
+
+    Optional<Long> result;
+
+    result = PropertyExtractions.getPropertyLong("some-property", point1, point2);
+
+    assertTrue(result.isPresent());
+    assertThat(result.get(), is(42L));
+
+    result = PropertyExtractions.getPropertyLong("some-property", point2, point1);
+
+    assertTrue(result.isPresent());
+    assertThat(result.get(), is(23L));
+  }
+
+  @Test
   public void returnPropertyValueIfPresentInMovementCommand() {
     MovementCommand command = new DummyMovementCommand(null, Map.of("some-property", "value1"));
 

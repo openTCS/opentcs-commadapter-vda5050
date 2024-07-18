@@ -10,6 +10,7 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.opentcs.commadapter.vehicle.vda5050.common.DistanceInAdvanceController;
 import org.opentcs.commadapter.vehicle.vda5050.common.OptionalParameterSupport;
 import org.opentcs.commadapter.vehicle.vda5050.common.UnsupportedPropertiesFilter;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.OrderMapper;
@@ -70,4 +71,12 @@ public interface CommAdapterComponentsFactory {
       Vehicle vehicle,
       Function<Vehicle, Map<String, OptionalParameterSupport>> propertiesExtractor
   );
+
+  /**
+   * Creates a new {@link DistanceInAdvanceController} for the given vehicle.
+   *
+   * @param maxDistanceInAdvance The maximum distance that may be covered in advance.
+   * @return A new instance.
+   */
+  DistanceInAdvanceController createDistanceInAdvanceController(long maxDistanceInAdvance);
 }

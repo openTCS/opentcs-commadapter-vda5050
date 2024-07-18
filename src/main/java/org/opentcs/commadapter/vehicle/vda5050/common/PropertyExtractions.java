@@ -105,6 +105,34 @@ public class PropertyExtractions {
   }
 
   /**
+   * Searches objects for a property and tries to parse it as a long.
+   *
+   * @param key The property key to search for
+   * @param objects The objects to search through.
+   * @return The value of the first occurrence of the property, or {@link Optional#EMPTY}, if no
+   * property with the given key is found.
+   */
+  public static Optional<Long> getPropertyLong(String key, TCSObject<?>... objects) {
+    return Stream.of(objects)
+        .filter(object -> object.getProperties().containsKey(key))
+        .map(object -> {
+          try {
+            return Long.valueOf(object.getProperty(key));
+          }
+          catch (NumberFormatException e) {
+            LOG.error(
+                "Property '{}' for TCSObject {} cannot be parsed as a Long.",
+                key,
+                object.getName()
+            );
+            return null;
+          }
+        })
+        .filter(Objects::nonNull)
+        .findFirst();
+  }
+
+  /**
    * Searches a movement command or its destination location (if any) for a property.
    *
    * @param key The property key to search for.
