@@ -57,5 +57,9 @@ For details regarding the functionality behind this property, see the 'Movement 
 The property value contains a padding distance in m, which is added when a node's deviation range is extended to include the vehicle position.
 If the value is negative, it is instead replaced with zero.
 (Default value: `0.01`.)
+`vda5050:optionalParams.order` (prefix, optional)::
+Property keys that start with this prefix should be extended by the path to the optional field in the order message separated by dots.
+The property value contains the support status for the optional field, which can be `REQUIRED`, `SUPPORTED`, or `NOT_SUPPORTED`.
+(Default value: `SUPPORTED`)
 
 NOTE: If any of the required properties are not set or contain unusable data, the driver may fail to be instantiated for / attached to the vehicle.
