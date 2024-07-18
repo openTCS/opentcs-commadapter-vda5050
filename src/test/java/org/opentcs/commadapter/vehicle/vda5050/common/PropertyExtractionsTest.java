@@ -159,7 +159,7 @@ public class PropertyExtractionsTest {
   }
 
   @Test
-  public void returnEmptyIfPropertyNotPresentFloat() {
+  public void returnEmptyIfPropertyNotPresentDouble() {
     Point point1 = new Point("point1").withProperty("some-property", "12.0");
     Point point2 = new Point("point2").withProperty("some-property", "45.0");
 

@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class PropertyExtractions {
 
   /**
-   * This class' logger.
+   * This class's logger.
    */
   private static final Logger LOG = LoggerFactory.getLogger(PropertyExtractions.class);
 
@@ -38,7 +38,7 @@ public class PropertyExtractions {
    *
    * @param key The property key to search for
    * @param objects The TCSObjects to search through.
-   * @return The value of the first occurance of the property of {@link Optional#EMPTY} if no
+   * @return The value of the first occurrence of the property of {@link Optional#EMPTY} if no
    * property with the given key is found.
    */
   public static Optional<String> getProperty(String key, TCSObject<?>... objects) {
@@ -53,7 +53,7 @@ public class PropertyExtractions {
    *
    * @param key The property key to search for
    * @param objects The objects to search through.
-   * @return The value of the first occurance of the property, or {@link Optional#EMPTY}, if no
+   * @return The value of the first occurrence of the property, or {@link Optional#EMPTY}, if no
    * property with the given key is found.
    */
   public static Optional<Integer> getPropertyInteger(String key, TCSObject<?>... objects) {
@@ -81,7 +81,7 @@ public class PropertyExtractions {
    *
    * @param key The property key to search for
    * @param objects The objects to search through.
-   * @return The value of the first occurance of the property, or {@link Optional#EMPTY}, if no
+   * @return The value of the first occurrence of the property, or {@link Optional#EMPTY}, if no
    * property with the given key is found.
    */
   public static Optional<Double> getPropertyDouble(String key, TCSObject<?>... objects) {
@@ -93,7 +93,7 @@ public class PropertyExtractions {
           }
           catch (NumberFormatException e) {
             LOG.error(
-                "Property '{}' for TCSObject {} cannot be parsed as an Integer.",
+                "Property '{}' for TCSObject {} cannot be parsed as a Double.",
                 key,
                 object.getName()
             );
@@ -109,7 +109,7 @@ public class PropertyExtractions {
    *
    * @param key The property key to search for.
    * @param command The movement command to search through.
-   * @return The value of the first occurance of the property of {@link Optional#EMPTY} if no
+   * @return The value of the first occurrence of the property of {@link Optional#EMPTY} if no
    * property with the given key is found.
    */
   public static Optional<String> getProperty(String key, MovementCommand command) {
@@ -127,7 +127,7 @@ public class PropertyExtractions {
    *
    * @param key The property key to search for.
    * @param command The movement command to search through.
-   * @return The value of the first occurance of the property of {@link Optional#EMPTY} if no
+   * @return The value of the first occurrence of the property of {@link Optional#EMPTY} if no
    * property with the given key is found.
    */
   public static Optional<Float> getPropertyFloat(String key, MovementCommand command) {
