@@ -151,7 +151,7 @@ public class ActionsMapping {
     requireNonNull(destinationLocation, "destinationLocation");
     requireNonNull(destinationType, "destinationType");
 
-    if (command.isWithoutOperation()) {
+    if (command.hasEmptyOperation()) {
       return Optional.empty();
     }
 

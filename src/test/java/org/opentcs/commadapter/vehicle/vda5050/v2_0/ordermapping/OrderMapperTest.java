@@ -506,6 +506,18 @@ public class OrderMapperTest {
     }
 
     @Override
+    public DriveOrder getDriveOrder() {
+      return new DriveOrder(new DriveOrder.Destination(new Point("some-point").getReference()))
+          .withRoute(dummyRoute);
+    }
+
+    @Override
+    public TransportOrder getTransportOrder() {
+      throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Deprecated
+    @Override
     public Route getRoute() {
       return dummyRoute;
     }
@@ -524,6 +536,7 @@ public class OrderMapperTest {
       this.operation = operation;
     }
 
+    @Deprecated
     @Override
     public boolean isWithoutOperation() {
       return operation == null;

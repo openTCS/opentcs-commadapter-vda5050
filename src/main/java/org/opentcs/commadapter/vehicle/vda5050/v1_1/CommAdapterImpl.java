@@ -210,7 +210,6 @@ public class CommAdapterImpl
     super(
         new ProcessModelImpl(vehicle),
         getPropertyInteger(PROPKEY_VEHICLE_MAX_STEPS_BASE, vehicle).orElse(2) + 1,
-        getPropertyInteger(PROPKEY_VEHICLE_MAX_STEPS_BASE, vehicle).orElse(2),
         getProperty(PROPKEY_VEHICLE_RECHARGE_OPERATION, vehicle)
             .orElse(DestinationOperations.CHARGE),
         kernelExecutor
@@ -264,11 +263,11 @@ public class CommAdapterImpl
   public void initialize() {
     super.initialize();
     orderMapper = componentsFactory.createOrderMapper(
-        getProcessModel().getVehicleReference(),
+        getProcessModel().getReference(),
         isActionExecutable
     );
     vehiclePositionResolver = componentsFactory.createVehiclePositionResolver(
-        getProcessModel().getVehicleReference()
+        getProcessModel().getReference()
     );
   }
 
@@ -372,7 +371,7 @@ public class CommAdapterImpl
   @Override
   protected VehicleProcessModelTO createCustomTransferableProcessModel() {
     return new ProcessModelImplTO()
-        .setVehicleRef(getProcessModel().getVehicleReference())
+        .setVehicleRef(getProcessModel().getReference())
         .setCurrentState(getProcessModel().getCurrentState())
         .setPreviousState(getProcessModel().getPreviousState())
         .setLastOrderSent(getProcessModel().getLastOrderSent())
@@ -398,7 +397,7 @@ public class CommAdapterImpl
   public boolean canAcceptNextCommand() {
     return super.canAcceptNextCommand() && distanceInAdvanceController.canAcceptNextCommand(
         Stream
-            .concat(getCommandQueue().stream(), getSentQueue().stream())
+            .concat(getUnsentCommands().stream(), getSentCommands().stream())
             .collect(Collectors.toList())
     );
   }
@@ -483,7 +482,7 @@ public class CommAdapterImpl
       getProcessModel().setBrokerConnected(false);
       getProcessModel().setCommAdapterConnected(false);
       getProcessModel().setVehicleIdle(true);
-      getProcessModel().setVehicleState(Vehicle.State.UNKNOWN);
+      getProcessModel().setState(Vehicle.State.UNKNOWN);
     });
   }
 
@@ -575,11 +574,11 @@ public class CommAdapterImpl
     if (message.getConnectionState() == ConnectionState.OFFLINE
         || message.getConnectionState() == ConnectionState.CONNECTIONBROKEN) {
       getProcessModel().setCommAdapterConnected(false);
-      getProcessModel().setVehicleState(Vehicle.State.UNKNOWN);
+      getProcessModel().setState(Vehicle.State.UNKNOWN);
     }
     else if (message.getConnectionState() == ConnectionState.ONLINE) {
       getProcessModel().setCommAdapterConnected(true);
-      getProcessModel().setVehicleState(Vehicle.State.IDLE);
+      getProcessModel().setState(Vehicle.State.IDLE);
     }
     getProcessModel().setCurrentConnection(message);
   }
@@ -596,41 +595,41 @@ public class CommAdapterImpl
     getProcessModel().setCurrentState(state);
 
     String newVehiclePosition = vehiclePositionResolver.resolveVehiclePosition(
-        getProcessModel().getVehiclePosition(), getProcessModel().getCurrentState()
+        getProcessModel().getPosition(), getProcessModel().getCurrentState()
     );
-    if (!Objects.equals(newVehiclePosition, getProcessModel().getVehiclePosition())) {
+    if (!Objects.equals(newVehiclePosition, getProcessModel().getPosition())) {
       LOG.debug("{}: Vehicle is now at point {}", getName(), newVehiclePosition);
-      getProcessModel().setVehiclePosition(newVehiclePosition);
+      getProcessModel().setPosition(newVehiclePosition);
     }
 
     if (state.getAgvPosition() != null) {
       processVehiclePosition(state.getAgvPosition());
     }
 
-    getProcessModel().setVehicleLoadHandlingDevices(toLoadHandlingDevices(state));
-    getProcessModel().setVehicleEnergyLevel(state.getBatteryState().getBatteryCharge().intValue());
-    getProcessModel().setVehicleProperty(
+    getProcessModel().setLoadHandlingDevices(toLoadHandlingDevices(state));
+    getProcessModel().setEnergyLevel(state.getBatteryState().getBatteryCharge().intValue());
+    getProcessModel().setProperty(
         PROPKEY_VEHICLE_ERRORS_FATAL,
         StateMappings.toErrorPropertyValue(state, ErrorLevel.FATAL)
     );
-    getProcessModel().setVehicleProperty(
+    getProcessModel().setProperty(
         PROPKEY_VEHICLE_ERRORS_WARNING,
         StateMappings.toErrorPropertyValue(state, ErrorLevel.WARNING)
     );
-    getProcessModel().setVehicleProperty(
+    getProcessModel().setProperty(
         PROPKEY_VEHICLE_INFORMATIONS_INFO,
         StateMappings.toInfoPropertyValue(state, InfoLevel.INFO)
     );
-    getProcessModel().setVehicleProperty(
+    getProcessModel().setProperty(
         PROPKEY_VEHICLE_INFORMATIONS_DEBUG,
         StateMappings.toInfoPropertyValue(state, InfoLevel.DEBUG)
     );
-    getProcessModel().setVehicleProperty(
+    getProcessModel().setProperty(
         PROPKEY_VEHICLE_PAUSED,
         StateMappings.toPausedPropertyValue(state)
     );
-    getProcessModel().setVehicleState(toVehicleState(state));
-    getProcessModel().setVehicleLength(
+    getProcessModel().setState(toVehicleState(state));
+    getProcessModel().setLength(
         toVehicleLength(state, vehicleLengthUnloaded, vehicleLengthLoaded)
     );
 
@@ -643,9 +642,9 @@ public class CommAdapterImpl
   MovementCommand finishedCommand) {
     requireNonNull(finishedCommand, "finishedCommand");
 
-    MovementCommand oldestCommand = getSentQueue().peek();
+    MovementCommand oldestCommand = getSentCommands().peek();
     if (Objects.equals(finishedCommand, oldestCommand)) {
-      getSentQueue().poll();
+      getSentCommands().poll();
       getProcessModel().commandExecuted(oldestCommand);
     }
     else {
@@ -670,7 +669,7 @@ public class CommAdapterImpl
           getName(),
           state.getOperatingMode()
       );
-      getProcessModel().setVehiclePosition(null);
+      getProcessModel().setPosition(null);
     }
 
     configuration.onOpModeChangeDoUpdateIntegrationLevel()
@@ -704,14 +703,14 @@ public class CommAdapterImpl
   }
 
   private void processVehiclePosition(AgvPosition position) {
-    getProcessModel().setVehiclePrecisePosition(
+    getProcessModel().setPrecisePosition(
         new Triple(
             (long) (position.getX() * 1000.0),
             (long) (position.getY() * 1000.0),
             0
         )
     );
-    getProcessModel().setVehicleOrientationAngle(Math.toDegrees(position.getTheta()));
+    getProcessModel().setOrientationAngle(Math.toDegrees(position.getTheta()));
   }
 
   /**

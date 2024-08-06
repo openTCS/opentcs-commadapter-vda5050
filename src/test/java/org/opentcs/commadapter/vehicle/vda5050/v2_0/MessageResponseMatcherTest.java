@@ -39,7 +39,9 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.SafetyState;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.State;
 import org.opentcs.data.model.Location;
 import org.opentcs.data.model.Point;
+import org.opentcs.data.order.DriveOrder;
 import org.opentcs.data.order.Route;
+import org.opentcs.data.order.TransportOrder;
 import org.opentcs.drivers.vehicle.MovementCommand;
 
 /**
@@ -291,7 +293,12 @@ public class MessageResponseMatcherTest {
         MovementCommand {
 
     @Override
-    public Route getRoute() {
+    public DriveOrder getDriveOrder() {
+      throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public TransportOrder getTransportOrder() {
       throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -305,6 +312,7 @@ public class MessageResponseMatcherTest {
       throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Deprecated
     @Override
     public boolean isWithoutOperation() {
       throw new UnsupportedOperationException("Not supported yet.");

@@ -23,7 +23,9 @@ import org.opentcs.data.model.Location;
 import org.opentcs.data.model.LocationType;
 import org.opentcs.data.model.Point;
 import org.opentcs.data.model.Vehicle;
+import org.opentcs.data.order.DriveOrder;
 import org.opentcs.data.order.Route;
+import org.opentcs.data.order.TransportOrder;
 import org.opentcs.drivers.vehicle.MovementCommand;
 
 /**
@@ -330,7 +332,12 @@ public class PropertyExtractionsTest {
     }
 
     @Override
-    public Route getRoute() {
+    public DriveOrder getDriveOrder() {
+      throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public TransportOrder getTransportOrder() {
       throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -348,6 +355,7 @@ public class PropertyExtractionsTest {
       throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Deprecated
     @Override
     public boolean isWithoutOperation() {
       throw new UnsupportedOperationException("Not supported yet.");

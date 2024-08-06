@@ -272,7 +272,7 @@ public class OrderMapper {
       @Nonnull
       Vehicle vehicle
   ) {
-    if (command.isWithoutOperation() || command.getOpLocation() == null) {
+    if (command.hasEmptyOperation() || command.getOpLocation() == null) {
       return Optional.empty();
     }
 
@@ -350,12 +350,12 @@ public class OrderMapper {
     int maxRouteIndex = Math.min(
         command.getStep().getRouteIndex()
             + getPropertyInteger(ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_HORIZON, vehicle)
-                .orElse(command.getRoute().getSteps().size()),
-        command.getRoute().getSteps().size()
+                .orElse(command.getDriveOrder().getRoute().getSteps().size()),
+        command.getDriveOrder().getRoute().getSteps().size()
     );
 
     for (int i = command.getStep().getRouteIndex() + 1; i < maxRouteIndex; i++) {
-      Step step = command.getRoute().getSteps().get(i);
+      Step step = command.getDriveOrder().getRoute().getSteps().get(i);
 
       order.getEdges().add(mapHorizonEdge(command, step, vehicle));
 
@@ -407,7 +407,7 @@ public class OrderMapper {
             command,
             vehicle,
             step,
-            step.getRouteIndex() == command.getRoute().getSteps().size() - 1
+            step.getRouteIndex() == command.getDriveOrder().getRoute().getSteps().size() - 1
         )
     );
   }
