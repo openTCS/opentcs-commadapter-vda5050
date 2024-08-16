@@ -11,12 +11,12 @@ import static java.util.Objects.requireNonNull;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.I18nCommAdapter.BUNDLE_PATH;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.UUID;
-import javax.inject.Inject;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.ProcessModelImpl;
@@ -82,6 +82,7 @@ public class StatusPanel
    * @param callWrapper The call wrapper to use for service calls.
    */
   @Inject
+  @SuppressWarnings("this-escape")
   public StatusPanel(
       @Assisted
       ProcessModelImplTO processModel,

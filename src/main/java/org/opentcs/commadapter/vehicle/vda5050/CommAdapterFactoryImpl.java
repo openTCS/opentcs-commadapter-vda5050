@@ -9,11 +9,11 @@ package org.opentcs.commadapter.vehicle.vda5050;
 
 import static java.util.Objects.requireNonNull;
 
+import jakarta.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterFactory.V1dot1;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.CommAdapterFactory.V2dot0;
 import org.opentcs.data.model.Vehicle;

@@ -66,7 +66,7 @@ public class ActionComboBoxModel
   );
 
   public ActionComboBoxModel() {
-    addAll(ACTION_TEMPLATES.values());
+    super(ACTION_TEMPLATES.values().toArray(new Action[0]));
   }
 
   @Override

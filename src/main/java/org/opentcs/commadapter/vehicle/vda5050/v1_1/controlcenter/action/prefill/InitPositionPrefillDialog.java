@@ -19,11 +19,11 @@ import static org.opentcs.commadapter.vehicle.vda5050.v1_1.action.InitPosition.P
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.action.InitPosition.PARAMKEY_Y;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import javax.inject.Inject;
 import org.opentcs.access.KernelServicePortal;
 import org.opentcs.components.kernel.services.VehicleService;
 import org.opentcs.data.model.Point;
@@ -50,6 +50,7 @@ public class InitPositionPrefillDialog
    * @param modal Wether or not this dialog is modal
    */
   @Inject
+  @SuppressWarnings("this-escape")
   public InitPositionPrefillDialog(
       KernelServicePortal servicePortal,
       @Assisted

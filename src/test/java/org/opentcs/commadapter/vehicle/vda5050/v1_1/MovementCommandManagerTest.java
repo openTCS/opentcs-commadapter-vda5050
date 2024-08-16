@@ -16,7 +16,6 @@ import static org.opentcs.commadapter.vehicle.vda5050.common.MovementCommandComp
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -40,7 +39,6 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.NodeState;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.OperatingMode;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.SafetyState;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.State;
-import org.opentcs.data.model.Location;
 import org.opentcs.data.model.Path;
 import org.opentcs.data.model.Point;
 import org.opentcs.data.model.Vehicle;
@@ -384,6 +382,34 @@ public class MovementCommandManagerTest {
         );
   }
 
+  private MovementCommand createMovementCommand(Point source, Point dest, boolean finalMovement) {
+    Path path = null;
+    if (source != null && dest != null) {
+      path = new Path("Path-0001", source.getReference(), dest.getReference());
+    }
+
+    Route.Step dummyStep = new Route.Step(
+        path,
+        source,
+        dest,
+        Vehicle.Orientation.FORWARD,
+        0
+    );
+
+    return new MovementCommand(
+        new TransportOrder("1", List.of()),
+        new DriveOrder(new DriveOrder.Destination(dest.getReference())),
+        dummyStep,
+        "NOP",
+        null,
+        finalMovement,
+        null,
+        dest,
+        "NOP",
+        Map.of()
+    );
+  }
+
   private class OrderBuilder {
 
     private String orderId;
@@ -392,7 +418,7 @@ public class MovementCommandManagerTest {
 
     OrderBuilder(String orderId, String sourcePoint, String destPoint, boolean isFinalMovement) {
       this.orderId = orderId;
-      command = new DummyMovementCommand(
+      command = createMovementCommand(
           new Point(sourcePoint),
           new Point(destPoint),
           isFinalMovement
@@ -495,95 +521,6 @@ public class MovementCommandManagerTest {
 
     public State build() {
       return state;
-    }
-  }
-
-  private class DummyMovementCommand
-      implements
-        MovementCommand {
-
-    private final Route.Step dummyStep;
-
-    private boolean finalMovement;
-
-    DummyMovementCommand(Point source, Point dest, boolean finalMovement) {
-      this(source, dest);
-      this.finalMovement = finalMovement;
-    }
-
-    DummyMovementCommand(Point source, Point dest) {
-      Path path = null;
-      if (source != null && dest != null) {
-        path = new Path("Path-0001", source.getReference(), dest.getReference());
-      }
-
-      dummyStep = new Route.Step(
-          path,
-          source,
-          dest,
-          Vehicle.Orientation.FORWARD,
-          0
-      );
-    }
-
-    @Override
-    public DriveOrder getDriveOrder() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public TransportOrder getTransportOrder() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Route.Step getStep() {
-      return dummyStep;
-    }
-
-    @Override
-    public String getOperation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Deprecated
-    @Override
-    public boolean isWithoutOperation() {
-      return true;
-    }
-
-    @Override
-    public Location getOpLocation() {
-      return null;
-    }
-
-    @Override
-    public boolean isFinalMovement() {
-      return finalMovement;
-    }
-
-    public void setFinalMovement(boolean finalMovement) {
-      this.finalMovement = finalMovement;
-    }
-
-    @Override
-    public Point getFinalDestination() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Location getFinalDestinationLocation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getFinalOperation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Map<String, String> getProperties() {
-      return new HashMap<>();
     }
   }
 }

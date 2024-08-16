@@ -32,6 +32,7 @@ public class LogReport
    */
   public static final String PARAMKEY_REASON = "reason";
 
+  @SuppressWarnings("this-escape")
   public LogReport(
       @Nonnull
       String actionId,

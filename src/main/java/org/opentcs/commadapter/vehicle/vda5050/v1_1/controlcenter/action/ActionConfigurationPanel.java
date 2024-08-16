@@ -9,6 +9,7 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.action;
 
 import static java.util.Objects.requireNonNull;
 
+import jakarta.inject.Inject;
 import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
-import javax.inject.Inject;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.action.InitPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.action.prefill.ActionPrefillDialog;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.action.prefill.PrefillDialogFactory;
@@ -45,6 +45,7 @@ public class ActionConfigurationPanel
   /**
    * Default constructor only for use with the GUI editor.
    */
+  @SuppressWarnings("this-escape")
   public ActionConfigurationPanel() {
     prefillDialogFactory = null;
 
@@ -57,6 +58,7 @@ public class ActionConfigurationPanel
    * @param prefillDialogFactory The prefill dialog factory
    */
   @Inject
+  @SuppressWarnings("this-escape")
   public ActionConfigurationPanel(PrefillDialogFactory prefillDialogFactory) {
     this.prefillDialogFactory = requireNonNull(prefillDialogFactory, "prefillDialogFactory");
 

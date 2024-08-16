@@ -86,7 +86,7 @@ public class ActionsMappingTest {
     LocationType locationType = new LocationType("locType");
     Location location = new Location("destLoc", locationType.getReference());
 
-    MovementCommand command = new DummyMovementCommand("destOp", location)
+    MovementCommand command = createMovementCommand("destOp", location)
         .withFinalMovement(true)
         .withProperties(
             Map.of(
@@ -117,7 +117,7 @@ public class ActionsMappingTest {
     LocationType locationType = new LocationType("locType");
     Location location = new Location("destLoc", locationType.getReference());
 
-    MovementCommand command = new DummyMovementCommand("destOp", location)
+    MovementCommand command = createMovementCommand("destOp", location)
         .withFinalMovement(false)
         .withProperties(
             Map.of(
@@ -456,7 +456,7 @@ public class ActionsMappingTest {
     LocationType locationType = new LocationType("locType");
     Location location = new Location("destLoc", locationType.getReference());
 
-    MovementCommand command = new DummyMovementCommand("destOp", location)
+    MovementCommand command = createMovementCommand("destOp", location)
         .withProperties(
             Map.of(
                 PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".blockingType", "HARD",
@@ -480,7 +480,7 @@ public class ActionsMappingTest {
     Vehicle vehicle = new Vehicle("vehicle");
     LocationType locationType = new LocationType("locType");
     Location location = new Location("destLoc", locationType.getReference());
-    MovementCommand command = new DummyMovementCommand("destOp", location);
+    MovementCommand command = createMovementCommand("destOp", location);
 
     Optional<PropertyAction> action
         = ActionsMapping.fromMovementCommand(vehicle, command, location, locationType);
@@ -497,7 +497,7 @@ public class ActionsMappingTest {
     LocationType locationType = new LocationType("locType")
         .withProperty(PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".destOp.blockingType", "SOFT");
     Location location = new Location("destLoc", locationType.getReference());
-    MovementCommand command = new DummyMovementCommand("destOp", location);
+    MovementCommand command = createMovementCommand("destOp", location);
 
     Optional<PropertyAction> action
         = ActionsMapping.fromMovementCommand(vehicle, command, location, locationType);
@@ -508,7 +508,7 @@ public class ActionsMappingTest {
     // Location overrides location type
     location = new Location("destLoc", locationType.getReference())
         .withProperty(PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".destOp.blockingType", "NONE");
-    command = new DummyMovementCommand("destOp", location);
+    command = createMovementCommand("destOp", location);
 
     action = ActionsMapping.fromMovementCommand(vehicle, command, location, locationType);
 
@@ -516,7 +516,7 @@ public class ActionsMappingTest {
     assertThat(action.get().getBlockingType(), is(BlockingType.NONE));
 
     // Transport order destination overrides location
-    command = new DummyMovementCommand("destOp", location)
+    command = createMovementCommand("destOp", location)
         .withProperties(Map.of(PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".blockingType", "HARD"));
 
     action = ActionsMapping.fromMovementCommand(vehicle, command, location, locationType);
@@ -530,7 +530,7 @@ public class ActionsMappingTest {
     Vehicle vehicle = new Vehicle("vehicle");
     LocationType locationType = new LocationType("locType");
     Location location = new Location("destLoc", locationType.getReference());
-    MovementCommand command = new DummyMovementCommand("destOp", location);
+    MovementCommand command = createMovementCommand("destOp", location);
 
     Optional<PropertyAction> action
         = ActionsMapping.fromMovementCommand(vehicle, command, location, locationType);
@@ -554,7 +554,7 @@ public class ActionsMappingTest {
             "value-from-location-type"
         );
     Location location = new Location("destLoc", locationType.getReference());
-    MovementCommand command = new DummyMovementCommand("destOp", location);
+    MovementCommand command = createMovementCommand("destOp", location);
 
     Optional<PropertyAction> action
         = ActionsMapping.fromMovementCommand(vehicle, command, location, locationType);
@@ -578,7 +578,7 @@ public class ActionsMappingTest {
             PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".destOp.parameter.override",
             "value-from-location"
         );
-    command = new DummyMovementCommand("destOp", location);
+    command = createMovementCommand("destOp", location);
 
     action = ActionsMapping.fromMovementCommand(vehicle, command, location, locationType);
 
@@ -593,7 +593,7 @@ public class ActionsMappingTest {
         );
 
     // Transport order destination appends/overrides location
-    command = new DummyMovementCommand("destOp", location)
+    command = createMovementCommand("destOp", location)
         .withProperties(
             Map.of(
                 PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".parameter.movementCommand",
@@ -617,104 +617,31 @@ public class ActionsMappingTest {
         );
   }
 
-  private static class DummyMovementCommand
-      implements
-        MovementCommand {
+  private MovementCommand createMovementCommand(String operation, Location opLocation) {
+    requireNonNull(operation, "operation");
+    requireNonNull(opLocation, "opLocation");
+    Point src = new Point("p1");
+    Point dst = new Point("p2");
 
-    private final String operation;
-    private final Location opLocation;
-    private final Map<String, String> properties;
-    private final boolean finalMovement;
+    Route.Step dummyStep = new Route.Step(
+        new Path("path1", src.getReference(), dst.getReference()),
+        src,
+        dst,
+        Vehicle.Orientation.FORWARD,
+        0
+    );
 
-    DummyMovementCommand(String operation, Location opLocation) {
-      this.operation = requireNonNull(operation, "operation");
-      this.opLocation = requireNonNull(opLocation, "opLocation");
-      this.properties = Map.of();
-      this.finalMovement = false;
-    }
-
-    private DummyMovementCommand(
-        String operation,
-        Location opLocation,
-        Map<String, String> properties,
-        boolean finalMovement
-    ) {
-      this.operation = requireNonNull(operation, "operation");
-      this.opLocation = requireNonNull(opLocation, "opLocation");
-      this.properties = requireNonNull(properties, "properties");
-      this.finalMovement = finalMovement;
-    }
-
-    @Override
-    public DriveOrder getDriveOrder() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public TransportOrder getTransportOrder() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Route.Step getStep() {
-      Point src = new Point("p1");
-      Point dst = new Point("p2");
-      return new Route.Step(
-          new Path("path1", src.getReference(), dst.getReference()),
-          src,
-          dst,
-          Vehicle.Orientation.FORWARD,
-          0
-      );
-    }
-
-    @Override
-    public String getOperation() {
-      return operation;
-    }
-
-    @Deprecated
-    @Override
-    public boolean isWithoutOperation() {
-      return operation == null;
-    }
-
-    @Override
-    public Location getOpLocation() {
-      return opLocation;
-    }
-
-    @Override
-    public boolean isFinalMovement() {
-      return finalMovement;
-    }
-
-    @Override
-    public Point getFinalDestination() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Location getFinalDestinationLocation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getFinalOperation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Map<String, String> getProperties() {
-      return properties;
-    }
-
-    public DummyMovementCommand withProperties(Map<String, String> properties) {
-      return new DummyMovementCommand(operation, opLocation, properties, finalMovement);
-    }
-
-    public DummyMovementCommand withFinalMovement(boolean finalMovement) {
-      return new DummyMovementCommand(operation, opLocation, properties, finalMovement);
-    }
+    return new MovementCommand(
+        new TransportOrder("1", List.of()),
+        new DriveOrder(new DriveOrder.Destination(dst.getReference())),
+        dummyStep,
+        operation,
+        opLocation,
+        false,
+        null,
+        dst,
+        "NOP",
+        Map.of()
+    );
   }
 }

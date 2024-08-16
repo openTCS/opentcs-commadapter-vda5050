@@ -10,11 +10,11 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter;
 import static java.util.Objects.requireNonNull;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
-import javax.inject.Inject;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -98,6 +98,7 @@ public class ControlPanel
    * @param callWrapper The call wrapper to use for service calls
    */
   @Inject
+  @SuppressWarnings("this-escape")
   public ControlPanel(
       ActionConfigurationPanel newOrderActionConfigurationPanel,
       ActionConfigurationPanel instantActionConfigurationPanel,

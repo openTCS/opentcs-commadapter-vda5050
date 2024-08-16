@@ -12,6 +12,7 @@ import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions
 import static org.opentcs.util.Assertions.checkArgument;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -20,7 +21,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Edge;

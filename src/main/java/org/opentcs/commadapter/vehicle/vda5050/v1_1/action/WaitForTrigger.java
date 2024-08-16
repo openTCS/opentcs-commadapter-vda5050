@@ -32,6 +32,7 @@ public class WaitForTrigger
    */
   public static final String PARAMKEY_TRIGGER_TYPE = "triggerType";
 
+  @SuppressWarnings("this-escape")
   public WaitForTrigger(
       @Nonnull
       String actionId,

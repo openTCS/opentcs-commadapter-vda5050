@@ -7,7 +7,7 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.modeleditor.ModelEditorPropertySuggestions;
 import org.opentcs.customizations.plantoverview.PlantOverviewInjectionModule;
 

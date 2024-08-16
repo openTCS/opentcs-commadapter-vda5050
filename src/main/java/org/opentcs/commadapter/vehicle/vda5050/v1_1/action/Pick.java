@@ -61,6 +61,7 @@ public class Pick
    */
   public static final String PARAMKEY_SIDE = "side";
 
+  @SuppressWarnings("this-escape")
   public Pick(
       @Nonnull
       String actionId,

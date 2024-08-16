@@ -44,6 +44,7 @@ public class StateMessageDialog
    * @param parentComponent The parent component.
    * @param state The state to show the JSON representation for.
    */
+  @SuppressWarnings("this-escape")
   public StateMessageDialog(
       Component parentComponent,
       @Nonnull

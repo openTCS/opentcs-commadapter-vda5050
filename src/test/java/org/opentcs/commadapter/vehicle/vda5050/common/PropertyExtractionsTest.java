@@ -7,13 +7,13 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050.common;
 
-import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -21,6 +21,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.opentcs.data.model.Location;
 import org.opentcs.data.model.LocationType;
+import org.opentcs.data.model.Path;
 import org.opentcs.data.model.Point;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.data.order.DriveOrder;
@@ -215,7 +216,7 @@ public class PropertyExtractionsTest {
 
   @Test
   public void returnPropertyValueIfPresentInMovementCommand() {
-    MovementCommand command = new DummyMovementCommand(null, Map.of("some-property", "value1"));
+    MovementCommand command = createMovementCommand(null, Map.of("some-property", "value1"));
 
     Optional<String> result = PropertyExtractions.getProperty("some-property", command);
 
@@ -225,7 +226,7 @@ public class PropertyExtractionsTest {
 
   @Test
   public void returnPropertyValueIfPresentInMovementCommandLocation() {
-    MovementCommand command = new DummyMovementCommand(
+    MovementCommand command = createMovementCommand(
         new Location("location1", new LocationType("locationType1").getReference())
             .withProperty("some-property", "value1"),
         Map.of()
@@ -239,7 +240,7 @@ public class PropertyExtractionsTest {
 
   @Test
   public void returnEmptyIfPropertyNotPresentInMovementCommandOrLocation() {
-    MovementCommand command = new DummyMovementCommand(
+    MovementCommand command = createMovementCommand(
         new Location("location1", new LocationType("locationType1").getReference())
             .withProperty("some-property", "value1"),
         Map.of("some-property", "value2")
@@ -252,7 +253,7 @@ public class PropertyExtractionsTest {
 
   @Test
   public void returnPropertyValueIfPresentInMovementCommandFloat() {
-    MovementCommand command = new DummyMovementCommand(null, Map.of("some-property", "11.0"));
+    MovementCommand command = createMovementCommand(null, Map.of("some-property", "11.0"));
 
     Optional<Float> result = PropertyExtractions.getPropertyFloat("some-property", command);
 
@@ -262,7 +263,7 @@ public class PropertyExtractionsTest {
 
   @Test
   public void returnEmptyIfPropertyNotPresentInMovementCommandFloat() {
-    MovementCommand command = new DummyMovementCommand(null, Map.of("some-property", "47.0"));
+    MovementCommand command = createMovementCommand(null, Map.of("some-property", "47.0"));
 
     Optional<Float> result = PropertyExtractions.getPropertyFloat("some-other-property", command);
 
@@ -319,84 +320,27 @@ public class PropertyExtractionsTest {
     assertThat(result).isPresent();
   }
 
-  private class DummyMovementCommand
-      implements
-        MovementCommand {
+  private MovementCommand createMovementCommand(Location location, Map<String, String> properties) {
+    Point point1 = new Point("1");
+    Point point2 = new Point("2");
 
-    private final Location location;
-    private final Map<String, String> properties;
-
-    DummyMovementCommand(Location location, Map<String, String> properties) {
-      this.location = location;
-      this.properties = requireNonNull(properties, "properties");
-    }
-
-    @Override
-    public DriveOrder getDriveOrder() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public TransportOrder getTransportOrder() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Route.Step getStep() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getOperation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void setOperation(String operation) {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Deprecated
-    @Override
-    public boolean isWithoutOperation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Location getOpLocation() {
-      return location;
-    }
-
-    public void setOpLocation(Location location) {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isFinalMovement() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Point getFinalDestination() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Location getFinalDestinationLocation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getFinalOperation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Map<String, String> getProperties() {
-      return properties;
-    }
-
-    public void setProperties(Map<String, String> properties) {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
+    return new MovementCommand(
+        new TransportOrder("1", List.of()),
+        new DriveOrder(new DriveOrder.Destination(point2.getReference())),
+        new Route.Step(
+            new Path("path", point1.getReference(), point2.getReference()),
+            point1,
+            point2,
+            Vehicle.Orientation.FORWARD,
+            0
+        ),
+        "NOP",
+        location,
+        true,
+        null,
+        point2,
+        "NOP",
+        properties
+    );
   }
 }

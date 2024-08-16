@@ -8,7 +8,7 @@
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.opentcs.commadapter.vehicle.vda5050.Vda5050CommAdapterFactory;
 import org.opentcs.customizations.kernel.KernelInjectionModule;
 

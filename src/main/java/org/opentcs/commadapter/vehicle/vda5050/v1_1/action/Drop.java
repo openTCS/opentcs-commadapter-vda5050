@@ -59,6 +59,7 @@ public class Drop
    */
   public static final String PARAMKEY_SIDE = "side";
 
+  @SuppressWarnings("this-escape")
   public Drop(
       @Nonnull
       String actionId,

@@ -30,6 +30,7 @@ import static org.opentcs.commadapter.vehicle.vda5050.v1_1.StateMappings.toVehic
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.StateMappings.toVehicleState;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import java.beans.PropertyChangeEvent;
 import java.time.Instant;
 import java.util.Arrays;
@@ -42,7 +43,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration;
 import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration.ConfigIntegrationLevel;
 import org.opentcs.commadapter.vehicle.vda5050.CommAdapterConfiguration.ConfigOperatingMode;
@@ -194,6 +194,7 @@ public class CommAdapterImpl
    * @param configuration The adapter configuration.
    * @param unsupportedPropertiesExtractor Extracts unsupported optional fields from the vehicle.
    */
+  @SuppressWarnings("this-escape")
   @Inject
   public CommAdapterImpl(
       @Assisted

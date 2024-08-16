@@ -16,9 +16,9 @@ import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROP
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MAP_ID;
 
 import com.google.inject.assistedinject.Assisted;
+import jakarta.inject.Inject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import org.opentcs.commadapter.vehicle.vda5050.common.AngleMath;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.AgvPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.State;

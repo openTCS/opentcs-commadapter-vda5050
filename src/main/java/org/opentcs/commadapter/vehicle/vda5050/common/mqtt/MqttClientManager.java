@@ -10,6 +10,7 @@ package org.opentcs.commadapter.vehicle.vda5050.common.mqtt;
 import static java.util.Objects.requireNonNull;
 import static org.opentcs.commadapter.vehicle.vda5050.common.mqtt.ConnectionCallback.CONNECT_CONTEXT;
 
+import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,6 @@ import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -77,6 +77,7 @@ public class MqttClientManager {
    * @param kernelExecutor The executor to run tasks on.
    * @throws IllegalStateException If there was a problem initializing the MQTT client.
    */
+  @SuppressWarnings("this-escape")
   @Inject
   public MqttClientManager(
       MqttConfiguration configuration,

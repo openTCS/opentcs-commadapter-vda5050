@@ -35,6 +35,7 @@ public class FinePositioning
    */
   public static final String PARAMKEY_STATION_NAME = "stationName";
 
+  @SuppressWarnings("this-escape")
   public FinePositioning(
       @Nonnull
       String actionId,

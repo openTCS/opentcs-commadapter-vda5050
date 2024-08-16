@@ -87,7 +87,7 @@ public class OrderMapperTest {
     // setup a movement command
     Point sourcePoint = new Point("Point-0001");
     Point destPoint = new Point("Point-0002");
-    MovementCommand command = new DummyMovementCommand(sourcePoint, destPoint);
+    MovementCommand command = createMovementCommandWithPoints(sourcePoint, destPoint);
 
     Order order = mapper.toOrder(command);
 
@@ -102,7 +102,7 @@ public class OrderMapperTest {
   public void generateSingleNodeIfMovementCommandHasNoActualMovement() {
     // setup a movement command
     Point destPoint = new Point("Point-0001");
-    MovementCommand command = new DummyMovementCommand(null, destPoint);
+    MovementCommand command = createMovementCommandWithPoints(null, destPoint);
 
     Order order = mapper.toOrder(command);
 
@@ -126,7 +126,7 @@ public class OrderMapperTest {
     Path path = new Path("Path-0001", sourcePoint.getReference(), destPoint.getReference());
     Step step = new Step(path, sourcePoint, destPoint, Orientation.FORWARD, 0);
 
-    MovementCommand command = new DummyMovementCommand(step);
+    MovementCommand command = createMovementCommandWithStep(step);
 
     Order order = mapper.toOrder(command);
 
@@ -151,7 +151,7 @@ public class OrderMapperTest {
     Path path = new Path("Path-0001", sourcePoint.getReference(), destPoint.getReference());
     Step step = new Step(path, sourcePoint, destPoint, Orientation.FORWARD, 0);
 
-    MovementCommand command = new DummyMovementCommand(step);
+    MovementCommand command = createMovementCommandWithStep(step);
 
     Order order = mapper.toOrder(command);
 
@@ -173,8 +173,8 @@ public class OrderMapperTest {
     Path path = new Path("Path-0001", sourcePoint.getReference(), destPoint.getReference());
     Step step = new Step(path, sourcePoint, destPoint, Orientation.FORWARD, 0);
 
-    DummyMovementCommand command = new DummyMovementCommand(step);
-    command.setOpLocation(destLoc);
+    MovementCommand command = createMovementCommandWithStep(step)
+        .withOpLocation(destLoc);
 
     Order order = mapper.toOrder(command);
 
@@ -189,22 +189,22 @@ public class OrderMapperTest {
     Point sourcePoint = new Point("Point-0001");
     Point destPoint = new Point("Point-0002");
 
-    DummyMovementCommand command = new DummyMovementCommand(
+    MovementCommand command = createMovementCommandWithPointsAndSpeeds(
         sourcePoint,
         destPoint,
         1000,
         500
     );
     LocationType locType = new LocationType("loc-type");
-    command.setOpLocation(new Location("location-0001", locType.getReference()));
+    command = command.withOpLocation(new Location("location-0001", locType.getReference()));
     when(objectService.fetchObject(LocationType.class, locType.getReference()))
         .thenReturn(locType);
 
-    command.setOperation("customOp");
+    command = command.withOperation("customOp");
     Map<String, String> properties = new HashMap<>();
     properties.put(PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".customOp.blockingType", "SOFT");
     properties.put(PROPKEY_CUSTOM_DEST_ACTION_PREFIX + ".customOp.parameters", "x = 234 | y = 567");
-    command.setProperties(properties);
+    command = command.withProperties(properties);
 
     Order order = mapper.toOrder(command);
 
@@ -236,7 +236,7 @@ public class OrderMapperTest {
         .withProperty(PROPKEY_CUSTOM_ACTION_PREFIX + ".02.tags", "tag_beep")
         .withProperty(PROPKEY_CUSTOM_ACTION_PREFIX + ".03", "run")
         .withProperty(PROPKEY_CUSTOM_ACTION_PREFIX + ".03.tags", "tag_run");
-    MovementCommand command = new DummyMovementCommand(sourcePoint, destPoint);
+    MovementCommand command = createMovementCommandWithPoints(sourcePoint, destPoint);
 
     Order order = mapper.toOrder(command);
 
@@ -258,10 +258,10 @@ public class OrderMapperTest {
         .withProperty(PROPKEY_CUSTOM_ACTION_PREFIX + ".03", "run")
         .withProperty(PROPKEY_CUSTOM_ACTION_PREFIX + ".03.tags", "tag_run");
 
-    DummyMovementCommand command = new DummyMovementCommand(sourcePoint, destPoint);
+    MovementCommand command = createMovementCommandWithPoints(sourcePoint, destPoint);
     Map<String, String> properties = new HashMap<>();
     properties.put(PROPKEY_EXECUTABLE_ACTIONS_TAGS, "tag_beep | tag_duck");
-    command.setProperties(properties);
+    command = command.withProperties(properties);
 
     Order order = mapper.toOrder(command);
 
@@ -278,10 +278,10 @@ public class OrderMapperTest {
     Point middlePoint = new Point("Point-0002");
     Point endPoint = new Point("Point-0003");
 
-    MovementCommand commandOne = new DummyMovementCommand(startPoint, middlePoint);
+    MovementCommand commandOne = createMovementCommandWithPoints(startPoint, middlePoint);
     Order orderOne = mapper.toOrder(commandOne);
 
-    MovementCommand commandTwo = new DummyMovementCommand(middlePoint, endPoint);
+    MovementCommand commandTwo = createMovementCommandWithPoints(middlePoint, endPoint);
     Order orderTwo = mapper.toOrder(commandTwo);
 
     assertThat(orderOne.getNodes().size(), is(2));
@@ -304,13 +304,13 @@ public class OrderMapperTest {
     Point sourcePoint = new Point("Point-0003");
     Point endPoint = new Point("Point-0004");
 
-    MovementCommand commandOne = new DummyMovementCommand(startPoint, destPoint);
+    MovementCommand commandOne = createMovementCommandWithPoints(startPoint, destPoint);
     Order orderOne = mapper.toOrder(commandOne);
 
     when(objectService.fetchObject(TransportOrder.class, transportOrder.getReference()))
         .thenReturn(transportOrder.withCurrentDriveOrderIndex(1));
 
-    MovementCommand commandTwo = new DummyMovementCommand(sourcePoint, endPoint);
+    MovementCommand commandTwo = createMovementCommandWithPoints(sourcePoint, endPoint);
     Order orderTwo = mapper.toOrder(commandTwo);
 
     assertThat(orderOne.getNodes().size(), is(2));
@@ -341,7 +341,7 @@ public class OrderMapperTest {
         Orientation.FORWARD,
         0
     );
-    MovementCommand command = new DummyMovementCommand(step);
+    MovementCommand command = createMovementCommandWithStep(step);
 
     Order order = mapper.toOrder(command);
 
@@ -364,10 +364,10 @@ public class OrderMapperTest {
         .withProperty(PROPKEY_EXECUTABLE_ACTIONS_TAGS, "tag_duck");
     Step step = new Step(path, source, dest, Orientation.FORWARD, 0);
 
-    MovementCommand commandOne = new DummyMovementCommand(step);
+    MovementCommand commandOne = createMovementCommandWithStep(step);
     Order orderOne = mapper.toOrder(commandOne);
 
-    MovementCommand commandTwo = new DummyMovementCommand(middle, source);
+    MovementCommand commandTwo = createMovementCommandWithPoints(middle, source);
     Order orderTwo = mapper.toOrder(commandTwo);
 
     assertThat(orderOne.getNodes().size(), is(2));
@@ -398,7 +398,7 @@ public class OrderMapperTest {
     );
     Point dest = new Point("Point-0002");
 
-    MovementCommand commandOne = new DummyMovementCommand(source, dest);
+    MovementCommand commandOne = createMovementCommandWithPoints(source, dest);
     Order orderOne = mapper.toOrder(commandOne);
 
     assertThat(orderOne.getNodes().size(), is(2));
@@ -418,12 +418,11 @@ public class OrderMapperTest {
     Path l2 = new Path("path-0002", p2.getReference(), p3.getReference());
     Step s2 = new Step(l2, p2, p3, Orientation.FORWARD, 1);
 
-    DummyMovementCommand command = new DummyMovementCommand(new Route(Arrays.asList(s1, s2), 0), 0);
-    command.finalOperation = MovementCommand.NO_OPERATION;
-    command.finalDestinationLocation = new Location(
-        "Location-0001",
-        new LocationType("loc-type").getReference()
-    );
+    MovementCommand command = createMovementCommandWithRoute(new Route(Arrays.asList(s1, s2), 0), 0)
+        .withFinalOperation(MovementCommand.NO_OPERATION)
+        .withFinalDestinationLocation(
+            new Location("Location-0001", new LocationType("loc-type").getReference())
+        );
 
     Order order = mapper.toOrder(command);
     assertThat(order.getNodes().size(), is(3));
@@ -435,149 +434,78 @@ public class OrderMapperTest {
     assertThat(order.getEdges().get(1).isReleased(), is(false));
   }
 
-  private class DummyMovementCommand
-      implements
-        MovementCommand {
+  private MovementCommand createMovementCommandWithStep(Step step) {
+    return createBasicMovementCommand(null, new Point("dest"), 1000, 500, 0, false)
+        .withStep(step)
+        .withDriveOrder(
+            new DriveOrder(new DriveOrder.Destination(new Point("point1").getReference()))
+                .withRoute(new Route(Arrays.asList(step), 0))
+        );
+  }
 
-    private final Route.Step dummyStep;
+  private MovementCommand createMovementCommandWithRoute(Route route, int currentIndex) {
+    return createBasicMovementCommand(null, new Point("dest"), 1000, 500, 0, false)
+        .withDriveOrder(
+            new DriveOrder(new DriveOrder.Destination(new Point("point1").getReference()))
+                .withRoute(route)
+        )
+        .withStep(route.getSteps().get(currentIndex));
+  }
 
-    private final Route dummyRoute;
+  private MovementCommand createMovementCommandWithPoints(Point source, Point dest) {
+    return createBasicMovementCommand(source, dest, 1000, 500, 0, false);
+  }
 
-    private String operation;
+  private MovementCommand createMovementCommandWithPointsAndSpeeds(
+      Point source,
+      Point dest,
+      int maxSpeedForward,
+      int maxSpeedReverse
+  ) {
+    return createBasicMovementCommand(source, dest, maxSpeedForward, maxSpeedReverse, 0, false);
+  }
 
-    private Map<String, String> properties = new HashMap<>();
+  private MovementCommand createBasicMovementCommand(
+      Point source,
+      Point dest,
+      int maxSpeedForward,
+      int maxSpeedReverse,
+      int routeIndex,
+      boolean isFinalMovement
+  ) {
+    MovementCommand movementCommand = new MovementCommand(
+        new TransportOrder("1", List.of()),
+        new DriveOrder(new DriveOrder.Destination(new Point("p1").getReference())),
+        new Route.Step(null, null, new Point("p2"), Orientation.FORWARD, 0),
+        "NOP",
+        null,
+        isFinalMovement,
+        null,
+        new Point("p3"),
+        "NOP",
+        Map.of()
+    );
 
-    private Location location;
-
-    private boolean isFinalMovment;
-
-    private Location finalDestinationLocation;
-
-    private String finalOperation;
-
-    DummyMovementCommand(Step step) {
-      dummyStep = step;
-      dummyRoute = new Route(Arrays.asList(dummyStep), 0);
+    Path path = null;
+    if (source != null && dest != null) {
+      path = new Path("Path-0001", source.getReference(), dest.getReference())
+          .withMaxVelocity(maxSpeedForward)
+          .withMaxReverseVelocity(maxSpeedReverse);
     }
 
-    DummyMovementCommand(Route route, int currentIndex) {
-      dummyRoute = route;
-      dummyStep = route.getSteps().get(currentIndex);
-    }
+    Route.Step newstep = new Step(
+        path,
+        source,
+        dest,
+        Orientation.FORWARD,
+        routeIndex
+    );
 
-    DummyMovementCommand(Point source, Point dest) {
-      this(source, dest, 1000, 500, 0, false);
-    }
-
-    DummyMovementCommand(
-        Point source,
-        Point dest,
-        int maxSpeedForward,
-        int maxSpeedReverse
-    ) {
-      this(source, dest, maxSpeedForward, maxSpeedReverse, 0, false);
-    }
-
-    DummyMovementCommand(
-        Point source,
-        Point dest,
-        int maxSpeedForward,
-        int maxSpeedReverse,
-        int routeIndex,
-        boolean isFinalMovement
-    ) {
-      Path path = null;
-      if (source != null && dest != null) {
-        path = new Path("Path-0001", source.getReference(), dest.getReference())
-            .withMaxVelocity(maxSpeedForward)
-            .withMaxReverseVelocity(maxSpeedReverse);
-      }
-
-      this.isFinalMovment = isFinalMovement;
-
-      dummyStep = new Step(
-          path,
-          source,
-          dest,
-          Orientation.FORWARD,
-          routeIndex
-      );
-      dummyRoute = new Route(Arrays.asList(dummyStep), 0);
-    }
-
-    @Override
-    public DriveOrder getDriveOrder() {
-      return new DriveOrder(new DriveOrder.Destination(new Point("some-point").getReference()))
-          .withRoute(dummyRoute);
-    }
-
-    @Override
-    public TransportOrder getTransportOrder() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Deprecated
-    @Override
-    public Route getRoute() {
-      return dummyRoute;
-    }
-
-    @Override
-    public Route.Step getStep() {
-      return dummyStep;
-    }
-
-    @Override
-    public String getOperation() {
-      return operation;
-    }
-
-    public void setOperation(String operation) {
-      this.operation = operation;
-    }
-
-    @Deprecated
-    @Override
-    public boolean isWithoutOperation() {
-      return operation == null;
-    }
-
-    @Override
-    public Location getOpLocation() {
-      return location;
-    }
-
-    public void setOpLocation(Location location) {
-      this.location = location;
-    }
-
-    @Override
-    public boolean isFinalMovement() {
-      return isFinalMovment;
-    }
-
-    @Override
-    public Point getFinalDestination() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Location getFinalDestinationLocation() {
-      return finalDestinationLocation;
-    }
-
-    @Override
-    public String getFinalOperation() {
-      return finalOperation;
-    }
-
-    @Override
-    public Map<String, String> getProperties() {
-      return properties;
-    }
-
-    public void setProperties(Map<String, String> properties) {
-      this.properties = properties;
-    }
+    return movementCommand
+        .withStep(newstep)
+        .withDriveOrder(
+            new DriveOrder(new DriveOrder.Destination(new Point("point1").getReference()))
+                .withRoute(new Route(Arrays.asList(newstep), 0))
+        );
   }
 }

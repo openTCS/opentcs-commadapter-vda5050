@@ -7,7 +7,7 @@
  */
 package org.opentcs.commadapter.vehicle.vda5050;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.MqttClientManager;
 import org.opentcs.commadapter.vehicle.vda5050.common.mqtt.MqttConfiguration;
 import org.opentcs.customizations.kernel.KernelInjectionModule;

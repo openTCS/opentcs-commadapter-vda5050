@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.opentcs.data.model.Location;
 import org.opentcs.data.model.Path;
 import org.opentcs.data.model.Point;
 import org.opentcs.data.model.Vehicle;
@@ -61,82 +60,25 @@ class DistanceInAdvanceControllerTest {
     Point destPoint = new Point("2");
     Path path = new Path("1 -- 2", srcPoint.getReference(), destPoint.getReference())
         .withLength(length);
-
-    return new DummyMovementCommand(
-        new Route.Step(
-            path,
-            srcPoint,
-            destPoint,
-            Vehicle.Orientation.FORWARD,
-            0
-        )
+    Route.Step step = new Route.Step(
+        path,
+        srcPoint,
+        destPoint,
+        Vehicle.Orientation.FORWARD,
+        0
     );
-  }
 
-  private class DummyMovementCommand
-      implements
-        MovementCommand {
-
-    private final Route.Step step;
-
-    private DummyMovementCommand(Route.Step step) {
-      this.step = step;
-    }
-
-    @Override
-    public Route.Step getStep() {
-      return step;
-    }
-
-    @Override
-    public String getOperation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Deprecated
-    @Override
-    public boolean isWithoutOperation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Location getOpLocation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isFinalMovement() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Point getFinalDestination() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Location getFinalDestinationLocation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getFinalOperation() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Map<String, String> getProperties() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public TransportOrder getTransportOrder() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public DriveOrder getDriveOrder() {
-      throw new UnsupportedOperationException("Not supported yet.");
-    }
+    return new MovementCommand(
+        new TransportOrder("1", List.of()),
+        new DriveOrder(new DriveOrder.Destination(new Point("point1").getReference())),
+        step,
+        "NOP",
+        null,
+        true,
+        null,
+        new Point("point2"),
+        "NOP",
+        Map.of()
+    );
   }
 }

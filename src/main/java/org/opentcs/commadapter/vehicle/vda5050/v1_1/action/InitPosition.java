@@ -48,6 +48,7 @@ public class InitPosition
    */
   public static final String PARAMKEY_LAST_NODE_ID = "lastNodeId";
 
+  @SuppressWarnings("this-escape")
   public InitPosition(
       @Nonnull
       String actionId,

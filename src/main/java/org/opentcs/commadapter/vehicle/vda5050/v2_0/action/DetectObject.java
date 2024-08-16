@@ -31,6 +31,7 @@ public class DetectObject
    */
   public static final String PARAMKEY_OBJECT_TYPE = "objectType";
 
+  @SuppressWarnings("this-escape")
   public DetectObject(
       @Nonnull
       String actionId,
