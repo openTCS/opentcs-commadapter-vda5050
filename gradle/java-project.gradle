@@ -39,6 +39,14 @@ compileTestJava {
   options.compilerArgs << "-Xlint:-serial"
 }
 
+javadoc {
+  title = "openTCS VDA5050 Communication Adapter ${project.version} API documentation: ${project.name}"
+
+  options {
+    header = "openTCS VDA5050 Communication Adapter ${project.version}"
+    addBooleanOption('Xdoclint:none', true)
+  }
+}
 test {
   useJUnitPlatform()
   // ignoreFailures = true
