@@ -15,7 +15,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.22 (2024-09-16)
 
 * Fixes:
 ** When translating the vehicle's reported state, ignore nodeStates and edgeStates belonging to the horizon.
