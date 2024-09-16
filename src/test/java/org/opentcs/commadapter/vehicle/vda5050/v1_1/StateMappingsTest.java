@@ -51,6 +51,10 @@ public class StateMappingsTest {
   public void respectVehicleStatePrecedence() {
     assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.IDLE));
 
+    state.setNodeStates(List.of(new NodeState("node-0", 0L, false)));
+    state.setEdgeStates(List.of(new EdgeState("edge-0", 1L, false)));
+    assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.IDLE));
+
     state.setDriving(true);
     assertThat(StateMappings.toVehicleState(state), is(Vehicle.State.EXECUTING));
 

@@ -353,7 +353,11 @@ Not doing so results in the vehicle driver resending the `instantActions` messag
 
 === `cancelOrder`
 
-An instant action of type `cancelOrder` is sent when a transport order is _forcibly_ withdrawn from the vehicle in openTCS.
+An instant action of type `cancelOrder` is automatically sent in the following cases:
+
+* When a transport order is _forcibly_ withdrawn from the vehicle in openTCS.
+* When the first order message belonging to a drive order in openTCS is about to be sent and the `nodeStates` and `edgeStates` arrays reported by the vehicle are not empty.
+
 The instant action's blocking type is set to `NONE`.
 
 === `startPause`/`stopPause`

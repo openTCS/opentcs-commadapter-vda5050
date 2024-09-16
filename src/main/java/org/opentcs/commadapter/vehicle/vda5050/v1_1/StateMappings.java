@@ -178,7 +178,8 @@ public class StateMappings {
   }
 
   private static boolean hasPendingMovement(State state) {
-    return !state.getNodeStates().isEmpty() || !state.getEdgeStates().isEmpty();
+    return state.getNodeStates().stream().anyMatch(nodeState -> nodeState.isReleased())
+        && state.getEdgeStates().stream().anyMatch(edgeState -> edgeState.isReleased());
   }
 
   private static boolean hasPendingAction(State state) {

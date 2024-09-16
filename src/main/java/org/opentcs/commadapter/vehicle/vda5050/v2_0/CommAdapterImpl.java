@@ -335,15 +335,7 @@ public class CommAdapterImpl
     movementCommandManager.clear();
     messageResponseMatcher.clear();
 
-    Action cancelOrderAction = new Action(
-        "cancelOrder",
-        UUID.randomUUID().toString(),
-        BlockingType.NONE
-    );
-    InstantActions instantAction = new InstantActions();
-    instantAction.setActions(Arrays.asList(cancelOrderAction));
-    messageResponseMatcher.enqueueAction(instantAction);
-
+    enqueueCancelOrder();
   }
 
   @Override
@@ -394,9 +386,15 @@ public class CommAdapterImpl
       throws IllegalArgumentException {
     requireNonNull(cmd, "cmd");
 
-    Order order = orderMapper.toOrder(cmd);
+    // If this is a drive order's first movement command AND the vehicle reports still having edges
+    // or nodes, ensure they are cleared first by sending a cancelOrder action.
+    if (cmd.getStep().getRouteIndex() == 0
+        && (!getProcessModel().getCurrentState().getNodeStates().isEmpty()
+            || !getProcessModel().getCurrentState().getEdgeStates().isEmpty())) {
+      enqueueCancelOrder();
+    }
 
-    messageResponseMatcher.enqueueCommand(order, cmd);
+    messageResponseMatcher.enqueueCommand(orderMapper.toOrder(cmd), cmd);
   }
 
   @Override
@@ -793,5 +791,16 @@ public class CommAdapterImpl
             UserNotification.Level.IMPORTANT
         )
     );
+  }
+
+  private void enqueueCancelOrder() {
+    Action cancelOrderAction = new Action(
+        "cancelOrder",
+        UUID.randomUUID().toString(),
+        BlockingType.NONE
+    );
+    InstantActions instantAction = new InstantActions();
+    instantAction.setActions(Arrays.asList(cancelOrderAction));
+    messageResponseMatcher.enqueueAction(instantAction);
   }
 }

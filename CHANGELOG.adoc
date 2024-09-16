@@ -17,7 +17,11 @@ toc::[]
 
 == Unreleased
 
-...
+* Fixes:
+** When translating the vehicle's reported state, ignore nodeStates and edgeStates belonging to the horizon.
+   Not doing so resulted in the vehicle not being assigned a new transport order after withdrawing a previous one.
+** Before sending a drive order's first movement command to the vehicle, check whether the vehicle reports any edgeStates or nodeStates.
+   If yes, send a cancelOrder to ensure the vehicle may accept the new order.
 
 == Version 0.21 (2024-08-20)
 
