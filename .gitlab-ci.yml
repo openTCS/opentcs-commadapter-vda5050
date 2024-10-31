@@ -48,6 +48,11 @@ stages:
   - test
   - deploy
 
+.touch-gradle-build-results: &touch-gradle-build-results
+  - echo "Touching build results to prevent Gradle rebuilding them..."
+  - find .gradle | xargs touch
+  - find . -regex '\./build/.*' | xargs touch
+
 build_code_quality_image:
   stage: build
   rules:
@@ -72,8 +77,18 @@ build:
   script:
     - ./gradlew -x check build testClasses -PNO_BUILD_NUMBER="$NO_BUILD_NUMBER"
   artifacts:
+    name: 'opentcs-commadapter-vda5050-build-b$CI_PIPELINE_IID'
     paths:
-      - build/
+      - .gradle
+      - build/classes/
+      - build/generated/
+      - build/libs/
+      - build/resources/
+      - build/tmp/
+    exclude:
+      - .gradle/.tmp/**/*
+      - .gradle/caches/**/*
+      - .gradle/wrapper/**/*
     expire_in: 1 week
   cache:
     key: build_test_deploy-$(date +%Y-%m)
@@ -86,10 +101,15 @@ test:
   dependencies:
     - build
   script:
+    - *touch-gradle-build-results
     - echo "Running unit tests..."
     - ./gradlew test jacocoLogAggregatedCoverage -PNO_BUILD_NUMBER="$NO_BUILD_NUMBER"
   coverage: '/Branch Coverage: ([0-9.]+)%/'
   artifacts:
+    name: 'opentcs-commadapter-vda5050-test-b$CI_PIPELINE_IID'
+    paths:
+      # Results of (failed) approval tests.
+      - build/**/*.received.txt
     reports:
       junit: build/test-results/test/TEST-*.xml
     when: always
@@ -102,8 +122,7 @@ test:
 lint-spotless:
   stage: test
   interruptible: true
-  dependencies:
-    - build
+  dependencies: []
   script:
     - echo "Running Spotless check..."
     - ./gradlew spotlessCheck
@@ -123,6 +142,7 @@ lint-checkstyle:
   dependencies:
     - build
   script:
+    - *touch-gradle-build-results
     - echo "Checking for changelog headers that do not match 'Version x.y.z (yyyy-mm-dd)'..."
     - '( grep --extended-regexp "^==[^=]" $CHANGELOG_FILE
         | grep --invert-match --extended-regexp "^== Version [0-9]+\.[0-9]+(\.[0-9]+)? +\([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\)$"
@@ -156,6 +176,7 @@ deploy_private:
   dependencies:
     - build
   script:
+    - *touch-gradle-build-results
     - './gradlew -x check publish
         -PDO_DEPLOY_PRIVATE="true"
         -PDO_DEPLOY_OSSRH="false"
@@ -175,6 +196,7 @@ deploy_ossrh:
   dependencies:
     - build
   script:
+    - *touch-gradle-build-results
     - './gradlew -x check publishToSonatype closeAndReleaseStagingRepositories
         -PDO_DEPLOY_PRIVATE="false"
         -PDO_DEPLOY_OSSRH="true"
