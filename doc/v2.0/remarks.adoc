@@ -16,6 +16,9 @@ toc::[]
 = General implementation remarks
 
 * The openTCS driver is implemented based on the VDA5050 2.0 PDF document as the definitive specification, not the documents that can be found at https://github.com/vda5050.
+* A message from the vehicle may be ignored in the following cases:
+** If the vehicle's `connection` topic indicates that the vehicle is offline.
+** If the message is considered outdated, i.e. it contains a timestamp that is older than the last accepted message on the same topic.
 * In case the vehicle rejects an order, the openTCS driver does not send further messages to it.
   Before any new messages can be sent to the vehicle, it is necessary to (forcibly) withdraw the vehicle's current transport order in openTCS.
   For details regarding order rejection, see the 'order' topic reference in xref:runtime-behaviour.adoc#topic-order[].

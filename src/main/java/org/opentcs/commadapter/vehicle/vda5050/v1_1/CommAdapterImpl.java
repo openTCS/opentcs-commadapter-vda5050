@@ -143,8 +143,14 @@ public class CommAdapterImpl
    * The vehicle's length when unloaded.
    */
   private final int vehicleLengthUnloaded;
-
+  /**
+   * Validates messages against JSON schemas.
+   */
   private final MessageValidator messageValidator;
+  /**
+   * Checks whether incoming messages should be accepted.
+   */
+  private final IncomingMessageFilter incomingMessageFilter;
   /**
    * Binds JSON strings to objects and vice versa.
    */
@@ -190,6 +196,7 @@ public class CommAdapterImpl
    * @param componentsFactory A factory for our components.
    * @param clientManager The MQTT client manager to use.
    * @param messageValidator Validates messages against JSON schemas.
+   * @param incomingMessageFilter Checks whether incoming messages should be accepted.
    * @param jsonBinder Binds JSON strings to objects and vice versa.
    * @param configuration The adapter configuration.
    * @param unsupportedPropertiesExtractor Extracts unsupported optional fields from the vehicle.
@@ -204,6 +211,7 @@ public class CommAdapterImpl
       CommAdapterComponentsFactory componentsFactory,
       MqttClientManager clientManager,
       MessageValidator messageValidator,
+      IncomingMessageFilter incomingMessageFilter,
       JsonBinder jsonBinder,
       CommAdapterConfiguration configuration,
       UnsupportedPropertiesExtractor unsupportedPropertiesExtractor
@@ -224,6 +232,7 @@ public class CommAdapterImpl
         = getPropertyInteger(PROPKEY_VEHICLE_LENGTH_UNLOADED, vehicle).orElse(vehicle.getLength());
     this.clientManager = requireNonNull(clientManager, "clientManager");
     this.messageValidator = requireNonNull(messageValidator, "messageValidator");
+    this.incomingMessageFilter = requireNonNull(incomingMessageFilter, "incomingMessageFilter");
     this.jsonBinder = requireNonNull(jsonBinder, "jsonBinder");
     this.configuration = requireNonNull(configuration, "configuration");
     requireNonNull(unsupportedPropertiesExtractor, "unsupportedPropertiesExtractor");
@@ -548,7 +557,13 @@ public class CommAdapterImpl
   }
 
   private void onVisualizationMessage(Visualization vis) {
+    LOG.debug("{}: Received a new visualization message: {}", getName(), vis);
     getProcessModel().setVehicleIdle(false);
+
+    if (!incomingMessageFilter.accept(vis)) {
+      LOG.warn("Discarding unacceptable visualization message: {}", vis);
+      return;
+    }
 
     long now = System.currentTimeMillis();
     if (now - lastVisualizationMessageTimestamp < minVisualizationInterval) {
@@ -570,6 +585,11 @@ public class CommAdapterImpl
     LOG.debug("{}: Received a new connection message: {}", getName(), message);
     getProcessModel().setVehicleIdle(false);
 
+    if (!incomingMessageFilter.accept(message)) {
+      LOG.warn("Discarding unacceptable connection message: {}", message);
+      return;
+    }
+
     if (message.getConnectionState() == ConnectionState.OFFLINE
         || message.getConnectionState() == ConnectionState.CONNECTIONBROKEN) {
       getProcessModel().setCommAdapterConnected(false);
@@ -584,8 +604,12 @@ public class CommAdapterImpl
 
   private void onStateMessage(State state) {
     LOG.debug("{}: Received a new state message: {}", getName(), state);
-
     getProcessModel().setVehicleIdle(false);
+
+    if (!incomingMessageFilter.accept(state)) {
+      LOG.warn("Discarding unacceptable state message: {}", state);
+      return;
+    }
 
     messageResponseMatcher.onStateMessage(state);
 

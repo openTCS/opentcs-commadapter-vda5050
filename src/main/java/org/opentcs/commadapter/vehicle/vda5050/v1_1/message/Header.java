@@ -85,7 +85,7 @@ public abstract class Header
     return headerId;
   }
 
-  public void setHeaderId(
+  public Header setHeaderId(
       @Nonnull
       Long headerId
   ) {
@@ -95,50 +95,55 @@ public abstract class Header
         UINT32_MAX_VALUE,
         "headerId"
     );
+    return this;
   }
 
   public Instant getTimestamp() {
     return timestamp;
   }
 
-  public void setTimestamp(
+  public Header setTimestamp(
       @Nonnull
       Instant timestamp
   ) {
     this.timestamp = requireNonNull(timestamp, "timestamp");
+    return this;
   }
 
   public String getVersion() {
     return version;
   }
 
-  public void setVersion(
+  public Header setVersion(
       @Nonnull
       String version
   ) {
     this.version = requireNonNull(version, "version");
+    return this;
   }
 
   public String getManufacturer() {
     return manufacturer;
   }
 
-  public void setManufacturer(
+  public Header setManufacturer(
       @Nonnull
       String manufacturer
   ) {
     this.manufacturer = requireNonNull(manufacturer, "manufacturer");
+    return this;
   }
 
   public String getSerialNumber() {
     return serialNumber;
   }
 
-  public void setSerialNumber(
+  public Header setSerialNumber(
       @Nonnull
       String serialNumber
   ) {
     this.serialNumber = requireNonNull(serialNumber, "serialNumber");
+    return this;
   }
 
   @Override
