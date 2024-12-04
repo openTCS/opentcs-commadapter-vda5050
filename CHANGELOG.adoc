@@ -19,6 +19,7 @@ toc::[]
 
 * New features and enhancements:
 ** Ignore incoming messages that are considered outdated (i.e. they contain a timestamp that is older than the last accepted message on the same topic) or arrive while the vehicle's `connection` topic indicates it is offline.
+** Explicitly set the MQTT client's maximum number of in-flight messages to 1 to ensure messages are published in the given order.
 
 == Version 0.22 (2024-09-16)
 

@@ -328,6 +328,7 @@ public class MqttClientManager {
               ? 0
               : Math.max(configuration.keepAliveInterval(), 1000) / 1000
       );
+      connectOptions.setMaxInflight(1);
 
       client = new MqttAsyncClient(
           String.format(
