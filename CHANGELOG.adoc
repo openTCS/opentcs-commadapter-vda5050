@@ -15,7 +15,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.23 (2024-12-05)
 
 * New features and enhancements:
 ** Ignore incoming messages that are considered outdated (i.e. they contain a timestamp that is older than the last accepted message on the same topic) or arrive while the vehicle's `connection` topic indicates it is offline.
