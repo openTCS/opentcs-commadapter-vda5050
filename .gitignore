@@ -5,3 +5,5 @@
 /build/
 .gradle/
 /nbproject/private/
+# Ignore approval test result files.
+**/.approval_tests_temp/
