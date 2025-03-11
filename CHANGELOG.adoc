@@ -17,7 +17,8 @@ toc::[]
 
 == Unreleased
 
-...
+* Changes affecting developers:
+** Update Gradle wrapper to 8.13.
 
 == Version 0.23 (2024-12-05)
 
