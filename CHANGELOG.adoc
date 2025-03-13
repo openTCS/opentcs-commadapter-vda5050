@@ -25,6 +25,8 @@ toc::[]
 ** Update Mockito to 5.16.0.
 ** Update AssertJ to 3.27.3.
 ** Update SLF4J to 2.0.17
+** Update Checkstyle to 10.21.4.
+** Update Spotless to 7.0.2.
 
 == Version 0.23 (2024-12-05)
 
