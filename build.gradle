@@ -47,7 +47,7 @@ dependencies {
 
   implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
 
-  runtimeOnly group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.36'
+  runtimeOnly group: 'org.slf4j', name: 'slf4j-jdk14', version: '2.0.17'
 
   testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.3'
 }
