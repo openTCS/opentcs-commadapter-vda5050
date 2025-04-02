@@ -59,14 +59,21 @@ public class IncomingMessageFilter {
     }
   }
 
+  /**
+   * Resets the filter to its initial state.
+   */
+  public void reset() {
+    headerRecordConnection.lastSeenTimestamp = Instant.EPOCH;
+    headerRecordState.lastSeenTimestamp = Instant.EPOCH;
+    headerRecordVisualization.lastSeenTimestamp = Instant.EPOCH;
+
+    online = false;
+  }
+
   private boolean processConnection(Connection message) {
     switch (message.getConnectionState()) {
       case CONNECTIONBROKEN:
-        online = false;
-
-        headerRecordConnection.lastSeenTimestamp = Instant.EPOCH;
-        headerRecordState.lastSeenTimestamp = Instant.EPOCH;
-        headerRecordVisualization.lastSeenTimestamp = Instant.EPOCH;
+        reset();
 
         return true;
       case OFFLINE:
@@ -76,11 +83,7 @@ public class IncomingMessageFilter {
           return false;
         }
 
-        online = false;
-
-        headerRecordConnection.lastSeenTimestamp = Instant.EPOCH;
-        headerRecordState.lastSeenTimestamp = Instant.EPOCH;
-        headerRecordVisualization.lastSeenTimestamp = Instant.EPOCH;
+        reset();
 
         return true;
       case ONLINE:

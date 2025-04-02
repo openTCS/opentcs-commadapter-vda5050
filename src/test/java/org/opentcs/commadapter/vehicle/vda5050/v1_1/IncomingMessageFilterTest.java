@@ -251,6 +251,37 @@ public class IncomingMessageFilterTest {
   }
 
   @Test
+  public void acceptOutdatedMessagesAfterReconnectToBroker() {
+    incomingMessageFilter.accept(
+        createEmptyConnection()
+            .setConnectionState(ConnectionState.ONLINE)
+            .setHeaderId(0L)
+            .setTimestamp(baseTimestamp)
+    );
+
+    incomingMessageFilter.reset();
+
+    assertThat(
+        incomingMessageFilter.accept(
+            createEmptyConnection()
+                .setConnectionState(ConnectionState.ONLINE)
+                .setHeaderId(0L)
+                .setTimestamp(baseTimestamp.minusMillis(10))
+        ),
+        is(true)
+    );
+
+    assertThat(
+        incomingMessageFilter.accept(
+            createEmptyState()
+                .setHeaderId(0L)
+                .setTimestamp(baseTimestamp.minusMillis(10))
+        ),
+        is(true)
+    );
+  }
+
+  @Test
   public void ignoreMessagesOfUnhandledType() {
     assertThat(
         incomingMessageFilter.accept(new Header() {}),

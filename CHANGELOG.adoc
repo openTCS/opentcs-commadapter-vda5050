@@ -17,6 +17,8 @@ toc::[]
 
 == Unreleased
 
+* Fixes:
+** Ensure that, after reconnecting to the MQTT broker, the first message on each topic is always accepted.
 * Changes affecting developers:
 ** Update Gradle wrapper to 8.13.
 ** Update Hamcrest to 3.0.

@@ -491,6 +491,7 @@ public class CommAdapterImpl
     LOG.debug("{}: Disconnected from broker.", getName());
 
     getExecutor().execute(() -> {
+      incomingMessageFilter.reset();
       getProcessModel().setBrokerConnected(false);
       getProcessModel().setCommAdapterConnected(false);
       getProcessModel().setVehicleIdle(true);
