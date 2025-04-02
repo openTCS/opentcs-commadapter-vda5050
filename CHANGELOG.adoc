@@ -22,7 +22,7 @@ toc::[]
 * Changes affecting developers:
 ** Update Gradle wrapper to 8.13.
 ** Update Hamcrest to 3.0.
-** Update Approvaltests to 24.17.0.
+** Update ApprovalTests to 24.17.0.
 ** Update JUnit5 to 5.12.0.
 ** Update Mockito to 5.16.0.
 ** Update AssertJ to 3.27.3.
