@@ -38,6 +38,8 @@ Set to a map of VDA5050 operating mode names to boolean values.
 Whenever the vehicle's reported operating mode changes to a value given in the map, the vehicle's transport order may be withdrawn; if it is withdrawn, this happens forcibly.
 Valid values for operating mode names are `TEACHIN`, `SERVICE`, `MANUAL`, `SEMIAUTOMATIC` and `AUTOMATIC`.
 Valid assignment values are `true` (do withdraw the transport order forcibly) and `false` (do not withdraw the transport order), with `false` being the default for every operating mode.
+Note that it is recommended to always set `MANUAL=true`.
+While setting it to `false` is generally possible, a vehicle that adheres to the VDA5050 specification will clear its order buffer and thus stop processing the current order when switching to/from manual mode; withdrawing the order ensures that the vehicle's state in openTCS reflects this, too.
 `commadapter.vehicle.vda5050.onOpModeChangeDoResetPosition`::
 Set to a map of VDA5050 operating mode names to boolean values.
 Whenever the vehicle's reported operating mode changes to a value given in the map, the vehicle's last known position may be reset.
@@ -72,7 +74,7 @@ The following example configuration can be used as a template to be pasted into 
 ----
 commadapter.vehicle.vda5050.enabledVersions = 1.1, 2.0
 commadapter.vehicle.vda5050.onOpModeChangeDoUpdateIntegrationLevel = AUTOMATIC=LEAVE_UNCHANGED, SEMIAUTOMATIC=LEAVE_UNCHANGED, SERVICE=LEAVE_UNCHANGED, MANUAL=LEAVE_UNCHANGED, TEACHIN=LEAVE_UNCHANGED
-commadapter.vehicle.vda5050.onOpModeChangeDoWithdrawOrder = AUTOMATIC=false, SEMIAUTOMATIC=false, SERVICE=false, MANUAL=false, TEACHIN=false
+commadapter.vehicle.vda5050.onOpModeChangeDoWithdrawOrder = AUTOMATIC=false, SEMIAUTOMATIC=false, SERVICE=false, MANUAL=true, TEACHIN=false
 commadapter.vehicle.vda5050.onOpModeChangeDoResetPosition = AUTOMATIC=false, SEMIAUTOMATIC=false, SERVICE=false, MANUAL=false, TEACHIN=false
 commadapter.vehicle.vda5050.mqtt.brokerHost = broker.example.com
 commadapter.vehicle.vda5050.mqtt.brokerPort = 1883

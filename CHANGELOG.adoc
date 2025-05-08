@@ -17,7 +17,8 @@ toc::[]
 
 == Unreleased
 
-...
+* New features and enhancements:
+** Update the example configuration in the documentation to ensure a transport order is withdrawn when switching to manual mode, which better matches the behaviour as described in the VDA5050 specification.
 
 == Version 0.24 (2025-04-22)
 
