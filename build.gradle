@@ -6,24 +6,16 @@ buildscript {
       url "https://plugins.gradle.org/m2/"
     }
   }
-  dependencies {
-    // License plugin
-    classpath 'gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.14.0'
-    // Stats plugin
-    classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.2'
-    // JaCoCo log plugin
-    classpath 'org.barfuin.gradle.jacocolog:gradle-jacoco-log:3.1.0'
-  }
 }
 
 plugins {
   id 'maven-publish'
   id 'signing'
-  id 'com.diffplug.spotless' version '7.0.2'
-  id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
+  alias(libs.plugins.spotless)
+  alias(libs.plugins.gradle.nexus.publish.plugin)
+  alias(libs.plugins.jacocolog)
 }
 
-apply from: "${rootDir}/gradle/dependency-versions.gradle"
 apply from: "${rootDir}/gradle/common.gradle"
 apply from: "${rootDir}/gradle/java-project.gradle"
 apply from: "${rootDir}/gradle/java-codequality.gradle"
@@ -37,19 +29,19 @@ apply plugin: 'distribution'
 apply plugin: 'org.barfuin.gradle.jacocolog'
 
 dependencies {
-  implementation group: 'org.opentcs', name: 'opentcs-api-injection', version: openTcsBaselineVersion
-  implementation group: 'org.opentcs', name: 'opentcs-common', version: openTcsBaselineVersion
+  implementation libs.opentcs.api.injection
+  implementation libs.opentcs.common
 
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.18.3'
-  implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.18.3'
+  implementation libs.jackson.databind
+  implementation libs.jackson.datatype.jsr310
 
-  implementation group: 'com.github.erosb', name: 'everit-json-schema', version: '1.14.5'
+  implementation libs.everit.json.schema
 
-  implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
+  implementation libs.eclipse.paho.client.mqttv3
 
-  runtimeOnly group: 'org.slf4j', name: 'slf4j-jdk14', version: '2.0.17'
+  runtimeOnly libs.slf4j.jdk14
 
-  testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.27.3'
+  testImplementation libs.assertj
 }
 
 // Attributes for the AsciiDoc documentation to include code from source files
