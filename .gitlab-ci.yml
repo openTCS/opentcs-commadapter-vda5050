@@ -1,5 +1,5 @@
 default:
-  image: eclipse-temurin:21.0.6_7-jdk-noble
+  image: eclipse-temurin:21.0.7_6-jdk-noble
   tags:
     - opentcs-runner
   before_script:
@@ -70,7 +70,7 @@ build_code_quality_image:
   rules:
     - if: $DO_BUILD_CODEQUALITY_IMAGE == "true"
   image:
-    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    name: gcr.io/kaniko-project/executor:v1.24.0-debug
     entrypoint: [""]
   dependencies: []
   script:
