@@ -21,6 +21,9 @@ toc::[]
 ** Update the example configuration in the documentation to ensure a transport order is withdrawn when switching to manual mode, which better matches the behaviour as described in the VDA5050 specification.
 * Changes affecting developers:
 ** Update Gradle wrapper to 8.14.2.
+** Update JUnit5 to 5.13.2.
+** Update Mockito to 5.18.0.
+** Update ApprovalTests to 24.22.0.
 
 == Version 0.24 (2025-04-22)
 
