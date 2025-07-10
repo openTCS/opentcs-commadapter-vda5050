@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: The openTCS Authors
+// SPDX-License-Identifier: MIT
+
 // If we do not have a build number, we're building on a developer's system, so
 // mark the artifact as a snapshot build.
 def versionBuild = "SNAPSHOT"

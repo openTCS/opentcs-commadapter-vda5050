@@ -1,4 +1,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<!--
+SPDX-FileCopyrightText: The Checkstyle Contributors (https://github.com/checkstyle/contribution/)
+SPDX-License-Identifier: LGPL-2.1-only
+-->
 <xsl:output method="html" indent="yes"/>
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
 
@@ -130,7 +134,7 @@
         <xsl:sort data-type="number" order="descending" select="count(key('files', @name)/error[@severity='error'])"/>
         <xsl:sort data-type="number" order="descending" select="count(key('files', @name)/error[@severity='warning'])"/>
         <xsl:sort data-type="number" order="descending" select="count(key('files', @name)/error[@severity='info'])"/>
-        
+
         <!-- Sort method 1: Sum(#error+#info+#warning) (uncomment to use, comment method 1)  -->
         <!--
         <xsl:sort data-type="number" order="descending" select="count(key('files', @name)/error)"/>
