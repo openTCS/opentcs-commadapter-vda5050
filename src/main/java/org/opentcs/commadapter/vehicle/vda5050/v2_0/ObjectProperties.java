@@ -104,6 +104,11 @@ public interface ObjectProperties {
    */
   String PROPKEY_VEHICLE_MAX_DISTANCE_IN_ADVANCE = "vda5050:maxDistanceBase";
   /**
+   * The key of the vehicle property that defines when the deviation of the first node of an order
+   * should be extended to include the vehicle's current position.
+   */
+  String PROPKEY_VEHICLE_DEVIATION_EXTENSION_TRIGGER = "vda5050:deviationExtensionTrigger";
+  /**
    * The key property containing a list of executable action tags.
    */
   String PROPKEY_EXECUTABLE_ACTIONS_TAGS = "vda5050:actionTags";

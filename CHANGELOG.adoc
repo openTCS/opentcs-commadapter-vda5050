@@ -22,6 +22,7 @@ toc::[]
 
 * New features and enhancements:
 ** Be more tolerant with messages on the connection topic, accepting any timestamps / header IDs here to better handle edge cases.
+** Introduce the vehicle property `vda5050:deviationExtensionTrigger` to make the extension of the deviation range of a node configurable.
 ** Update the example configuration in the documentation to ensure a transport order is withdrawn when switching to manual mode, which better matches the behaviour as described in the VDA5050 specification.
 * Changes affecting developers:
 ** Update Gradle wrapper to 8.14.2.

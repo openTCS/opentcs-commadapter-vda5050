@@ -182,6 +182,10 @@ public class CommAdapterImpl
    * Limits the amount of orders sent to the vehicle in advance.
    */
   private final DistanceInAdvanceController distanceInAdvanceController;
+  /**
+   * Determines whether the deviation of nodes should be extended.
+   */
+  private final DeviationExtensionTrigger deviationExtensionTrigger;
 
   /**
    * Creates a new instance.
@@ -262,6 +266,7 @@ public class CommAdapterImpl
     );
 
     this.isActionExecutable = new ExecutableActionsTagsPredicate(vehicle);
+    this.deviationExtensionTrigger = componentsFactory.createDeviationExtensionTrigger(vehicle);
   }
 
   @Override
@@ -269,7 +274,8 @@ public class CommAdapterImpl
     super.initialize();
     orderMapper = componentsFactory.createOrderMapper(
         getProcessModel().getReference(),
-        isActionExecutable
+        isActionExecutable,
+        deviationExtensionTrigger
     );
     vehiclePositionResolver = componentsFactory.createVehiclePositionResolver(
         getProcessModel().getReference()

@@ -21,6 +21,7 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Edge;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Node;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Order;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.DeviationExtensionTrigger;
 import org.opentcs.components.kernel.services.TCSObjectService;
 import org.opentcs.data.TCSObjectReference;
 import org.opentcs.data.model.LocationType;
@@ -54,6 +55,10 @@ public class OrderMapper {
    */
   private final Predicate<String> vehicleActionsFilter;
   /**
+   * Determines whether the deviation of nodes should be extended.
+   */
+  private final DeviationExtensionTrigger deviationExtensionTrigger;
+  /**
    * The last order that was mapped.
    */
   private Order lastMappedOrder;
@@ -63,6 +68,7 @@ public class OrderMapper {
    *
    * @param vehicleReference A reference to the attached vehicle.
    * @param isActionExecutable A predicate to test if an action is executable.
+   * @param deviationExtensionTrigger Determines whether the deviation of nodes should be extended.
    * @param objectService An object service.
    */
   @Inject
@@ -73,11 +79,16 @@ public class OrderMapper {
       @Assisted
       @Nonnull
       Predicate<String> isActionExecutable,
+      @Assisted
+      @Nonnull
+      DeviationExtensionTrigger deviationExtensionTrigger,
       @Nonnull
       TCSObjectService objectService
   ) {
     this.vehicleReference = requireNonNull(vehicleReference, "vehicleReference");
     this.vehicleActionsFilter = requireNonNull(isActionExecutable, "isActionExecutable");
+    this.deviationExtensionTrigger
+        = requireNonNull(deviationExtensionTrigger, "deviationExtensionTrigger");
     this.objectService = requireNonNull(objectService, "objectService");
   }
 
@@ -198,7 +209,7 @@ public class OrderMapper {
             .filter(actionFilter)
             .map(propertyAction -> ActionsMapping.fromPropertyAction(vehicle, propertyAction))
             .collect(Collectors.toList()),
-        true
+        deviationExtensionTrigger.extendDeviation(command)
     );
   }
 

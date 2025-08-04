@@ -26,15 +26,17 @@ public interface CommAdapterComponentsFactory {
   CommAdapterImpl createCommAdapterImpl(Vehicle vehicle);
 
   /**
-   * Creates a new objcet mapper.
+   * Creates a new object mapper.
    *
    * @param vehicleReference Reference to the vehicle.
    * @param isActionExecutable A predicate to test if an action is executable.
+   * @param deviationExtensionTrigger Determines whether the deviation of nodes should be extended.
    * @return The new object mapper.
    */
   OrderMapper createOrderMapper(
       TCSObjectReference<Vehicle> vehicleReference,
-      Predicate<String> isActionExecutable
+      Predicate<String> isActionExecutable,
+      DeviationExtensionTrigger deviationExtensionTrigger
   );
 
   /**
@@ -74,4 +76,12 @@ public interface CommAdapterComponentsFactory {
    * @return A new instance.
    */
   DistanceInAdvanceController createDistanceInAdvanceController(long maxDistanceInAdvance);
+
+  /**
+   * Creates a new {@link DeviationExtensionTrigger} for the given vehicle.
+   *
+   * @param vehicle The vehicle.
+   * @return A new instance.
+   */
+  DeviationExtensionTrigger createDeviationExtensionTrigger(Vehicle vehicle);
 }

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Node;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Order;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.DeviationExtensionTrigger;
 import org.opentcs.components.kernel.services.TCSObjectService;
 import org.opentcs.data.model.Location;
 import org.opentcs.data.model.LocationType;
@@ -62,7 +63,8 @@ public class OrderMapperTest {
             .withCurrentDriveOrderIndex(0);
     vehicle = new Vehicle("vehicle-0001")
         .withPrecisePosition(new Triple(0, 0, 0))
-        .withTransportOrder(transportOrder.getReference());
+        .withTransportOrder(transportOrder.getReference())
+        .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_EXTENSION_TRIGGER, "always");
 
     objectService = mock(TCSObjectService.class);
     when(objectService.fetchObject(Vehicle.class, vehicle.getReference()))
@@ -73,6 +75,7 @@ public class OrderMapperTest {
     mapper = new OrderMapper(
         vehicle.getReference(),
         s -> true,
+        new DeviationExtensionTrigger(vehicle),
         objectService
     );
   }
@@ -219,6 +222,7 @@ public class OrderMapperTest {
     mapper = new OrderMapper(
         vehicle.getReference(),
         new ExecutableActionsTagsPredicate(vehicle),
+        new DeviationExtensionTrigger(vehicle),
         objectService
     );
 
