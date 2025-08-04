@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
 public class IncomingMessageFilter {
   private static final Logger LOG = LoggerFactory.getLogger(IncomingMessageFilter.class);
 
-  private HeaderRecord headerRecordConnection = new HeaderRecord();
-  private HeaderRecord headerRecordState = new HeaderRecord();
-  private HeaderRecord headerRecordVisualization = new HeaderRecord();
+  private final HeaderRecord headerRecordConnection = new HeaderRecord();
+  private final HeaderRecord headerRecordState = new HeaderRecord();
+  private final HeaderRecord headerRecordVisualization = new HeaderRecord();
   private boolean online;
 
   /**
@@ -66,6 +66,17 @@ public class IncomingMessageFilter {
   }
 
   private boolean processConnection(Connection message) {
+    // Note that the following scenario is possible with VDA5050:
+    // 1. The driver's connection to the MQTT broker is lost.
+    // 2. An OFFLINE/CONNECTIONBROKEN message is published by the vehicle/broker.
+    // 3. The vehicle resets its timestamps and header IDs, e.g. as part of a reboot.
+    // 4. An ONLINE message is published by the vehicle.
+    // 5. The driver's connection to the MQTT broker is restored.
+    // In this situation, only the ONLINE message would be delivered to us, containing the new,
+    // "older" timestamps and header IDs. For this reason, we accept ANY message with a valid
+    // connection state here, and reset our header records for EVERY topic, too. Not doing so would
+    // mean not accepting any further messages from the vehicle until its timestamps/header IDs have
+    // caught up with the previously-reached values.
     switch (message.getConnectionState()) {
       case CONNECTIONBROKEN:
         reset();
@@ -74,8 +85,7 @@ public class IncomingMessageFilter {
       case OFFLINE:
         if (message.getHeaderId() <= headerRecordConnection.lastSeenHeaderId
             && !message.getTimestamp().isAfter(headerRecordConnection.lastSeenTimestamp)) {
-          LOG.info("Not accepting message with outdated header: {}", message);
-          return false;
+          LOG.info("Connection message header outdated, accepting anyway: {}", message);
         }
 
         reset();
@@ -84,19 +94,18 @@ public class IncomingMessageFilter {
       case ONLINE:
         if (message.getHeaderId() <= headerRecordConnection.lastSeenHeaderId
             && !message.getTimestamp().isAfter(headerRecordConnection.lastSeenTimestamp)) {
-          LOG.info("Not accepting message with outdated header: {}", message);
-          return false;
+          LOG.info("Connection message header outdated, accepting anyway: {}", message);
         }
 
+        reset();
         online = true;
-
         headerRecordConnection.lastSeenHeaderId = message.getHeaderId();
         headerRecordConnection.lastSeenTimestamp = message.getTimestamp();
 
         return true;
       default:
         LOG.warn("Unhandled connection state: {}", message.getConnectionState());
-        return true;
+        return false;
     }
   }
 
