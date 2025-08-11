@@ -12,6 +12,7 @@ import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROP
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MAP_ID;
 
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
@@ -35,7 +36,8 @@ public class NodeMapping {
   /**
    * Prevents unwanted instantiation.
    */
-  private NodeMapping() {
+  @Inject
+  public NodeMapping() {
   }
 
   /**
@@ -50,7 +52,7 @@ public class NodeMapping {
    * include the vehicle's position.
    * @return A mapped Node.
    */
-  public static Node toBaseNode(
+  public Node toBaseNode(
       Point point,
       long sequenceId,
       Vehicle vehicle,
@@ -82,7 +84,7 @@ public class NodeMapping {
    * include the vehicle's position.
    * @return A mapped Node.
    */
-  public static Node toHorizonNode(
+  public Node toHorizonNode(
       Point point,
       long sequenceId,
       Vehicle vehicle,
@@ -111,7 +113,7 @@ public class NodeMapping {
    * include the vehicle's position.
    * @return A node position.
    */
-  public static NodePosition toNodePosition(
+  public NodePosition toNodePosition(
       @Nonnull
       Point point,
       @Nonnull
@@ -148,17 +150,17 @@ public class NodeMapping {
     return position;
   }
 
-  private static Optional<Double> regularDeviationXY(Point point, Vehicle vehicle) {
+  private Optional<Double> regularDeviationXY(Point point, Vehicle vehicle) {
     return getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_XY, point, vehicle);
   }
 
-  private static Optional<Double> regularDeviationTheta(Point point, Vehicle vehicle) {
+  private Optional<Double> regularDeviationTheta(Point point, Vehicle vehicle) {
     // XXX Ensure the angle is (positive and) within 0 and 180 degrees.
     return getPropertyDouble(PROPKEY_VEHICLE_DEVIATION_THETA, point, vehicle)
         .map(value -> toRadians(value));
   }
 
-  private static Double extendedDeviationXY(Point point, Vehicle vehicle) {
+  private Double extendedDeviationXY(Point point, Vehicle vehicle) {
     // Ensure the deviation range is large enough for the vehicle to accept this node.
     double deltaX
         = (vehicle.getPrecisePosition().getX() - point.getPose().getPosition().getX()) / 1000.0;
@@ -177,7 +179,7 @@ public class NodeMapping {
     );
   }
 
-  private static Double extendedDeviationTheta() {
+  private Double extendedDeviationTheta() {
     return Math.PI;
   }
 }

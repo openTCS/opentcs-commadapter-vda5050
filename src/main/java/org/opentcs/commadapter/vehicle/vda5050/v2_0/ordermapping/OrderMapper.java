@@ -59,6 +59,10 @@ public class OrderMapper {
    */
   private final DeviationExtensionTrigger deviationExtensionTrigger;
   /**
+   * Maps points from movement commands to a VDA5050 node.
+   */
+  private final NodeMapping nodeMapping;
+  /**
    * The last order that was mapped.
    */
   private Order lastMappedOrder;
@@ -70,6 +74,7 @@ public class OrderMapper {
    * @param isActionExecutable A predicate to test if an action is executable.
    * @param deviationExtensionTrigger Determines whether the deviation of nodes should be extended.
    * @param objectService An object service.
+   * @param nodeMapping Maps points from movement commands to a VDA5050 node.
    */
   @Inject
   public OrderMapper(
@@ -83,13 +88,16 @@ public class OrderMapper {
       @Nonnull
       DeviationExtensionTrigger deviationExtensionTrigger,
       @Nonnull
-      TCSObjectService objectService
+      TCSObjectService objectService,
+      @Nonnull
+      NodeMapping nodeMapping
   ) {
     this.vehicleReference = requireNonNull(vehicleReference, "vehicleReference");
     this.vehicleActionsFilter = requireNonNull(isActionExecutable, "isActionExecutable");
     this.deviationExtensionTrigger
         = requireNonNull(deviationExtensionTrigger, "deviationExtensionTrigger");
     this.objectService = requireNonNull(objectService, "objectService");
+    this.nodeMapping = requireNonNull(nodeMapping, "nodeMapping");
   }
 
   /**
@@ -201,7 +209,7 @@ public class OrderMapper {
             EnumSet.of(ActionTrigger.ORDER_START)
         );
 
-    return NodeMapping.toBaseNode(
+    return nodeMapping.toBaseNode(
         command.getStep().getSourcePoint(),
         0,
         vehicle,
@@ -220,7 +228,7 @@ public class OrderMapper {
       @Nonnull
       Vehicle vehicle
   ) {
-    return NodeMapping.toBaseNode(
+    return nodeMapping.toBaseNode(
         command.getStep().getDestinationPoint(),
         sequenceId,
         vehicle,
@@ -405,7 +413,7 @@ public class OrderMapper {
       @Nonnull
       Vehicle vehicle
   ) {
-    return NodeMapping.toHorizonNode(
+    return nodeMapping.toHorizonNode(
         step.getDestinationPoint(),
         sequenceId,
         vehicle,

@@ -76,7 +76,8 @@ public class OrderMapperTest {
         vehicle.getReference(),
         s -> true,
         new DeviationExtensionTrigger(vehicle),
-        objectService
+        objectService,
+        new NodeMapping()
     );
   }
 
@@ -223,7 +224,8 @@ public class OrderMapperTest {
         vehicle.getReference(),
         new ExecutableActionsTagsPredicate(vehicle),
         new DeviationExtensionTrigger(vehicle),
-        objectService
+        objectService,
+        new NodeMapping()
     );
 
     // setup a movement command

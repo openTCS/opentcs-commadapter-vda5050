@@ -79,6 +79,10 @@ public class ControlPanel
    */
   private final CallWrapper callWrapper;
   /**
+   * Maps points from movement commands to a VDA5050 node.
+   */
+  private final NodeMapping nodeMapping;
+  /**
    * The comm adapter's process model.
    */
   private ProcessModelImplTO processModel;
@@ -91,6 +95,7 @@ public class ControlPanel
    * @param processModel The comm adapter's process model
    * @param vehicleService The vehicle service
    * @param callWrapper The call wrapper to use for service calls
+   * @param nodeMapping Maps points from movement commands to a VDA5050 node.
    */
   @Inject
   @SuppressWarnings("this-escape")
@@ -102,7 +107,8 @@ public class ControlPanel
       @Assisted
       VehicleService vehicleService,
       @ServiceCallWrapper
-      CallWrapper callWrapper
+      CallWrapper callWrapper,
+      NodeMapping nodeMapping
   ) {
     this.newOrderActionConfigurationPanel
         = requireNonNull(newOrderActionConfigurationPanel, "newOrderActionConfigurationPanel");
@@ -111,6 +117,7 @@ public class ControlPanel
     this.processModel = requireNonNull(processModel, "processModel");
     this.vehicleService = requireNonNull(vehicleService, "vehicleService");
     this.callWrapper = requireNonNull(callWrapper, "callWrapper");
+    this.nodeMapping = requireNonNull(nodeMapping, "nodeMapping");
     initComponents();
     initComboBoxes();
     initGuiContent();
@@ -705,7 +712,7 @@ public class ControlPanel
     );
     Point point = vehicleService.fetchObject(Point.class, reference);
     Vehicle vehicle = vehicleService.fetchObject(Vehicle.class, processModel.getVehicleRef());
-    node.setNodePosition(NodeMapping.toNodePosition(point, vehicle, false));
+    node.setNodePosition(nodeMapping.toNodePosition(point, vehicle, false));
     return node;
   }
 
