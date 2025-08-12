@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.NodePosition;
 import org.opentcs.data.model.Point;
+import org.opentcs.data.model.Pose;
 import org.opentcs.data.model.Triple;
 import org.opentcs.data.model.Vehicle;
 
@@ -68,7 +69,7 @@ public class NodeMappingTest {
   @Test
   public void extendDeviationToIncludeVehicle() {
     Vehicle vehicle = new Vehicle("vehicle-0001")
-        .withPrecisePosition(new Triple(5000, 5000, 0));
+        .withPose(new Pose(new Triple(5000, 5000, 0), Double.NaN));
     Point point = new Point("Point-0001");
     point = point
         .withPose(point.getPose().withPosition(new Triple(1000, 1000, 0)))
@@ -89,7 +90,7 @@ public class NodeMappingTest {
   @Test
   public void extendDeviationToIncludeVehicleWithExtraPadding() {
     Vehicle vehicle = new Vehicle("vehicle-0001")
-        .withPrecisePosition(new Triple(5000, 5000, 0))
+        .withPose(new Pose(new Triple(5000, 5000, 0), Double.NaN))
         .withProperty(PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING, "1.23");
     Point point = new Point("Point-0001");
     point = point
@@ -108,7 +109,7 @@ public class NodeMappingTest {
   @Test
   public void extendedDeviationRangePaddingMustNotBeNegative() {
     Vehicle vehicle = new Vehicle("vehicle-0001")
-        .withPrecisePosition(new Triple(5000, 5000, 0))
+        .withPose(new Pose(new Triple(5000, 5000, 0), Double.NaN))
         .withProperty(PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING, "-1.23");
     Point point = new Point("Point-0001");
     point = point
@@ -126,7 +127,7 @@ public class NodeMappingTest {
   @Test
   public void stickToNodeDeviationIfVehicleIsCloser() {
     Vehicle vehicle = new Vehicle("vehicle-0001")
-        .withPrecisePosition(new Triple(500, 500, 0));
+        .withPose(new Pose(new Triple(500, 500, 0), Double.NaN));
     Point point = new Point("Point-0001");
     point = point
         .withPose(point.getPose().withPosition(new Triple(1000, 1000, 0)))

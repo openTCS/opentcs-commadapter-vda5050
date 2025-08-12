@@ -321,13 +321,14 @@ public class PropertyExtractionsTest {
 
     return new MovementCommand(
         new TransportOrder("1", List.of()),
-        new DriveOrder(new DriveOrder.Destination(point2.getReference())),
+        new DriveOrder("drive-order", new DriveOrder.Destination(point2.getReference())),
         new Route.Step(
             new Path("path", point1.getReference(), point2.getReference()),
             point1,
             point2,
             Vehicle.Orientation.FORWARD,
-            0
+            0,
+            1
         ),
         "NOP",
         location,

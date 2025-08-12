@@ -623,12 +623,13 @@ public class ActionsMappingTest {
         src,
         dst,
         Vehicle.Orientation.FORWARD,
-        0
+        0,
+        1
     );
 
     return new MovementCommand(
         new TransportOrder("1", List.of()),
-        new DriveOrder(new DriveOrder.Destination(dst.getReference())),
+        new DriveOrder("drive-order", new DriveOrder.Destination(dst.getReference())),
         dummyStep,
         operation,
         opLocation,

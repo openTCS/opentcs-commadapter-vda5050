@@ -388,12 +388,13 @@ public class MovementCommandManagerTest {
         source,
         dest,
         Vehicle.Orientation.FORWARD,
-        0
+        0,
+        1
     );
 
     return new MovementCommand(
         new TransportOrder("1", List.of()),
-        new DriveOrder(new DriveOrder.Destination(dest.getReference())),
+        new DriveOrder("drive-order", new DriveOrder.Destination(dest.getReference())),
         dummyStep,
         "NOP",
         null,

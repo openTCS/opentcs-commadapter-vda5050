@@ -6,30 +6,26 @@ import static java.util.Objects.requireNonNull;
 
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterMessages;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ProcessModelImpl;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.commands.SendInstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.action.ActionConfigurationPanel;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.commands.SendOrderCommand;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.instantactions.InstantActions;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Edge;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Node;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Order;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.NodeMapping;
 import org.opentcs.components.kernel.services.VehicleService;
 import org.opentcs.customizations.ServiceCallWrapper;
 import org.opentcs.data.TCSObjectReference;
 import org.opentcs.data.model.Path;
 import org.opentcs.data.model.Point;
-import org.opentcs.data.model.Vehicle;
-import org.opentcs.drivers.vehicle.AdapterCommand;
+import org.opentcs.drivers.vehicle.VehicleCommAdapterMessage;
 import org.opentcs.drivers.vehicle.VehicleProcessModel;
 import org.opentcs.drivers.vehicle.management.VehicleCommAdapterPanel;
 import org.opentcs.drivers.vehicle.management.VehicleProcessModelTO;
@@ -79,10 +75,6 @@ public class ControlPanel
    */
   private final CallWrapper callWrapper;
   /**
-   * Maps points from movement commands to a VDA5050 node.
-   */
-  private final NodeMapping nodeMapping;
-  /**
    * The comm adapter's process model.
    */
   private ProcessModelImplTO processModel;
@@ -95,7 +87,6 @@ public class ControlPanel
    * @param processModel The comm adapter's process model
    * @param vehicleService The vehicle service
    * @param callWrapper The call wrapper to use for service calls
-   * @param nodeMapping Maps points from movement commands to a VDA5050 node.
    */
   @Inject
   @SuppressWarnings("this-escape")
@@ -107,8 +98,7 @@ public class ControlPanel
       @Assisted
       VehicleService vehicleService,
       @ServiceCallWrapper
-      CallWrapper callWrapper,
-      NodeMapping nodeMapping
+      CallWrapper callWrapper
   ) {
     this.newOrderActionConfigurationPanel
         = requireNonNull(newOrderActionConfigurationPanel, "newOrderActionConfigurationPanel");
@@ -117,7 +107,6 @@ public class ControlPanel
     this.processModel = requireNonNull(processModel, "processModel");
     this.vehicleService = requireNonNull(vehicleService, "vehicleService");
     this.callWrapper = requireNonNull(callWrapper, "callWrapper");
-    this.nodeMapping = requireNonNull(nodeMapping, "nodeMapping");
     initComponents();
     initComboBoxes();
     initGuiContent();
@@ -293,21 +282,21 @@ public class ControlPanel
   }
 
   /**
-   * Sends a command to the comm adapter.
+   * Sends a message to the comm adapter.
    *
-   * @param command The command
+   * @param message The message
    */
-  private void sendAdapterCommand(AdapterCommand command) {
+  private void sendAdapterMessage(VehicleCommAdapterMessage message) {
     try {
       callWrapper.call(
-          () -> vehicleService.sendCommAdapterCommand(
+          () -> vehicleService.sendCommAdapterMessage(
               processModel.getVehicleRef(),
-              command
+              message
           )
       );
     }
     catch (Exception ex) {
-      LOG.warn("Error sending comm adapter command '{}'", command, ex);
+      LOG.warn("Error sending comm adapter message '{}'", message, ex);
     }
   }
 
@@ -675,72 +664,104 @@ public class ControlPanel
     }
 
     Path path = (Path) pathComboBox.getSelectedItem();
-
-    TCSObjectReference<Point> destinationPoint = path.getDestinationPoint();
-    Node destinationNode = makeNodeFromPointReference(destinationPoint);
-    destinationNode.setSequenceId(2L);
-
-    Optional<Action> action = newOrderActionConfigurationPanel.getAction();
-    if (action.isPresent()) {
-      destinationNode.setActions(Arrays.asList(action.get()));
-    }
-
     TCSObjectReference<Point> sourcePoint = path.getSourcePoint();
-    Node sourceNode = makeNodeFromPointReference(sourcePoint);
-    sourceNode.setSequenceId(0L);
+    TCSObjectReference<Point> destinationPoint = path.getDestinationPoint();
 
-    Edge edge = makeEdgeFromPath(path, sourceNode, destinationNode);
-    edge.setSequenceId(1L);
-
-    Order order = new Order(
-        orderIdTextField.getText(),
-        updateId,
-        Arrays.asList(sourceNode, destinationNode),
-        Arrays.asList(edge)
+    Map<String, String> messageParameters = new HashMap<>();
+    messageParameters.put(
+        CommAdapterMessages.SEND_ORDER_PARAM_ORDER_ID,
+        orderIdTextField.getText()
+    );
+    messageParameters.put(
+        CommAdapterMessages.SEND_ORDER_PARAM_ORDER_UPDATE_ID,
+        String.valueOf(updateId)
+    );
+    messageParameters.put(
+        CommAdapterMessages.SEND_ORDER_PARAM_SOURCE_NODE,
+        sourcePoint.getName()
+    );
+    messageParameters.put(
+        CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE,
+        destinationPoint.getName()
+    );
+    messageParameters.put(
+        CommAdapterMessages.SEND_ORDER_PARAM_EDGE,
+        path.getName()
     );
 
-    SendOrderCommand command = new SendOrderCommand(order);
-    sendAdapterCommand(command);
+    newOrderActionConfigurationPanel.getAction().ifPresent(action -> {
+      messageParameters.put(
+          CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_TYPE,
+          action.getActionType()
+      );
+      messageParameters.put(
+          CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_ID,
+          action.getActionId()
+      );
+      messageParameters.put(
+          CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_BLOCKING_TYPE,
+          action.getBlockingType().name()
+      );
+      messageParameters.put(
+          CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_DESCRIPTION,
+          action.getActionDescription()
+      );
+
+
+      action.getActionParameters().forEach(
+          actionParameter -> messageParameters.put(
+              CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_PARAMETER_PREFIX
+                  + actionParameter.getKey(),
+              actionParameter.getValue().toString()
+          )
+      );
+    });
+
+    sendAdapterMessage(
+        new VehicleCommAdapterMessage(CommAdapterMessages.SEND_ORDER_TYPE, messageParameters)
+    );
   }//GEN-LAST:event_sendOrderButtonActionPerformed
-
-  private Node makeNodeFromPointReference(TCSObjectReference<Point> reference) {
-    Node node = new Node(
-        reference.getName(),
-        0L,
-        true,
-        new ArrayList<>()
-    );
-    Point point = vehicleService.fetchObject(Point.class, reference);
-    Vehicle vehicle = vehicleService.fetchObject(Vehicle.class, processModel.getVehicleRef());
-    node.setNodePosition(nodeMapping.toNodePosition(point, vehicle, false));
-    return node;
-  }
-
-  private Edge makeEdgeFromPath(Path p, Node startNode, Node endNode) {
-    Edge rtn = new Edge(
-        p.getName(),
-        0L,
-        true,
-        startNode.getNodeId(),
-        endNode.getNodeId(),
-        new ArrayList<>()
-    );
-    return rtn;
-  }
 
   private void enableAdapterCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableAdapterCheckBoxActionPerformed
     enableCommAdapter(enableAdapterCheckBox.isSelected());
   }//GEN-LAST:event_enableAdapterCheckBoxActionPerformed
 
   private void sendInstantActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendInstantActionButtonActionPerformed
-    Optional<Action> action = instantActionConfigurationPanel.getAction();
-    if (action.isPresent()) {
-      InstantActions instantAction = new InstantActions();
-      instantAction.setInstantActions(Arrays.asList(action.get()));
+    instantActionConfigurationPanel.getAction().ifPresent(action -> {
+      Map<String, String> messageParameters = new HashMap<>();
 
-      AdapterCommand command = new SendInstantActions(instantAction);
-      sendAdapterCommand(command);
-    }
+      messageParameters.put(
+          CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_TYPE,
+          action.getActionType()
+      );
+      messageParameters.put(
+          CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_ID,
+          action.getActionId()
+      );
+      messageParameters.put(
+          CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_BLOCKING_TYPE,
+          action.getBlockingType().name()
+      );
+      messageParameters.put(
+          CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_DESCRIPTION,
+          action.getActionDescription()
+      );
+
+      action.getActionParameters()
+          .forEach(
+              actionParameter -> messageParameters.put(
+                  CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX
+                      + actionParameter.getKey(),
+                  actionParameter.getValue().toString()
+              )
+          );
+
+      sendAdapterMessage(
+          new VehicleCommAdapterMessage(
+              CommAdapterMessages.SEND_INSTANT_ACTION_TYPE, messageParameters
+          )
+      );
+    });
   }//GEN-LAST:event_sendInstantActionButtonActionPerformed
 
   private void applyLastOrderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyLastOrderButtonActionPerformed

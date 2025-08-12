@@ -29,6 +29,7 @@ import org.opentcs.data.model.Location;
 import org.opentcs.data.model.LocationType;
 import org.opentcs.data.model.Path;
 import org.opentcs.data.model.Point;
+import org.opentcs.data.model.Pose;
 import org.opentcs.data.model.Triple;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.data.model.Vehicle.Orientation;
@@ -57,12 +58,15 @@ public class OrderMapperTest {
         = new TransportOrder(
             "some-order",
             List.of(
-                new DriveOrder(new DriveOrder.Destination(new Point("some-point").getReference()))
+                new DriveOrder(
+                    "drive-order",
+                    new DriveOrder.Destination(new Point("some-point").getReference())
+                )
             )
         )
             .withCurrentDriveOrderIndex(0);
     vehicle = new Vehicle("vehicle-0001")
-        .withPrecisePosition(new Triple(0, 0, 0))
+        .withPose(new Pose(new Triple(0, 0, 0), Double.NaN))
         .withTransportOrder(transportOrder.getReference())
         .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_EXTENSION_TRIGGER, "always");
 
@@ -123,7 +127,7 @@ public class OrderMapperTest {
         .withProperty(PROPKEY_CUSTOM_ACTION_PREFIX + ".01.parameters", "x = 234 | y = 567");
 
     Path path = new Path("Path-0001", sourcePoint.getReference(), destPoint.getReference());
-    Step step = new Step(path, sourcePoint, destPoint, Orientation.FORWARD, 0);
+    Step step = new Step(path, sourcePoint, destPoint, Orientation.FORWARD, 0, 1);
 
     MovementCommand command = createMovementCommandWithStep(step);
 
@@ -148,7 +152,7 @@ public class OrderMapperTest {
         .withProperty(PROPKEY_CUSTOM_ACTION_PREFIX + ".01.parameters", "x = 234 | y = 567");
 
     Path path = new Path("Path-0001", sourcePoint.getReference(), destPoint.getReference());
-    Step step = new Step(path, sourcePoint, destPoint, Orientation.FORWARD, 0);
+    Step step = new Step(path, sourcePoint, destPoint, Orientation.FORWARD, 0, 1);
 
     MovementCommand command = createMovementCommandWithStep(step);
 
@@ -170,7 +174,7 @@ public class OrderMapperTest {
         .withProperty(PROPKEY_CUSTOM_ACTION_PREFIX + ".ab.parameters", "x = 234 | y = 567");
 
     Path path = new Path("Path-0001", sourcePoint.getReference(), destPoint.getReference());
-    Step step = new Step(path, sourcePoint, destPoint, Orientation.FORWARD, 0);
+    Step step = new Step(path, sourcePoint, destPoint, Orientation.FORWARD, 0, 1);
 
     MovementCommand command = createMovementCommandWithStep(step)
         .withOpLocation(destLoc);
@@ -340,7 +344,8 @@ public class OrderMapperTest {
         source,
         dest,
         Orientation.FORWARD,
-        0
+        0,
+        1
     );
     MovementCommand command = createMovementCommandWithStep(step);
 
@@ -363,7 +368,7 @@ public class OrderMapperTest {
 
     Path path = new Path("path-0001", source.getReference(), dest.getReference())
         .withProperty(PROPKEY_EXECUTABLE_ACTIONS_TAGS, "tag_duck");
-    Step step = new Step(path, source, dest, Orientation.FORWARD, 0);
+    Step step = new Step(path, source, dest, Orientation.FORWARD, 0, 1);
 
     MovementCommand commandOne = createMovementCommandWithStep(step);
     Order orderOne = mapper.toOrder(commandOne);
@@ -391,8 +396,8 @@ public class OrderMapperTest {
     source = source.withPose(
         source.getPose().withPosition(
             new Triple(
-                vehicle.getPrecisePosition().getX() + 1234,
-                vehicle.getPrecisePosition().getY(),
+                vehicle.getPose().getPosition().getX() + 1234,
+                vehicle.getPose().getPosition().getY(),
                 0
             )
         )
@@ -415,11 +420,11 @@ public class OrderMapperTest {
     Point p3 = new Point("Point-0003");
 
     Path l1 = new Path("path-0001", p1.getReference(), p2.getReference());
-    Step s1 = new Step(l1, p1, p2, Orientation.FORWARD, 0);
+    Step s1 = new Step(l1, p1, p2, Orientation.FORWARD, 0, 1);
     Path l2 = new Path("path-0002", p2.getReference(), p3.getReference());
-    Step s2 = new Step(l2, p2, p3, Orientation.FORWARD, 1);
+    Step s2 = new Step(l2, p2, p3, Orientation.FORWARD, 1, 1);
 
-    MovementCommand command = createMovementCommandWithRoute(new Route(Arrays.asList(s1, s2), 0), 0)
+    MovementCommand command = createMovementCommandWithRoute(new Route(Arrays.asList(s1, s2)), 0)
         .withFinalOperation(MovementCommand.NO_OPERATION)
         .withFinalDestinationLocation(
             new Location("Location-0001", new LocationType("loc-type").getReference())
@@ -439,15 +444,21 @@ public class OrderMapperTest {
     return createBasicMovementCommand(null, new Point("dest"), 1000, 500, 0, false)
         .withStep(step)
         .withDriveOrder(
-            new DriveOrder(new DriveOrder.Destination(new Point("point1").getReference()))
-                .withRoute(new Route(Arrays.asList(step), 0))
+            new DriveOrder(
+                "drive-order",
+                new DriveOrder.Destination(new Point("point1").getReference())
+            )
+                .withRoute(new Route(Arrays.asList(step)))
         );
   }
 
   private MovementCommand createMovementCommandWithRoute(Route route, int currentIndex) {
     return createBasicMovementCommand(null, new Point("dest"), 1000, 500, 0, false)
         .withDriveOrder(
-            new DriveOrder(new DriveOrder.Destination(new Point("point1").getReference()))
+            new DriveOrder(
+                "drive-order",
+                new DriveOrder.Destination(new Point("point1").getReference())
+            )
                 .withRoute(route)
         )
         .withStep(route.getSteps().get(currentIndex));
@@ -476,8 +487,8 @@ public class OrderMapperTest {
   ) {
     MovementCommand movementCommand = new MovementCommand(
         new TransportOrder("1", List.of()),
-        new DriveOrder(new DriveOrder.Destination(new Point("p1").getReference())),
-        new Route.Step(null, null, new Point("p2"), Orientation.FORWARD, 0),
+        new DriveOrder("drive-order", new DriveOrder.Destination(new Point("p1").getReference())),
+        new Route.Step(null, null, new Point("p2"), Orientation.FORWARD, 0, 1),
         "NOP",
         null,
         isFinalMovement,
@@ -499,14 +510,18 @@ public class OrderMapperTest {
         source,
         dest,
         Orientation.FORWARD,
-        routeIndex
+        routeIndex,
+        1
     );
 
     return movementCommand
         .withStep(newstep)
         .withDriveOrder(
-            new DriveOrder(new DriveOrder.Destination(new Point("point1").getReference()))
-                .withRoute(new Route(Arrays.asList(newstep), 0))
+            new DriveOrder(
+                "drive-order",
+                new DriveOrder.Destination(new Point("point1").getReference())
+            )
+                .withRoute(new Route(Arrays.asList(newstep)))
         );
   }
 }

@@ -84,4 +84,12 @@ public interface CommAdapterComponentsFactory {
    * @return A new instance.
    */
   DeviationExtensionTrigger createDeviationExtensionTrigger(Vehicle vehicle);
+
+  /**
+   * Creates a new {@link CommAdapterMessageMapper} for the given vehicle.
+   *
+   * @param vehicle The vehicle.
+   * @return A new instance.
+   */
+  CommAdapterMessageMapper createCommAdapterMessageMapper(Vehicle vehicle);
 }

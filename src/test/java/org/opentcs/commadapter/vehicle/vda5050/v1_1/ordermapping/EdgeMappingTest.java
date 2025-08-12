@@ -45,7 +45,8 @@ public class EdgeMappingTest {
         source,
         dest,
         Vehicle.Orientation.FORWARD,
-        0
+        0,
+        1
     );
 
     Edge edge = EdgeMapping.toBaseEdge(step, vehicle, List.of());
@@ -74,7 +75,8 @@ public class EdgeMappingTest {
         source,
         dest,
         Vehicle.Orientation.FORWARD,
-        0
+        0,
+        1
     );
 
     Edge edge = EdgeMapping.toBaseEdge(step, vehicle, List.of());
@@ -99,7 +101,8 @@ public class EdgeMappingTest {
         source,
         dest,
         Vehicle.Orientation.BACKWARD,
-        0
+        0,
+        1
     );
 
     Edge edge = EdgeMapping.toBaseEdge(step, vehicle, List.of());
@@ -115,7 +118,8 @@ public class EdgeMappingTest {
         source,
         dest,
         Vehicle.Orientation.FORWARD,
-        0
+        0,
+        1
     );
 
     Edge edge = EdgeMapping.toHorizonEdge(step, List.of());

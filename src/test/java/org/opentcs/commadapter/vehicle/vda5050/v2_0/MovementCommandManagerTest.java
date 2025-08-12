@@ -385,8 +385,8 @@ public class MovementCommandManagerTest {
 
     return new MovementCommand(
         new TransportOrder("1", List.of()),
-        new DriveOrder(new DriveOrder.Destination(dest.getReference())),
-        new Route.Step(path, source, dest, Vehicle.Orientation.FORWARD, 0),
+        new DriveOrder("drive-order", new DriveOrder.Destination(dest.getReference())),
+        new Route.Step(path, source, dest, Vehicle.Orientation.FORWARD, 0, 1),
         "NOP",
         null,
         finalMovement,

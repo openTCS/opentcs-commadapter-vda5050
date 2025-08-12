@@ -50,11 +50,14 @@ class DeviationExtensionTriggerTest {
 
   private MovementCommand createMovementCommand(int routeIndex) {
     Point point = new Point("point-1");
-    DriveOrder driveOrder = new DriveOrder(new DriveOrder.Destination(point.getReference()));
+    DriveOrder driveOrder = new DriveOrder(
+        "drive-order",
+        new DriveOrder.Destination(point.getReference())
+    );
     return new MovementCommand(
         new TransportOrder("1", List.of()),
         driveOrder,
-        new Route.Step(null, null, point, Vehicle.Orientation.FORWARD, routeIndex),
+        new Route.Step(null, null, point, Vehicle.Orientation.FORWARD, routeIndex, 1),
         "NOP",
         null,
         true,

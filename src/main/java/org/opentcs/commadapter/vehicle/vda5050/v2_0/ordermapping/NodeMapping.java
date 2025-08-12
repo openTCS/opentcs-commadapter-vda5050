@@ -161,11 +161,15 @@ public class NodeMapping {
   }
 
   private Double extendedDeviationXY(Point point, Vehicle vehicle) {
+    if (vehicle.getPose().getPosition() == null) {
+      return 0.0;
+    }
+
     // Ensure the deviation range is large enough for the vehicle to accept this node.
     double deltaX
-        = (vehicle.getPrecisePosition().getX() - point.getPose().getPosition().getX()) / 1000.0;
+        = (vehicle.getPose().getPosition().getX() - point.getPose().getPosition().getX()) / 1000.0;
     double deltaY
-        = (vehicle.getPrecisePosition().getY() - point.getPose().getPosition().getY()) / 1000.0;
+        = (vehicle.getPose().getPosition().getY() - point.getPose().getPosition().getY()) / 1000.0;
 
     double padding = PropertyExtractions.getPropertyDouble(
         PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING, vehicle

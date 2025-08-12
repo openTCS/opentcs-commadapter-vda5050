@@ -135,21 +135,21 @@ public class StateMappingsTest {
   public void returnUnloadedLengthForNullLoads() {
     state.setLoads(null);
 
-    assertThat(StateMappings.toVehicleLength(state, 1000, 2000), is(1000));
+    assertThat(StateMappings.toVehicleLength(state, 1000, 2000), is(1000L));
   }
 
   @Test
   public void returnUnloadedLengthForEmptyLoads() {
     state.setLoads(List.of());
 
-    assertThat(StateMappings.toVehicleLength(state, 1000, 2000), is(1000));
+    assertThat(StateMappings.toVehicleLength(state, 1000, 2000), is(1000L));
   }
 
   @Test
   public void returnLoadedLengthForLoads() {
     state.setLoads(List.of(new Load()));
 
-    assertThat(StateMappings.toVehicleLength(state, 1000, 2000), is(2000));
+    assertThat(StateMappings.toVehicleLength(state, 1000, 2000), is(2000L));
   }
 
   @Test

@@ -65,6 +65,7 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.ExecutableActio
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.OrderMapper;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.UnsupportedPropertiesExtractor;
 import org.opentcs.customizations.kernel.KernelExecutor;
+import org.opentcs.data.model.Pose;
 import org.opentcs.data.model.Triple;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.data.notification.UserNotification;
@@ -72,6 +73,7 @@ import org.opentcs.data.order.DriveOrder;
 import org.opentcs.data.order.TransportOrder;
 import org.opentcs.drivers.vehicle.BasicVehicleCommAdapter;
 import org.opentcs.drivers.vehicle.MovementCommand;
+import org.opentcs.drivers.vehicle.VehicleCommAdapterMessage;
 import org.opentcs.drivers.vehicle.management.VehicleProcessModelTO;
 import org.opentcs.util.ExplainedBoolean;
 import org.slf4j.Logger;
@@ -133,11 +135,11 @@ public class CommAdapterImpl
   /**
    * The vehicle's length when loaded.
    */
-  private final int vehicleLengthLoaded;
+  private final long vehicleLengthLoaded;
   /**
    * The vehicle's length when unloaded.
    */
-  private final int vehicleLengthUnloaded;
+  private final long vehicleLengthUnloaded;
   /**
    * Validates messages against JSON schemas.
    */
@@ -186,6 +188,10 @@ public class CommAdapterImpl
    * Determines whether the deviation of nodes should be extended.
    */
   private final DeviationExtensionTrigger deviationExtensionTrigger;
+  /**
+   * Maps {@link VehicleCommAdapterMessage} to other types.
+   */
+  private final CommAdapterMessageMapper commAdapterMessageMapper;
 
   /**
    * Creates a new instance.
@@ -225,10 +231,10 @@ public class CommAdapterImpl
     this.componentsFactory = requireNonNull(componentsFactory, "componentsFactory");
     this.minVisualizationInterval
         = getPropertyInteger(PROPKEY_VEHICLE_MIN_VISU_INTERVAL, vehicle).orElse(500);
-    this.vehicleLengthLoaded
-        = getPropertyInteger(PROPKEY_VEHICLE_LENGTH_LOADED, vehicle).orElse(vehicle.getLength());
-    this.vehicleLengthUnloaded
-        = getPropertyInteger(PROPKEY_VEHICLE_LENGTH_UNLOADED, vehicle).orElse(vehicle.getLength());
+    this.vehicleLengthLoaded = getPropertyLong(PROPKEY_VEHICLE_LENGTH_LOADED, vehicle)
+        .orElse(vehicle.getBoundingBox().getLength());
+    this.vehicleLengthUnloaded = getPropertyLong(PROPKEY_VEHICLE_LENGTH_UNLOADED, vehicle)
+        .orElse(vehicle.getBoundingBox().getLength());
     this.clientManager = requireNonNull(clientManager, "clientManager");
     this.messageValidator = requireNonNull(messageValidator, "messageValidator");
     this.incomingMessageFilter = requireNonNull(incomingMessageFilter, "incomingMessageFilter");
@@ -245,6 +251,7 @@ public class CommAdapterImpl
     distanceInAdvanceController = componentsFactory.createDistanceInAdvanceController(
         getPropertyLong(PROPKEY_VEHICLE_MAX_DISTANCE_IN_ADVANCE, vehicle).orElse(Long.MAX_VALUE)
     );
+    commAdapterMessageMapper = componentsFactory.createCommAdapterMessageMapper(vehicle);
 
     messageResponseMatcher = new MessageResponseMatcher(
         this.getName(),
@@ -456,8 +463,21 @@ public class CommAdapterImpl
   }
 
   @Override
+  @Deprecated
   public void processMessage(Object message) {
     //Process messages sent from the kernel or a kernel extension
+  }
+
+  @Override
+  public void processMessage(
+      @Nonnull
+      VehicleCommAdapterMessage message
+  ) {
+    switch (message.getType()) {
+      case CommAdapterMessages.SEND_ORDER_TYPE -> handleSendOrder(message);
+      case CommAdapterMessages.SEND_INSTANT_ACTION_TYPE -> handleSendInstantAction(message);
+      default -> LOG.warn("Ignoring unknown message type: {}", message.getType());
+    }
   }
 
   //ConnectionEventListener
@@ -654,8 +674,10 @@ public class CommAdapterImpl
         StateMappings.toPausedPropertyValue(state)
     );
     getProcessModel().setState(toVehicleState(state));
-    getProcessModel().setLength(
-        toVehicleLength(state, vehicleLengthUnloaded, vehicleLengthLoaded)
+    getProcessModel().setBoundingBox(
+        getProcessModel().getBoundingBox().withLength(
+            toVehicleLength(state, vehicleLengthUnloaded, vehicleLengthLoaded)
+        )
     );
 
     processVehicleOperatingMode(state);
@@ -728,14 +750,16 @@ public class CommAdapterImpl
   }
 
   private void processVehiclePosition(AgvPosition position) {
-    getProcessModel().setPrecisePosition(
-        new Triple(
-            (long) (position.getX() * 1000.0),
-            (long) (position.getY() * 1000.0),
-            0
+    getProcessModel().setPose(
+        new Pose(
+            new Triple(
+                (long) (position.getX() * 1000.0),
+                (long) (position.getY() * 1000.0),
+                0
+            ),
+            Math.toDegrees(position.getTheta())
         )
     );
-    getProcessModel().setOrientationAngle(Math.toDegrees(position.getTheta()));
   }
 
   /**
@@ -818,5 +842,19 @@ public class CommAdapterImpl
     InstantActions instantAction = new InstantActions();
     instantAction.setInstantActions(Arrays.asList(cancelOrderAction));
     messageResponseMatcher.enqueueAction(instantAction);
+  }
+
+  private void handleSendOrder(VehicleCommAdapterMessage message) {
+    commAdapterMessageMapper.toOrder(message)
+        .ifPresent(this::sendOrder);
+  }
+
+  private void handleSendInstantAction(VehicleCommAdapterMessage message) {
+    commAdapterMessageMapper.toAction(message)
+        .ifPresent(
+            action -> messageResponseMatcher.enqueueAction(
+                new InstantActions().setInstantActions(List.of(action))
+            )
+        );
   }
 }

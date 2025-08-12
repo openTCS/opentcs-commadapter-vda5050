@@ -95,11 +95,11 @@ public class StateMappings {
    * @param lengthLoaded The length of the vehicle when loaded.
    * @return The length of the vehicle based on the loads reported in the given state.
    */
-  public static int toVehicleLength(
+  public static long toVehicleLength(
       @Nonnull
       State state,
-      int lengthUnloaded,
-      int lengthLoaded
+      long lengthUnloaded,
+      long lengthLoaded
   ) {
     requireNonNull(state, "state");
 

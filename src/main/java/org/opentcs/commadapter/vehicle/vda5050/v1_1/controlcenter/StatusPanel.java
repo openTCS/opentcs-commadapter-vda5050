@@ -8,25 +8,23 @@ import static org.opentcs.commadapter.vehicle.vda5050.v1_1.I18nCommAdapter.BUNDL
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
 import java.awt.Color;
-import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterMessages;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ProcessModelImpl;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.commands.SendInstantActions;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.connection.Connection;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ErrorEntry;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ErrorLevel;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.State;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.visualization.Visualization;
 import org.opentcs.components.kernel.services.VehicleService;
 import org.opentcs.customizations.ServiceCallWrapper;
-import org.opentcs.drivers.vehicle.AdapterCommand;
+import org.opentcs.drivers.vehicle.VehicleCommAdapterMessage;
 import org.opentcs.drivers.vehicle.VehicleProcessModel;
 import org.opentcs.drivers.vehicle.management.VehicleCommAdapterPanel;
 import org.opentcs.drivers.vehicle.management.VehicleProcessModelTO;
@@ -1494,32 +1492,37 @@ public class StatusPanel
   }//GEN-LAST:event_buttonShowLastReportedStateActionPerformed
 
   private void buttonGetStateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonGetStateActionPerformed
-    sendAdapterCommand(new SendInstantActions(createStateRequestInstantAction()));
+    sendAdapterMessage(
+        new VehicleCommAdapterMessage(
+            CommAdapterMessages.SEND_INSTANT_ACTION_TYPE,
+            Map.of(
+                CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_TYPE,
+                "stateRequest",
+                CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_ID,
+                UUID.randomUUID().toString(),
+                CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_BLOCKING_TYPE,
+                BlockingType.NONE.name()
+            )
+        )
+    );
   }//GEN-LAST:event_buttonGetStateActionPerformed
 
-  private InstantActions createStateRequestInstantAction() {
-    Action instantAction = new Action(
-        "stateRequest",
-        UUID.randomUUID().toString(),
-        BlockingType.NONE
-    );
-
-    InstantActions action = new InstantActions();
-    action.setInstantActions(Arrays.asList(instantAction));
-    return action;
-  }
-
-  private void sendAdapterCommand(AdapterCommand command) {
+  /**
+   * Sends a message to the comm adapter.
+   *
+   * @param message The message
+   */
+  private void sendAdapterMessage(VehicleCommAdapterMessage message) {
     try {
       callWrapper.call(
-          () -> vehicleService.sendCommAdapterCommand(
+          () -> vehicleService.sendCommAdapterMessage(
               processModel.getVehicleRef(),
-              command
+              message
           )
       );
     }
     catch (Exception ex) {
-      LOG.warn("Error sending comm adapter command '{}'", command, ex);
+      LOG.warn("Error sending comm adapter message '{}'", message, ex);
     }
   }
 

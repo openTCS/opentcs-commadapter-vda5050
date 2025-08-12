@@ -60,12 +60,16 @@ class DistanceInAdvanceControllerTest {
         srcPoint,
         destPoint,
         Vehicle.Orientation.FORWARD,
-        0
+        0,
+        1
     );
 
     return new MovementCommand(
         new TransportOrder("1", List.of()),
-        new DriveOrder(new DriveOrder.Destination(new Point("point1").getReference())),
+        new DriveOrder(
+            "drive-order",
+            new DriveOrder.Destination(new Point("point1").getReference())
+        ),
         step,
         "NOP",
         null,
