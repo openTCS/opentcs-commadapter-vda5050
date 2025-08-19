@@ -407,6 +407,7 @@ public class CommAdapterImpl
     }
 
     messageResponseMatcher.enqueueCommand(orderMapper.toOrder(cmd), cmd);
+    deviationExtensionTrigger.reset();
   }
 
   @Override
@@ -476,6 +477,7 @@ public class CommAdapterImpl
     switch (message.getType()) {
       case CommAdapterMessages.SEND_ORDER_TYPE -> handleSendOrder(message);
       case CommAdapterMessages.SEND_INSTANT_ACTION_TYPE -> handleSendInstantAction(message);
+      case CommAdapterMessages.EXTEND_DEVIATION_ONCE_TYPE -> handleExtendDeviationOnce();
       default -> LOG.warn("Ignoring unknown message type: {}", message.getType());
     }
   }
@@ -856,5 +858,9 @@ public class CommAdapterImpl
                 new InstantActions().setInstantActions(List.of(action))
             )
         );
+  }
+
+  private void handleExtendDeviationOnce() {
+    deviationExtensionTrigger.onExtensionRequestedManually();
   }
 }

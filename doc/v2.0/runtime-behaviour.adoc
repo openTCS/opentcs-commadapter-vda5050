@@ -354,6 +354,7 @@ In case the vehicle rejects an instant action, it must still reflect that instan
 NOTE: It is important for the vehicle to confirm that it has received an instant action even for those it rejects.
 Not doing so results in the vehicle driver resending the `instantActions` message, which effectively leads to an endless cycle of such messages being sent, implicitly also blocking any further `order` message from being sent.
 
+[#instantaction-cancelorder]
 === `cancelOrder`
 
 An instant action of type `cancelOrder` is automatically sent in the following cases:
@@ -376,3 +377,30 @@ This can be done by invoking `VehicleService.sendCommAdapterCommand()` with an a
 == Topic `factsheet`
 
 Factsheet messages are currently not processed by the driver.
+
+[#supported-communication-adapter-messages]
+== Supported communication adapter messages
+
+This section describes the communication adapter messages that can be sent to the vehicle driver, e.g. via the openTCS web API (see the openTCS web API specification).
+
+=== Extend deviation once
+
+* Type: `vda5050:extendDeviationOnce`
+* Parameters:None
+
+Sending the _extend deviation once_ message to the vehicle driver results in the vehicle driver to extend the (node) deviation range in the next order message that is sent to the vehicle.
+The deviation range is extended...
+
+* only for the very first node in an order
+* and only if the vehicle's current position is outside that node's allowed deviation range.
+
+Otherwise, this message is ignored.
+
+[source,json]
+.Example: Extend deviation once message
+----
+{
+  "type": "vda5050:extendDeviationOnce",
+  "parameters": []
+}
+----

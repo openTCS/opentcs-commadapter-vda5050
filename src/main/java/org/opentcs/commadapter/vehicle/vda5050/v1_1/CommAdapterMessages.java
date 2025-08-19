@@ -119,6 +119,12 @@ public class CommAdapterMessages {
    */
   public static final String SEND_ORDER_PARAM_EDGE = "edge";
 
+  /**
+   * A message for requesting the extension of the deviation of the very first node in an order to
+   * include the vehicle's position.
+   */
+  public static final String EXTEND_DEVIATION_ONCE_TYPE = "vda5050:extendDeviationOnce";
+
   private CommAdapterMessages() {
   }
 }

@@ -20,6 +20,14 @@ public class DeviationExtensionTrigger {
    * The trigger that determines whether the deviation should be extended.
    */
   private final Trigger trigger;
+  /**
+   * Whether the deviation should be extended as a result of a manual request.
+   */
+  private boolean extendByManualRequest = false;
+  /**
+   * Whether the deviation should be extended as a result of a "cancelOrder" instant action.
+   */
+  private boolean extendByCancelOrder = false;
 
   /**
    * Creates a new instance.
@@ -50,7 +58,49 @@ public class DeviationExtensionTrigger {
     return switch (trigger) {
       case ALWAYS -> true;
       case NEVER -> false;
+      case AUTO -> extendByCancelOrder;
+      case MANUALLY -> extendByManualRequest;
+      case AUTO_AND_MANUALLY -> extendByCancelOrder || extendByManualRequest;
     };
+  }
+
+  /**
+   * Disables deviation extension that has been enabled via {@link #onCancelOrderEnqueued()} or
+   * {@link #onExtensionRequestedManually()}.
+   */
+  public void reset() {
+    extendByCancelOrder = false;
+    extendByManualRequest = false;
+  }
+
+  /**
+   * Called when a "cancelOrder" instant action has been enqueued.
+   * <p>
+   * After calling this method, deviation extension is enabled (for movement commands for the very
+   * first node of orders) until {@link #reset()} is invoked.
+   * This only takes effect if the vehicle is configured for the {@link Trigger#AUTO} or
+   * {@link Trigger#AUTO_AND_MANUALLY} trigger.
+   * </p>
+   */
+  public void onCancelOrderEnqueued() {
+    if (trigger == Trigger.AUTO || trigger == Trigger.AUTO_AND_MANUALLY) {
+      extendByCancelOrder = true;
+    }
+  }
+
+  /**
+   * Called when an extension of the deviation has been requested manually.
+   * <p>
+   * After calling this method, deviation extension is enabled (for movement commands for the very
+   * first node of orders) until {@link #reset()} is invoked.
+   * This only takes effect if the vehicle is configured for the {@link Trigger#MANUALLY} or
+   * {@link Trigger#AUTO_AND_MANUALLY} trigger.
+   * </p>
+   */
+  public void onExtensionRequestedManually() {
+    if (trigger == Trigger.MANUALLY || trigger == Trigger.AUTO_AND_MANUALLY) {
+      extendByManualRequest = true;
+    }
   }
 
   private boolean isFirstMovementCommandInRoute(MovementCommand command) {
@@ -58,7 +108,8 @@ public class DeviationExtensionTrigger {
   }
 
   /**
-   * The trigger that determines whether the deviation should be extended.
+   * The trigger that determines whether the deviation should be extended (for the very first node
+   * of an order).
    */
   private enum Trigger {
 
@@ -69,11 +120,26 @@ public class DeviationExtensionTrigger {
     /**
      * The deviation should never be extended.
      */
-    NEVER;
+    NEVER,
+    /**
+     * The deviation should be extended (once) after a "cancelOrder" instant action.
+     */
+    AUTO,
+    /**
+     * The deviation should be extended (once) after a manual request.
+     */
+    MANUALLY,
+    /**
+     * The combination of {@link #AUTO} and {@link #MANUALLY}.
+     */
+    AUTO_AND_MANUALLY;
 
     public static Trigger fromVehicle(Vehicle vehicle) {
       return switch (vehicle.getProperty(PROPKEY_VEHICLE_DEVIATION_EXTENSION_TRIGGER)) {
         case "never" -> NEVER;
+        case "auto" -> AUTO;
+        case "manually" -> MANUALLY;
+        case "auto+manually" -> AUTO_AND_MANUALLY;
         case null, default -> ALWAYS;
       };
     }
