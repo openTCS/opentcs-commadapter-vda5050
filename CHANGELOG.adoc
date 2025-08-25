@@ -18,7 +18,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.25 (2025-08-25)
 
 * New features and enhancements:
 ** Be more tolerant with messages on the connection topic, accepting any timestamps / header IDs here to better handle edge cases.
