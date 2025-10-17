@@ -189,7 +189,7 @@ lint-reuse:
   interruptible: true
   dependencies: []
   image:
-    name: fsfe/reuse:4.0.3
+    name: fsfe/reuse:6.1.2
     entrypoint: [""]
   script:
     - reuse lint
