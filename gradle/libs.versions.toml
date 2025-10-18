@@ -9,7 +9,7 @@ commons-io = "2.13.0"
 eclipse-paho = "1.2.5"
 everit-json-schema = "1.14.5"
 google-code-findbugs = "3.0.2"
-jackson = "2.18.3"
+jackson = "2.20.0"
 slf4j = "2.0.17"
 # Test dependency versions
 approvaltests = "25.7.0"
