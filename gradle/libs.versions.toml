@@ -21,7 +21,7 @@ mockito = "5.20.0"
 # Plugin versions
 jacocolog = "3.1.0"
 gradle-nexus-publish-plugin = "2.0.0"
-spotless = "8.0.0"
+spotless = "8.1.0"
 
 [libraries]
 # openTCS dependencies
