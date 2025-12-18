@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 [versions]
-opentcs-baseline = "6.6.0"
+opentcs-baseline = "6.7.0"
 # Other dependency versions
 checkstyle = "10.21.4"
 commons-io = "2.13.0"

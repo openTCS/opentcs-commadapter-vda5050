@@ -22,8 +22,9 @@ toc::[]
 
 * New features and enhancements:
 ** Add vehicle communication adapter specific message suggestions that can be used in the Operations Desk.
+** Let the kernel resolve precise positions to logical ones, if necessary, implicitly also respecting any configured coordinate mapping.
 * Changes affecting developers:
-** Update openTCS baseline dependency to 6.6.0.
+** Update openTCS baseline dependency to 6.7.0.
 ** Update Gradle wrapper to 8.14.3.
 ** Update JUnit to 6.0.1.
 ** Update AssertJ to 3.27.6.

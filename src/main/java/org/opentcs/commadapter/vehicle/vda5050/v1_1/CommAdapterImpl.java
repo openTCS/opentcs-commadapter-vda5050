@@ -121,10 +121,6 @@ public class CommAdapterImpl
    */
   private final MovementCommandManager movementCommandManager;
   /**
-   * The manager for the vehicle position.
-   */
-  private VehiclePositionResolver vehiclePositionResolver;
-  /**
    * Factory for creating adapter components.
    */
   private final CommAdapterComponentsFactory componentsFactory;
@@ -283,9 +279,6 @@ public class CommAdapterImpl
         getProcessModel().getReference(),
         isActionExecutable,
         deviationExtensionTrigger
-    );
-    vehiclePositionResolver = componentsFactory.createVehiclePositionResolver(
-        getProcessModel().getReference()
     );
   }
 
@@ -641,16 +634,19 @@ public class CommAdapterImpl
     getProcessModel().setPreviousState(getProcessModel().getCurrentState());
     getProcessModel().setCurrentState(state);
 
-    String newVehiclePosition = vehiclePositionResolver.resolveVehiclePosition(
-        getProcessModel().getPosition(), getProcessModel().getCurrentState()
-    );
-    if (!Objects.equals(newVehiclePosition, getProcessModel().getPosition())) {
-      LOG.debug("{}: Vehicle is now at point {}", getName(), newVehiclePosition);
-      getProcessModel().setPosition(newVehiclePosition);
-    }
-
     if (state.getAgvPosition() != null) {
       processVehiclePosition(state.getAgvPosition());
+    }
+
+    if (state.getLastNodeId() != null && !state.getLastNodeId().isBlank()) {
+      String newVehiclePosition = state.getLastNodeId();
+      if (!Objects.equals(newVehiclePosition, getProcessModel().getPosition())) {
+        LOG.debug("{}: Vehicle is now at point {}", getName(), newVehiclePosition);
+        getProcessModel().setPosition(newVehiclePosition);
+      }
+    }
+    else if (state.getAgvPosition() != null) {
+      getProcessModel().positionResolutionRequested(getProcessModel().getPose());
     }
 
     getProcessModel().setLoadHandlingDevices(toLoadHandlingDevices(state));

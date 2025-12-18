@@ -40,16 +40,6 @@ public interface CommAdapterComponentsFactory {
   );
 
   /**
-   * Creates a new vehicle position resolver.
-   *
-   * @param vehicleReference Reference to the vehicle.
-   * @return The new vehicle position resolver.
-   */
-  VehiclePositionResolver createVehiclePositionResolver(
-      TCSObjectReference<Vehicle> vehicleReference
-  );
-
-  /**
    * Creates a new {@link MovementCommandManager} for the given vehicle.
    *
    * @param vehicle The vehicle.
