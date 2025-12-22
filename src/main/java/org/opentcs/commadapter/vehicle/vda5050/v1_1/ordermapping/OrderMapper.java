@@ -112,7 +112,7 @@ public class OrderMapper {
   ) {
     requireNonNull(command, "command");
 
-    return mapOrder(command, objectService.fetchObject(Vehicle.class, vehicleReference));
+    return mapOrder(command, objectService.fetch(Vehicle.class, vehicleReference).orElseThrow());
   }
 
   /**
@@ -294,7 +294,7 @@ public class OrderMapper {
         vehicle,
         command,
         command.getOpLocation(),
-        objectService.fetchObject(LocationType.class, command.getOpLocation().getType())
+        objectService.fetch(LocationType.class, command.getOpLocation().getType()).orElseThrow()
     );
   }
 
@@ -329,7 +329,7 @@ public class OrderMapper {
     checkArgument(vehicle.getTransportOrder() != null, "Vehicle does not have a transport order");
 
     TransportOrder transportOrder
-        = objectService.fetchObject(TransportOrder.class, vehicle.getTransportOrder());
+        = objectService.fetch(TransportOrder.class, vehicle.getTransportOrder()).orElseThrow();
 
     return transportOrder.getName() + "-" + transportOrder.getCurrentDriveOrderIndex();
   }
@@ -479,10 +479,10 @@ public class OrderMapper {
         vehicle,
         command,
         command.getFinalDestinationLocation(),
-        objectService.fetchObject(
+        objectService.fetch(
             LocationType.class,
             command.getFinalDestinationLocation().getType()
-        )
+        ).orElseThrow()
     );
   }
 }

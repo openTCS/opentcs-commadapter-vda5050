@@ -171,7 +171,7 @@ public class ControlPanel
   private void initComboBoxes() {
     try {
       pathComboBox.removeAllItems();
-      callWrapper.call(() -> vehicleService.fetchObjects(Path.class)).stream()
+      callWrapper.call(() -> vehicleService.fetch(Path.class)).stream()
           .sorted(Comparators.objectsByName())
           .forEach(path -> {
             pathComboBox.addItem(path);
@@ -802,10 +802,8 @@ public class ControlPanel
     orderUpdateIdTextField.setText(String.valueOf(order.getOrderUpdateId()));
     if (!order.getEdges().isEmpty()) {
       String pathName = order.getEdges().get(0).getEdgeId();
-      Path path = vehicleService.fetchObject(Path.class, pathName);
-      if (path != null) {
-        pathComboBox.setSelectedItem(path);
-      }
+      vehicleService.fetch(Path.class, pathName)
+          .ifPresent(path -> pathComboBox.setSelectedItem(path));
     }
 
     Optional<Action> lastAction = getLastNodeAction(order);

@@ -20,7 +20,8 @@ toc::[]
 
 == Unreleased
 
-...
+* Changes affecting developers:
+** Update openTCS baseline dependency to 7.0.1.
 
 == Version 0.26 (2025-12-18)
 

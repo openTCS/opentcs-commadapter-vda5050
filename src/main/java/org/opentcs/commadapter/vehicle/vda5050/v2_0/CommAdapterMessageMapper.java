@@ -225,7 +225,7 @@ public class CommAdapterMessageMapper {
         List.of()
     ).setNodePosition(
         nodeMapping.toNodePosition(
-            objectService.fetchObject(Point.class, pointName),
+            objectService.fetch(Point.class, pointName).orElseThrow(),
             vehicle,
             false
         )

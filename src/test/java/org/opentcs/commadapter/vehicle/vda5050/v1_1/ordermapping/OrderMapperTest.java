@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.DeviationExtensionTrigger;
@@ -71,10 +72,10 @@ public class OrderMapperTest {
         .withProperty(ObjectProperties.PROPKEY_VEHICLE_DEVIATION_EXTENSION_TRIGGER, "always");
 
     objectService = mock(TCSObjectService.class);
-    when(objectService.fetchObject(Vehicle.class, vehicle.getReference()))
-        .thenReturn(vehicle);
-    when(objectService.fetchObject(TransportOrder.class, transportOrder.getReference()))
-        .thenReturn(transportOrder);
+    when(objectService.fetch(Vehicle.class, vehicle.getReference()))
+        .thenReturn(Optional.of(vehicle));
+    when(objectService.fetch(TransportOrder.class, transportOrder.getReference()))
+        .thenReturn(Optional.of(transportOrder));
 
     mapper = new OrderMapper(
         vehicle.getReference(),
@@ -200,8 +201,8 @@ public class OrderMapperTest {
     );
     LocationType locType = new LocationType("loc-type");
     command = command.withOpLocation(new Location("location-0001", locType.getReference()));
-    when(objectService.fetchObject(LocationType.class, locType.getReference()))
-        .thenReturn(locType);
+    when(objectService.fetch(LocationType.class, locType.getReference()))
+        .thenReturn(Optional.of(locType));
 
     command = command.withOperation("customOp");
     Map<String, String> properties = new HashMap<>();
@@ -221,8 +222,8 @@ public class OrderMapperTest {
     // Setup mapper with a vehicle with executable actions.
     vehicle = vehicle
         .withProperty(ObjectProperties.PROPKEY_EXECUTABLE_ACTIONS_TAGS, "tag_beep | tag_duck");
-    when(objectService.fetchObject(Vehicle.class, vehicle.getReference()))
-        .thenReturn(vehicle);
+    when(objectService.fetch(Vehicle.class, vehicle.getReference()))
+        .thenReturn(Optional.of(vehicle));
 
     mapper = new OrderMapper(
         vehicle.getReference(),
@@ -312,8 +313,8 @@ public class OrderMapperTest {
     MovementCommand commandOne = createMovementCommandWithPoints(startPoint, destPoint);
     Order orderOne = mapper.toOrder(commandOne);
 
-    when(objectService.fetchObject(TransportOrder.class, transportOrder.getReference()))
-        .thenReturn(transportOrder.withCurrentDriveOrderIndex(1));
+    when(objectService.fetch(TransportOrder.class, transportOrder.getReference()))
+        .thenReturn(Optional.of(transportOrder.withCurrentDriveOrderIndex(1)));
 
     MovementCommand commandTwo = createMovementCommandWithPoints(sourcePoint, endPoint);
     Order orderTwo = mapper.toOrder(commandTwo);

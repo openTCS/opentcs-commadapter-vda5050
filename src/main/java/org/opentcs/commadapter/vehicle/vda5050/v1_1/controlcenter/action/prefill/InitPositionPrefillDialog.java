@@ -60,7 +60,7 @@ public class InitPositionPrefillDialog
   }
 
   private void initComboBox(VehicleService vehicleService) {
-    vehicleService.fetchObjects(Point.class)
+    vehicleService.fetch(Point.class)
         .stream()
         .sorted(Comparators.objectsByName())
         .forEach(p -> {

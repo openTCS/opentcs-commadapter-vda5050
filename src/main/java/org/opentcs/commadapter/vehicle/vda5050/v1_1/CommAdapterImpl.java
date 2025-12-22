@@ -457,12 +457,6 @@ public class CommAdapterImpl
   }
 
   @Override
-  @Deprecated
-  public void processMessage(Object message) {
-    //Process messages sent from the kernel or a kernel extension
-  }
-
-  @Override
   public void processMessage(
       @Nonnull
       VehicleCommAdapterMessage message

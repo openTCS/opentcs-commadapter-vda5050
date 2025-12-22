@@ -5,6 +5,7 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_DESCRIPTION;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_ID;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_TYPE;
@@ -22,6 +23,7 @@ import static org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterMessages.S
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterMessages.SEND_ORDER_PARAM_SOURCE_NODE;
 
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
@@ -31,6 +33,7 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Edge;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Node;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping.NodeMapping;
 import org.opentcs.components.kernel.services.TCSObjectService;
+import org.opentcs.data.model.Point;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.VehicleCommAdapterMessage;
 import org.opentcs.util.MapValueExtractor;
@@ -40,14 +43,16 @@ import org.opentcs.util.MapValueExtractor;
  */
 class CommAdapterMessageMapperTest {
 
+  private TCSObjectService objectService;
   private CommAdapterMessageMapper mapper;
 
   @BeforeEach
   void setUp() {
+    objectService = mock(TCSObjectService.class);
     mapper = new CommAdapterMessageMapper(
         new Vehicle("vehicle-1"),
         new MapValueExtractor(),
-        mock(TCSObjectService.class),
+        objectService,
         mock(NodeMapping.class)
     );
   }
@@ -79,6 +84,11 @@ class CommAdapterMessageMapperTest {
             Map.entry(SEND_ORDER_PARAM_EDGE, "edge")
         )
     );
+
+    when(objectService.fetch(Point.class, "source-node"))
+        .thenReturn(Optional.of(new Point("source-node")));
+    when(objectService.fetch(Point.class, "destination-node"))
+        .thenReturn(Optional.of(new Point("destination-node")));
 
     var result = mapper.toOrder(message);
 
