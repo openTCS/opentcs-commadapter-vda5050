@@ -18,7 +18,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Release 0.27 (2026-01-14)
 
 * Changes affecting developers:
 ** Update openTCS baseline dependency to 7.0.1.
