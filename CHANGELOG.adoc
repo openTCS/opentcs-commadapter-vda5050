@@ -20,7 +20,9 @@ toc::[]
 
 == Unreleased
 
-...
+* New features and enhancements:
+** Avoid discarding of messages:
+   Remove explicit setting of maximum in-flight messages to 1 and set QoS 0 for all subscribed topics.
 
 == Version 0.27 (2026-01-14)
 

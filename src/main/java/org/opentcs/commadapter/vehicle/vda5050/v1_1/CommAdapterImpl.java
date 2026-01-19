@@ -296,8 +296,10 @@ public class CommAdapterImpl
     super.enable();
 
     clientManager.registerConnectionEventListener(this);
+    // We subscribe to all topics with QoS 0 (AT_MOST_ONCE), because we always connect to the broker
+    // with a clean session, and QoS 1 or 2 do not make sense with clean sessions.
     clientManager.subscribe(
-        getProcessModel().getTopicPrefix() + "/connection", QualityOfService.AT_LEAST_ONCE, this
+        getProcessModel().getTopicPrefix() + "/connection", QualityOfService.AT_MOST_ONCE, this
     );
     clientManager.subscribe(
         getProcessModel().getTopicPrefix() + "/state", QualityOfService.AT_MOST_ONCE, this
