@@ -20,7 +20,8 @@ toc::[]
 
 == Unreleased
 
-...
+* New features and enhancements:
+** Improve thread-safety of MQTT client handling.
 
 == Version 0.28 (2026-01-20)
 

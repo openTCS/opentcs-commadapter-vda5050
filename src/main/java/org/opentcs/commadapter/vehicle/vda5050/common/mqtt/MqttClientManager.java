@@ -6,10 +6,10 @@ import static java.util.Objects.requireNonNull;
 import static org.opentcs.commadapter.vehicle.vda5050.common.mqtt.ConnectionCallback.CONNECT_CONTEXT;
 
 import jakarta.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
@@ -35,7 +35,7 @@ public class MqttClientManager {
   /**
    * A map from topics to corresponding subscriptions managed by this class.
    */
-  private final Map<String, Subscription> subscriptions = new HashMap<>();
+  private final Map<String, Subscription> subscriptions = new ConcurrentHashMap<>();
   /**
    * Configuration for the comm adapter.
    */
@@ -59,7 +59,7 @@ public class MqttClientManager {
   /**
    * Whether a connection is established or not.
    */
-  private boolean connected;
+  private volatile boolean connected;
   /**
    * The executor to run tasks on.
    */
@@ -164,7 +164,7 @@ public class MqttClientManager {
    * {@link ConnectionEventListener} to be notified when a message is received on the given topic.
    * <p>
    * In case the underlying MQTT client is already subscribed to the given topic, the given
-   * {@link ConnectionEventListener} is merely registerd to be notified when a message is received
+   * {@link ConnectionEventListener} is merely registered to be notified when a message is received
    * on the given topic.
    *
    * @param topic The topic to subscribe to.
@@ -187,7 +187,7 @@ public class MqttClientManager {
     Subscription subscription = subscriptions.get(topic);
     if (subscription == null) {
       LOG.debug("Subscribing to topic '{}'...", topic);
-      subscription = new Subscription(topic, qos, new ArrayList<>());
+      subscription = new Subscription(topic, qos, new CopyOnWriteArrayList<>());
       subscription.getSubscribers().add(listener);
       subscriptions.put(topic, subscription);
       subscribe(topic, qos);
@@ -298,7 +298,7 @@ public class MqttClientManager {
   }
 
   /**
-   * This method is invoked when the client successfuly connected to the broker.
+   * This method is invoked when the client successfully connected to the broker.
    */
   public void onConnect() {
     LOG.info("Connected.");
@@ -370,6 +370,7 @@ public class MqttClientManager {
 
   private void subscribe(String topic, QualityOfService qos) {
     try {
+      LOG.info("Subscribing to topic '{}' with QoS {}...", topic, qos.getQosValue());
       client.subscribe(topic, qos.getQosValue());
     }
     catch (MqttException ex) {
