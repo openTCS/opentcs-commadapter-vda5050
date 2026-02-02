@@ -22,6 +22,9 @@ toc::[]
 
 * New features and enhancements:
 ** Improve thread-safety of MQTT client handling.
+** Provide deviation policies that allow the kernel to take VDA5050 deviation properties into account for position resolution.
+* Changes affecting developers:
+** Update openTCS baseline dependency to 7.2.0.
 
 == Version 0.28 (2026-01-20)
 

@@ -27,5 +27,11 @@ public class KernelInjectionModuleImpl
         .to(CommAdapterFactory.class);
 
     install(new FactoryModuleBuilder().build(CommAdapterComponentsFactory.class));
+
+    bind(PositionDeviationPolicyFactoryImpl.class)
+        .in(Singleton.class);
+    positionDeviationPolicyFactoryBinder()
+        .addBinding()
+        .to(PositionDeviationPolicyFactoryImpl.class);
   }
 }
