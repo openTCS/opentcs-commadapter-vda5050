@@ -13,6 +13,8 @@ import static org.hamcrest.Matchers.nullValue;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ActionState;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ActionStatus;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.BatteryState;
@@ -315,6 +317,14 @@ public class StateMappingsTest {
 
     String result = StateMappings.toPausedPropertyValue(state);
     assertThat(result, is("true"));
+  }
+
+  @ParameterizedTest()
+  @ValueSource(strings = {"validationError", "noRouteError", "orderError", "orderUpdateError"})
+  public void recognizeOrderRejection(String errorType) {
+    state.setErrors(List.of(new ErrorEntry(errorType, ErrorLevel.WARNING)));
+
+    assertThat(StateMappings.vehicleRejectsOrder(state), is(true));
   }
 
   private State createState() {

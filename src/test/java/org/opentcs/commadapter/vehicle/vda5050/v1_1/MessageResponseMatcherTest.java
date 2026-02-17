@@ -43,7 +43,6 @@ public class MessageResponseMatcherTest {
   private Consumer<Order> sendOrderCallback;
   private Consumer<InstantActions> sendInstantActionsCallback;
   private Consumer<OrderAssociation> orderAcceptedCallback;
-  private Consumer<OrderAssociation> orderRejectedCallback;
 
   private MovementCommand dummyCommand;
 
@@ -53,13 +52,11 @@ public class MessageResponseMatcherTest {
     sendOrderCallback = mock(Consumer.class);
     sendInstantActionsCallback = mock(Consumer.class);
     orderAcceptedCallback = mock(Consumer.class);
-    orderRejectedCallback = mock(Consumer.class);
     messageResponseMatcher = new MessageResponseMatcher(
         "test",
         sendOrderCallback,
         sendInstantActionsCallback,
-        orderAcceptedCallback,
-        orderRejectedCallback
+        orderAcceptedCallback
     );
     messageResponseMatcher.onStateMessage(newState());
     dummyCommand = mock(MovementCommand.class);
@@ -112,7 +109,7 @@ public class MessageResponseMatcherTest {
   }
 
   @Test
-  public void retrySendingOrderIfItIsNotAcknowleged() {
+  public void retrySendingOrderIfItIsNotAcknowledged() {
     Order orderNone = new Order("", 0L, List.of(), List.of());
     Order order1 = new Order("order1", 0L, List.of(), List.of());
 
@@ -167,7 +164,7 @@ public class MessageResponseMatcherTest {
   }
 
   @Test
-  public void waitForInstantActionAckknowlegmentBeforeSendingNextOrder() {
+  public void waitForInstantActionAcknowledgementBeforeSendingNextOrder() {
     InstantActions action1 = new InstantActions();
     action1.setHeaderId(1L);
     InstantActions action2 = new InstantActions();

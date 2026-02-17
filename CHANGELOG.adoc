@@ -20,7 +20,9 @@ toc::[]
 
 == Unreleased
 
-...
+* Fixes:
+** Ensure that, once a vehicle reports that it rejects an order, the corresponding movement command is never reported as completed to the kernel, even if the vehicle later reports it as completed.
+   This avoids situations in which the kernel assigns a new transport order to the vehicle when it should actually wait for a withdrawal.
 
 == Version 0.29 (2026-02-02)
 

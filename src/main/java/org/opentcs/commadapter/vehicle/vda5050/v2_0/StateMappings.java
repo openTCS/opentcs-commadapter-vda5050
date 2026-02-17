@@ -176,6 +176,24 @@ public class StateMappings {
     return Objects.toString(state.isPaused(), null);
   }
 
+  /**
+   * Indicates whether the vehicle rejects an order based on the errors reported in the given state
+   * message.
+   *
+   * @param state The state message.
+   * @return Whether the vehicle rejects an order.
+   */
+  public static boolean vehicleRejectsOrder(State state) {
+    return state.getErrors().stream().anyMatch(StateMappings::isOrderRejectionWarning);
+  }
+
+  private static boolean isOrderRejectionWarning(ErrorEntry error) {
+    return switch (error.getErrorType()) {
+      case "validationError", "noRouteError", "orderError", "orderUpdateError" -> true;
+      default -> false;
+    };
+  }
+
   private static boolean hasPendingMovement(State state) {
     return state.getNodeStates().stream().anyMatch(nodeState -> nodeState.isReleased())
         && state.getEdgeStates().stream().anyMatch(edgeState -> edgeState.isReleased());

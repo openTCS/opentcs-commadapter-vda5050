@@ -110,23 +110,6 @@ public class MovementCommandManager {
     }
   }
 
-  /**
-   * Fails the current movement command and removes it from this instance.
-   *
-   * @param callback The callback for failed movement commands.
-   */
-  public void failCurrentCommand(
-      @Nonnull
-      Consumer<MovementCommand> callback
-  ) {
-    if (!trackedOrders.isEmpty()) {
-      callback.accept(trackedOrders.poll().getCommand());
-    }
-    else {
-      LOG.debug("No commands to fail");
-    }
-  }
-
   private boolean checkForCompletionAndReport(
       OrderAssociation association,
       State state,

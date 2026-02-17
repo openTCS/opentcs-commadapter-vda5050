@@ -12,7 +12,6 @@ import javax.annotation.Nonnull;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Order;
-import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.ErrorEntry;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.OperatingMode;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.State;
 import org.opentcs.drivers.vehicle.MovementCommand;
@@ -30,7 +29,7 @@ public class MessageResponseMatcher {
    */
   private final String commAdapterName;
   /**
-   * Queue for requests that need to be send to the vehicle.
+   * Queue for requests that need to be sent to the vehicle.
    */
   private final Queue<Object> requests = new ArrayDeque<>();
   /**
@@ -46,10 +45,6 @@ public class MessageResponseMatcher {
    */
   private final Consumer<OrderAssociation> orderAcceptedCallback;
   /**
-   * The callback for when an order was rejected by the vehicle.
-   */
-  private final Consumer<OrderAssociation> orderRejectedCallback;
-  /**
    * Flag indicating whether this comm adapter may currently send requests to the vehicle.
    * If false, all enqueued requests will stay in the queue until the flag becomes true.
    */
@@ -62,7 +57,6 @@ public class MessageResponseMatcher {
    * @param sendOrderCallback The callback for sending the next order.
    * @param sendInstantActionsCallback The callback for sending instant actions.
    * @param orderAcceptedCallback The callback for when the order is accepted by the vehicle.
-   * @param orderRejectedCallback The callback for when the vehicle rejects an order.
    */
   public MessageResponseMatcher(
       @Nonnull
@@ -72,16 +66,13 @@ public class MessageResponseMatcher {
       @Nonnull
       Consumer<InstantActions> sendInstantActionsCallback,
       @Nonnull
-      Consumer<OrderAssociation> orderAcceptedCallback,
-      @Nonnull
-      Consumer<OrderAssociation> orderRejectedCallback
+      Consumer<OrderAssociation> orderAcceptedCallback
   ) {
     this.commAdapterName = requireNonNull(commAdapterName, "commAdapterName");
     this.sendOrderCallback = requireNonNull(sendOrderCallback, "sendOrderCallback");
     this.sendInstantActionsCallback
         = requireNonNull(sendInstantActionsCallback, "sendInstantActionsCallback");
     this.orderAcceptedCallback = requireNonNull(orderAcceptedCallback, "orderAcceptedCallback");
-    this.orderRejectedCallback = requireNonNull(orderRejectedCallback, "orderRejectedCallback");
   }
 
   public void enqueueCommand(Order order, MovementCommand command) {
@@ -130,18 +121,13 @@ public class MessageResponseMatcher {
       return;
     }
 
-    if (vehicleRejectedOrder(state)) {
-      if (currentRequest instanceof OrderAssociation) {
-        orderRejectedCallback.accept((OrderAssociation) currentRequest);
-      }
-
-      LOG.warn(
-          "{}: Vehicle indicates order rejection. Last request sent to it was: {}",
-          commAdapterName,
-          currentRequest
-      );
+    if (StateMappings.vehicleRejectsOrder(state)) {
+      // Don't do anything - the vehicle cannot continue processing the drive order. We will wait
+      // for this to be resolved via order withdrawal and a new initial order message.
+      return;
     }
-    else if (requestAccepted(currentRequest, state)) {
+
+    if (requestAccepted(currentRequest, state)) {
       requests.poll();
       if (currentRequest instanceof OrderAssociation) {
         OrderAssociation order = (OrderAssociation) currentRequest;
@@ -156,22 +142,6 @@ public class MessageResponseMatcher {
     }
     else {
       sendNextOrder();
-    }
-  }
-
-  private boolean vehicleRejectedOrder(State state) {
-    return state.getErrors().stream().anyMatch(this::isOrderRejectionWarning);
-  }
-
-  private boolean isOrderRejectionWarning(ErrorEntry error) {
-    switch (error.getErrorType()) {
-      case "validationError":
-      case "noRouteError":
-      case "orderError":
-      case "orderUpdateError":
-        return true;
-      default:
-        return false;
     }
   }
 

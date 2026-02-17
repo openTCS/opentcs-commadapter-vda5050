@@ -253,8 +253,7 @@ public class CommAdapterImpl
         this.getName(),
         this::sendOrder,
         this::sendInstantAction,
-        this::orderAccepted,
-        this::orderRejected
+        this::orderAccepted
     );
 
     vehicleSerialNumber = vehicle.getProperty(PROPKEY_VEHICLE_SERIAL_NUMBER);
@@ -637,6 +636,34 @@ public class CommAdapterImpl
     getProcessModel().setPreviousState(getProcessModel().getCurrentState());
     getProcessModel().setCurrentState(state);
 
+    boolean orderRejectedNow = StateMappings.vehicleRejectsOrder(state);
+    boolean orderRejectedBefore = StateMappings.vehicleRejectsOrder(
+        getProcessModel().getPreviousState()
+    );
+
+    if (orderRejectedNow != orderRejectedBefore) {
+      if (orderRejectedNow) {
+        LOG.info("{}: Vehicle indicates order rejection.", getName());
+        getProcessModel().publishUserNotification(
+            new UserNotification(
+                getProcessModel().getName(),
+                "Vehicle rejects its current VDA5050 order",
+                UserNotification.Level.IMPORTANT
+            )
+        );
+      }
+      else {
+        LOG.info("{}: Vehicle no longer indicates order rejection.", getName());
+        getProcessModel().publishUserNotification(
+            new UserNotification(
+                getProcessModel().getName(),
+                "Vehicle no longer rejects its current VDA5050 order",
+                UserNotification.Level.IMPORTANT
+            )
+        );
+      }
+    }
+
     if (state.getAgvPosition() != null) {
       processVehiclePosition(state.getAgvPosition());
     }
@@ -814,26 +841,6 @@ public class CommAdapterImpl
 
   private void orderAccepted(OrderAssociation order) {
     movementCommandManager.enqueue(order);
-  }
-
-  private void orderRejected(OrderAssociation order) {
-    // Even though the vehicle rejected the order, we still enqueue the order association with the
-    // movement command manager here, anyway. We do this to enable the movement command manager
-    // to fail the latest movement command / trigger withdrawal of the current transport order for
-    // rejected orders, too.
-    movementCommandManager.enqueue(order);
-
-    getProcessModel().publishUserNotification(
-        new UserNotification(
-            getProcessModel().getName(),
-            String.format(
-                "Vehicle rejected VDA5050 order (ID: %s, update ID: %s)",
-                order.getOrder().getOrderId(),
-                order.getOrder().getOrderUpdateId()
-            ),
-            UserNotification.Level.IMPORTANT
-        )
-    );
   }
 
   private void enqueueCancelOrder() {
