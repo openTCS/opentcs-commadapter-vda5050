@@ -18,7 +18,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.30 (2026-02-24)
 
 * Fixes:
 ** Ensure that, once a vehicle reports that it rejects an order, the corresponding movement command is never reported as completed to the kernel, even if the vehicle later reports it as completed.
