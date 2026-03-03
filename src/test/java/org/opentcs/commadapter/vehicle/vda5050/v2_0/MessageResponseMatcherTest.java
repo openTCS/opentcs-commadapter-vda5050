@@ -13,13 +13,18 @@ import static org.mockito.Mockito.verify;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.CancelOrder;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.Drop;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.Pick;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.StartCharging;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Order;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.state.ActionState;
@@ -164,13 +169,18 @@ public class MessageResponseMatcherTest {
   }
 
   @Test
-  public void waitForInstantActionAcknowledgementBeforeSendingNextOrder() {
+  public void waitForInstantActionAcknowledgementBeforeSendingNextMessage() {
     InstantActions action1 = new InstantActions();
     action1.setHeaderId(1L);
+    action1.setActions(List.of(new Action(Pick.ACTION_TYPE, "action1", BlockingType.HARD)));
     InstantActions action2 = new InstantActions();
     action2.setHeaderId(2L);
+    action2.setActions(List.of(new Action(Drop.ACTION_TYPE, "action2", BlockingType.HARD)));
     InstantActions action3 = new InstantActions();
     action3.setHeaderId(3L);
+    action3.setActions(
+        List.of(new Action(StartCharging.ACTION_TYPE, "action3", BlockingType.HARD))
+    );
 
     messageResponseMatcher.enqueueAction(action1);
     messageResponseMatcher.enqueueAction(action2);
@@ -180,15 +190,69 @@ public class MessageResponseMatcherTest {
     verify(sendInstantActionsCallback, never()).accept(action2);
     verify(sendInstantActionsCallback, never()).accept(action3);
 
+    messageResponseMatcher.onStateMessage(newState());
+
+    // The instant action is repeated if the vehicle does not reflect it as accepted in its state.
+    verify(sendInstantActionsCallback, times(2)).accept(action1);
+    verify(sendInstantActionsCallback, never()).accept(action2);
+    verify(sendInstantActionsCallback, never()).accept(action3);
+
     messageResponseMatcher.onStateMessage(stateAcceptingInstantAction(action1));
 
-    verify(sendInstantActionsCallback, times(1)).accept(action1);
+    verify(sendInstantActionsCallback, times(2)).accept(action1);
     verify(sendInstantActionsCallback, times(1)).accept(action2);
     verify(sendInstantActionsCallback, never()).accept(action3);
 
     messageResponseMatcher.onStateMessage(stateAcceptingInstantAction(action2));
 
+    verify(sendInstantActionsCallback, times(2)).accept(action1);
+    verify(sendInstantActionsCallback, times(1)).accept(action2);
+    verify(sendInstantActionsCallback, times(1)).accept(action3);
+  }
+
+  @Test
+  public void waitForCancelOrderCompletionBeforeSendingNextMessage() {
+    InstantActions action1 = new InstantActions();
+    action1.setHeaderId(1L);
+    action1.setActions(List.of(new Action(CancelOrder.ACTION_TYPE, "action1", BlockingType.HARD)));
+    InstantActions action2 = new InstantActions();
+    action2.setHeaderId(2L);
+    action2.setActions(List.of(new Action(CancelOrder.ACTION_TYPE, "action2", BlockingType.HARD)));
+    InstantActions action3 = new InstantActions();
+    action3.setHeaderId(3L);
+    action3.setActions(List.of(new Action(CancelOrder.ACTION_TYPE, "action3", BlockingType.HARD)));
+
+    messageResponseMatcher.enqueueAction(action1);
+    messageResponseMatcher.enqueueAction(action2);
+    messageResponseMatcher.enqueueAction(action3);
+
     verify(sendInstantActionsCallback, times(1)).accept(action1);
+    verify(sendInstantActionsCallback, never()).accept(action2);
+    verify(sendInstantActionsCallback, never()).accept(action3);
+
+    messageResponseMatcher.onStateMessage(newState());
+
+    // The cancelOrder is repeated if the vehicle does not reflect it as accepted in its state.
+    verify(sendInstantActionsCallback, times(2)).accept(action1);
+    verify(sendInstantActionsCallback, never()).accept(action2);
+    verify(sendInstantActionsCallback, never()).accept(action3);
+
+    messageResponseMatcher.onStateMessage(stateAcceptingInstantAction(action1));
+
+    // The cancelOrder is repeated if the vehicle has accepted but not completed it yet.
+    verify(sendInstantActionsCallback, times(3)).accept(action1);
+    verify(sendInstantActionsCallback, never()).accept(action2);
+    verify(sendInstantActionsCallback, never()).accept(action3);
+
+    messageResponseMatcher.onStateMessage(stateCompletingInstantAction(action1));
+
+    verify(sendInstantActionsCallback, times(3)).accept(action1);
+    verify(sendInstantActionsCallback, times(1)).accept(action2);
+    verify(sendInstantActionsCallback, never()).accept(action3);
+
+    messageResponseMatcher.onStateMessage(stateCompletingInstantAction(action2));
+
+    verify(sendInstantActionsCallback, times(3)).accept(action1);
     verify(sendInstantActionsCallback, times(1)).accept(action2);
     verify(sendInstantActionsCallback, times(1)).accept(action3);
   }
@@ -252,7 +316,22 @@ public class MessageResponseMatcherTest {
                 )
                     .setActionType(action.getActionType())
             )
-            .collect(Collectors.toList())
+            .toList()
+    );
+    return state;
+  }
+
+  private State stateCompletingInstantAction(
+      InstantActions actions
+  ) {
+    State state = newState();
+    state.getActionStates().addAll(
+        actions.getActions().stream()
+            .map(
+                action -> new ActionState(action.getActionId(), ActionStatus.FINISHED)
+                    .setActionType(action.getActionType())
+            )
+            .toList()
     );
     return state;
   }

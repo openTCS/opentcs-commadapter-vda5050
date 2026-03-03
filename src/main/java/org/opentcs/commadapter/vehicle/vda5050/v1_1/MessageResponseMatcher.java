@@ -9,9 +9,11 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.function.Consumer;
 import javax.annotation.Nonnull;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.action.CancelOrder;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.order.Order;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.ActionStatus;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.OperatingMode;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.State;
 import org.opentcs.drivers.vehicle.MovementCommand;
@@ -127,7 +129,7 @@ public class MessageResponseMatcher {
       return;
     }
 
-    if (requestAccepted(currentRequest, state)) {
+    if (requestAcknowledged(currentRequest, state)) {
       requests.poll();
       if (currentRequest instanceof OrderAssociation) {
         OrderAssociation order = (OrderAssociation) currentRequest;
@@ -145,12 +147,12 @@ public class MessageResponseMatcher {
     }
   }
 
-  private boolean requestAccepted(Object request, State state) {
+  private boolean requestAcknowledged(Object request, State state) {
     if (request instanceof OrderAssociation) {
       return orderAccepted(((OrderAssociation) request).getOrder(), state);
     }
     else if (request instanceof InstantActions) {
-      return instantActionsAccepted((InstantActions) request, state);
+      return instantActionsAcknowledged((InstantActions) request, state);
     }
     else {
       LOG.warn(
@@ -198,13 +200,33 @@ public class MessageResponseMatcher {
         && Objects.equals(state.getOrderUpdateId(), order.getOrderUpdateId());
   }
 
-  private boolean instantActionsAccepted(InstantActions instantAction, State state) {
+  private boolean instantActionsAcknowledged(InstantActions instantAction, State state) {
     return instantAction.getInstantActions().stream()
-        .allMatch(action -> actionAccepted(action, state));
+        .allMatch(action -> {
+          // In case of a cancelOrder action, we actually wait for the vehicle to accept AND
+          // COMPLETE the action. Not doing this can lead to situations in which we send another
+          // order while the vehicle is still processing the cancelOrder, and the vehicle then
+          // immediately cancelling that new order.
+          if (Objects.equals(action.getActionType(), CancelOrder.ACTION_TYPE)) {
+            return cancelOrderAcceptedAndCompleted(action, state);
+          }
+          else {
+            return actionAccepted(action, state);
+          }
+        });
   }
 
   private boolean actionAccepted(Action action, State state) {
     return state.getActionStates().stream()
         .anyMatch(actionState -> actionState.getActionId().equals(action.getActionId()));
+  }
+
+  private boolean cancelOrderAcceptedAndCompleted(Action action, State state) {
+    return state.getActionStates().stream()
+        .filter(actionState -> actionState.getActionId().equals(action.getActionId()))
+        .anyMatch(
+            actionState -> actionState.getActionStatus() == ActionStatus.FINISHED
+                || actionState.getActionStatus() == ActionStatus.FAILED
+        );
   }
 }
