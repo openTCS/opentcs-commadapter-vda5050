@@ -32,7 +32,7 @@ public class InstantActionsTest {
   }
 
   @Test
-  public void validateAgainstJsonSchemaMinmal() {
+  public void validateAgainstJsonSchemaMinimal() {
     messageValidator.validate(
         jsonBinder.toJson(createInstantActionsMinimal()),
         InstantActions.class

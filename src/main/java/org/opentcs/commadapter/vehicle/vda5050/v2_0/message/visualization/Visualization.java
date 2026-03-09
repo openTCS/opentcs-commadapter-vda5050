@@ -13,7 +13,7 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Velocity;
 /**
  * Describes information for visualization purposes.
  * <p>
- * Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the
+ * Can be published at a higher rate if wanted. Since bandwidth may be expensive depending on the
  * update rate, all fields are optional.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

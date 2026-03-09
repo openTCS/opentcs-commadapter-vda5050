@@ -28,7 +28,7 @@ public class Order
   public static final String JSON_SCHEMA_PATH
       = "/org/opentcs/commadapter/vehicle/vda5050/v2_0/schemas/order.schema.json";
   /**
-   * Unique order indentification.
+   * Unique order identification.
    * <p>
    * This is to be used to identify multiple order messages that belong to the same order.
    */
@@ -69,7 +69,7 @@ public class Order
    * are used. For instances created with this constructor, the header content must therefore be set
    * subsequently.
    *
-   * @param orderId Unique order indentification.
+   * @param orderId Unique order identification.
    * @param orderUpdateId Order update identification.
    * @param nodes List of {@link Node} objects to be traversed for fulfilling the order.
    * @param edges List of {@link Edge} objects to be traversed for fulfilling the order.

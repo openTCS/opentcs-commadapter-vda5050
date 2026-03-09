@@ -3,7 +3,7 @@
 package org.opentcs.commadapter.vehicle.vda5050.common;
 
 /**
- * Expresses the extent to which an optional parameter in a messsage is supported by a vehicle.
+ * Expresses the extent to which an optional parameter in a message is supported by a vehicle.
  */
 public enum OptionalParameterSupport {
   /**

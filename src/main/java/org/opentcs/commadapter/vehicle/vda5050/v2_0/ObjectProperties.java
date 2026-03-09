@@ -92,14 +92,14 @@ public interface ObjectProperties {
    * The key of the vehicle property containing the distance that is added to the extended
    * deviation range of a node.
    */
-  String PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING = "vda5050:extendedDeviationRangePadding";
+  String PROPKEY_VEHICLE_EXTENDED_DEVIATION_RANGE_PADDING = "vda5050:extendedDeviationRangePadding";
   /**
    * The prefix for vehicle properties that define the support status of optional parameters in
    * order messages.
    */
   String PROPKEY_VEHICLE_OPTIONAL_ORDER_PARAMETER_PREFIX = "vda5050:optionalParams.order";
   /**
-   * The key of the vehicle property containing the maximum distance (in mm)) that should be covered
+   * The key of the vehicle property containing the maximum distance (in mm) that should be covered
    * by the movement commands the vehicle receives in advance.
    */
   String PROPKEY_VEHICLE_MAX_DISTANCE_IN_ADVANCE = "vda5050:maxDistanceBase";

@@ -11,7 +11,7 @@ public enum ActionTrigger {
    */
   PASSING,
   /**
-   * Action should be exectued when it is at the start of an order.
+   * Action should be executed when it is at the start of an order.
    */
   ORDER_START,
   /**

@@ -282,7 +282,7 @@ public class ControlPanel
       applyLastInstantActionButton.setEnabled(true);
       lastInstantActionListsModel.add(0, lastInstantActionsSent);
       lastInstantActionsList.setSelectedIndex(0);
-      // Delete last element if our listmodel contains too many elements
+      // Delete last element if our list model contains too many elements
       while (lastInstantActionListsModel.getSize() > MAX_LAST_ORDERS) {
         lastInstantActionListsModel.removeElement(lastInstantActionListsModel.lastElement());
       }

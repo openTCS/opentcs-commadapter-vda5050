@@ -78,9 +78,9 @@ public class VehicleSimulator
    */
   private static final long MOVEMENTSPEED = 3000;
   /**
-   * The executor for the simluation.
+   * The executor for the simulation.
    */
-  private final ScheduledExecutorService simultationExecutor = Executors
+  private final ScheduledExecutorService simulationExecutor = Executors
       .newSingleThreadScheduledExecutor(runnable -> new Thread(runnable, "simulationExecutor"));
   /**
    * The executor for specific tasks.
@@ -478,7 +478,7 @@ public class VehicleSimulator
 
   @Override
   public void onIdle() {
-    LOG.info("Communucation adapter is idle.");
+    LOG.info("Communication adapter is idle.");
   }
 
   private void sendConnection(Connection connection) {
@@ -583,7 +583,7 @@ public class VehicleSimulator
       terminate();
       System.exit(0);
     };
-    simultationExecutor.schedule(simulationTask, 0, TimeUnit.SECONDS);
+    simulationExecutor.schedule(simulationTask, 0, TimeUnit.SECONDS);
   }
 
   /**

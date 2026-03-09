@@ -28,15 +28,11 @@ import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.NodeState;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.state.State;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.MovementCommand;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Tracks the progress of movement commands and reports back finished ones.
  */
 public class MovementCommandManager {
-
-  private static final Logger LOG = LoggerFactory.getLogger(MovementCommandManager.class);
 
   /**
    * A list of currently tracked orders.
@@ -124,10 +120,10 @@ public class MovementCommandManager {
     }
   }
 
-  private boolean orderComplete(OrderAssociation assocation, State state) {
-    return movementComplete(assocation, state)
-        && (!assocation.getCommand().isFinalMovement()
-            || actionsComplete(assocation.getOrder(), state));
+  private boolean orderComplete(OrderAssociation association, State state) {
+    return movementComplete(association, state)
+        && (!association.getCommand().isFinalMovement()
+            || actionsComplete(association.getOrder(), state));
   }
 
   private boolean movementComplete(OrderAssociation association, State state) {

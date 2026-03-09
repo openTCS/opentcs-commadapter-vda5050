@@ -172,7 +172,7 @@ public class PropertyActionsFilterTest {
   }
 
   @Test
-  public void actionTriggerMustMatchAtleastOneTriggerFilter() {
+  public void actionTriggerMustMatchAtLeastOneTriggerFilter() {
     point = point
         .withProperty(PROPKEY_CUSTOM_ACTION_PREFIX + ".01", "duck")
         .withProperty(PROPKEY_CUSTOM_ACTION_PREFIX + ".01.when", "PASSING")

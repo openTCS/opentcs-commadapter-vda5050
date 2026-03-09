@@ -88,7 +88,7 @@ public class MovementCommandManagerTest {
 
   @ParameterizedTest
   @EnumSource(MovementCommandCompletedCondition.class)
-  public void keepMovementWhenEdgeStatesAreNotEmtpy(
+  public void keepMovementWhenEdgeStatesAreNotEmpty(
       MovementCommandCompletedCondition completedCondition
   ) {
     OrderAssociation association = new OrderBuilder(
@@ -196,7 +196,7 @@ public class MovementCommandManagerTest {
 
   @ParameterizedTest
   @EnumSource(MovementCommandCompletedCondition.class)
-  public void finishFinalMovementOnlyWhenBothEdgeAndNodeStatesAreEmtpy(
+  public void finishFinalMovementOnlyWhenBothEdgeAndNodeStatesAreEmpty(
       MovementCommandCompletedCondition condition
   ) {
     OrderAssociation association = new OrderBuilder(
@@ -228,7 +228,7 @@ public class MovementCommandManagerTest {
         .withNodeState(new NodeState("dest-point", 5L, true))
         .withEdgeState(new EdgeState("some-path", 4L, true))
         .build();
-    // Sequence ids that are unrelated to the movement command shouldnt not block it from completing
+    // Sequence ids that are unrelated to the movement command should not block it from completing
     // even if the node ids match.
     manager.enqueue(association);
     manager.onStateMessage(state, callback);

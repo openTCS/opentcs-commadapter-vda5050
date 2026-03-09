@@ -57,7 +57,7 @@ public class StateMessageDialog
       textAreaState.setText(jsonBinder.toJson(state));
     }
     catch (IllegalArgumentException e) {
-      LOG.error("An error occured while serializing the state message.", e);
+      LOG.error("An error occurred while serializing the state message.", e);
     }
   }
 

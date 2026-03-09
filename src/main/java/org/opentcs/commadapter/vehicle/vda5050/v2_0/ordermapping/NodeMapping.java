@@ -9,7 +9,7 @@ import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyDouble;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_DEVIATION_THETA;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_DEVIATION_XY;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_EXTENDED_DEVIATION_RANGE_PADDING;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MAP_ID;
 
 import jakarta.inject.Inject;
@@ -172,7 +172,7 @@ public class NodeMapping {
         = (vehicle.getPose().getPosition().getY() - point.getPose().getPosition().getY()) / 1000.0;
 
     double padding = PropertyExtractions.getPropertyDouble(
-        PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING, vehicle
+        PROPKEY_VEHICLE_EXTENDED_DEVIATION_RANGE_PADDING, vehicle
     )
         .map(p -> Math.max(p, 0.0))
         .orElse(EXTENDED_DEVIATION_RANGE_PADDING_DEFAULT);

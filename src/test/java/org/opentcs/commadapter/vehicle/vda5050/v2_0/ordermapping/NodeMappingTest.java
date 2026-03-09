@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_EXTENDED_DEVIATION_RANGE_PADDING;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -91,7 +91,7 @@ public class NodeMappingTest {
   public void extendDeviationToIncludeVehicleWithExtraPadding() {
     Vehicle vehicle = new Vehicle("vehicle-0001")
         .withPose(new Pose(new Triple(5000, 5000, 0), Double.NaN))
-        .withProperty(PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING, "1.23");
+        .withProperty(PROPKEY_VEHICLE_EXTENDED_DEVIATION_RANGE_PADDING, "1.23");
     Point point = new Point("Point-0001");
     point = point
         .withPose(point.getPose().withPosition(new Triple(1000, 1000, 0)))
@@ -110,7 +110,7 @@ public class NodeMappingTest {
   public void extendedDeviationRangePaddingMustNotBeNegative() {
     Vehicle vehicle = new Vehicle("vehicle-0001")
         .withPose(new Pose(new Triple(5000, 5000, 0), Double.NaN))
-        .withProperty(PROPKEY_VEHICLE_EXTEDNED_DEVIATION_RANGE_PADDING, "-1.23");
+        .withProperty(PROPKEY_VEHICLE_EXTENDED_DEVIATION_RANGE_PADDING, "-1.23");
     Point point = new Point("Point-0001");
     point = point
         .withPose(point.getPose().withPosition(new Triple(1000, 1000, 0)))

@@ -33,7 +33,7 @@ public class InitPositionPrefillDialog
       ActionPrefillDialog {
 
   /**
-   * Wether or not the dialog was closed with ok.
+   * Whether or not the dialog was closed with ok.
    */
   private boolean wasClosedWithOK;
 

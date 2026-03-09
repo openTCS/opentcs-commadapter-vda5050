@@ -53,7 +53,7 @@ The IP address or host name of the MQTT broker to be used.
 `commadapter.vehicle.vda5050.mqtt.brokerPort`::
 The port number of the MQTT broker to be used.
 `commadapter.vehicle.vda5050.mqtt.connectionEncrypted`::
-Whether to use SSL/TLS encryption for the connection to the MQTT borker.
+Whether to use SSL/TLS encryption for the connection to the MQTT broker.
 Valid values are `true` and `false`.
 Note that, for an encrypted connection, the server's certificate must be signed by a CA certificate trusted by the system the driver is running on.
 `commadapter.vehicle.vda5050.mqtt.username`::

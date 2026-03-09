@@ -326,7 +326,7 @@ public class ActionConfigurationPanel
       return;
     }
 
-    // Use a LinkedHashMap to perserve to order of the original parameters.
+    // Use a LinkedHashMap to preserve the order of the original parameters.
     Map<String, ActionParameter> actionParameters = new LinkedHashMap<>();
     // add existing parameters
     getTableModel().getParameters().forEach(ap -> actionParameters.put(ap.getKey(), ap));

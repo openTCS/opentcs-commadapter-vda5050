@@ -67,7 +67,7 @@ public class ActionParametersTableModel
   /**
    * Adds a parameter to the table and returns its index.
    *
-   * @return The index of the new paramter.
+   * @return The index of the new parameter.
    */
   public int addParameter() {
     parameters.add(new ActionParameter("", ""));

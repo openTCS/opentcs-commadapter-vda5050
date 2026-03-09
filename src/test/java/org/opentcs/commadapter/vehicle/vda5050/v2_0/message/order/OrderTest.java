@@ -35,7 +35,7 @@ public class OrderTest {
   }
 
   @Test
-  public void validateAgainstJsonSchemaMinmal() {
+  public void validateAgainstJsonSchemaMinimal() {
     messageValidator.validate(
         jsonBinder.toJson(createOrderMinimal()),
         Order.class

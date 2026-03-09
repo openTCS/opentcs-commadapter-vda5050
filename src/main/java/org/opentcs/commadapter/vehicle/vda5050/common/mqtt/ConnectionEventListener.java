@@ -25,7 +25,7 @@ public interface ConnectionEventListener {
   void onConnect();
 
   /**
-   * Called when a connnection attempt to the remote peer has failed.
+   * Called when a connection attempt to the remote peer has failed.
    */
   void onFailedConnectionAttempt();
 
