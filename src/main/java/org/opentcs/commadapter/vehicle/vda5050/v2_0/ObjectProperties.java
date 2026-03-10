@@ -109,6 +109,11 @@ public interface ObjectProperties {
    */
   String PROPKEY_VEHICLE_DEVIATION_EXTENSION_TRIGGER = "vda5050:deviationExtensionTrigger";
   /**
+   * The key of the vehicle property containing the maximum number of ignored consecutive
+   * rejections.
+   */
+  String PROPKEY_VEHICLE_MAX_IGNORED_REJECTIONS = "vda5050:maxIgnoredRejections";
+  /**
    * The key property containing a list of executable action tags.
    */
   String PROPKEY_EXECUTABLE_ACTIONS_TAGS = "vda5050:actionTags";

@@ -47,6 +47,16 @@ public class MessageResponseMatcher {
    */
   private final Consumer<OrderAssociation> orderAcceptedCallback;
   /**
+   * The maximum number of consecutive state messages that indicate a rejection of the current
+   * order/message before we consider the rejection to be permanent and stop retrying.
+   */
+  private final int maxIgnoredRejectionsCount;
+  /**
+   * The number of consecutive state messages that indicate a rejection of the current order/message
+   * we have received so far.
+   */
+  private int consecutiveRejectionsCount;
+  /**
    * Flag indicating whether this comm adapter may currently send requests to the vehicle.
    * If false, all enqueued requests will stay in the queue until the flag becomes true.
    */
@@ -59,6 +69,9 @@ public class MessageResponseMatcher {
    * @param sendOrderCallback The callback for sending the next order.
    * @param sendInstantActionsCallback The callback for sending instant actions.
    * @param orderAcceptedCallback The callback for when the order is accepted by the vehicle.
+   * @param maxIgnoredRejectionsCount The maximum number of consecutive state messages that
+   * indicate a rejection of the current order/message before we consider the rejection to be
+   * permanent and stop retrying.
    */
   public MessageResponseMatcher(
       @Nonnull
@@ -68,13 +81,15 @@ public class MessageResponseMatcher {
       @Nonnull
       Consumer<InstantActions> sendInstantActionsCallback,
       @Nonnull
-      Consumer<OrderAssociation> orderAcceptedCallback
+      Consumer<OrderAssociation> orderAcceptedCallback,
+      int maxIgnoredRejectionsCount
   ) {
     this.commAdapterName = requireNonNull(commAdapterName, "commAdapterName");
     this.sendOrderCallback = requireNonNull(sendOrderCallback, "sendOrderCallback");
     this.sendInstantActionsCallback
         = requireNonNull(sendInstantActionsCallback, "sendInstantActionsCallback");
     this.orderAcceptedCallback = requireNonNull(orderAcceptedCallback, "orderAcceptedCallback");
+    this.maxIgnoredRejectionsCount = maxIgnoredRejectionsCount;
   }
 
   public void enqueueCommand(Order order, MovementCommand command) {
@@ -107,6 +122,7 @@ public class MessageResponseMatcher {
    */
   public void clear() {
     requests.clear();
+    consecutiveRejectionsCount = 0;
   }
 
   public void onStateMessage(
@@ -124,6 +140,12 @@ public class MessageResponseMatcher {
     }
 
     if (StateMappings.vehicleRejectsOrder(state)) {
+      consecutiveRejectionsCount++;
+    }
+    else {
+      consecutiveRejectionsCount = 0;
+    }
+    if (consecutiveRejectionsCount > maxIgnoredRejectionsCount) {
       // Don't do anything - the vehicle cannot continue processing the drive order. We will wait
       // for this to be resolved via order withdrawal and a new initial order message.
       return;

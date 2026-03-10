@@ -72,5 +72,8 @@ If the value is negative, it is instead replaced with zero.
 Property keys that start with this prefix should be extended by the path to the optional field in the order message separated by dots.
 The property value contains the support status for the optional field, which can be `REQUIRED`, `SUPPORTED`, or `NOT_SUPPORTED`.
 (Default value: `SUPPORTED`)
+`vda5050:maxIgnoredRejections` (optional)::
+The property value contains the maximum number of consecutive state messages indicating an order rejection before the driver considers the rejection to be permanent and stop retrying.
+(Default value: `0`.)
 
 NOTE: If any of the required properties are not set or contain unusable data, the driver may fail to be instantiated for / attached to the vehicle.

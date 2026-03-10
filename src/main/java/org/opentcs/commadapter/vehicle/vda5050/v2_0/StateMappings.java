@@ -3,6 +3,10 @@
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
 import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.NO_ROUTE_ERROR;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.ORDER_ERROR;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.ORDER_UPDATE_ERROR;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.VALIDATION_ERROR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,7 +193,7 @@ public class StateMappings {
 
   private static boolean isOrderRejectionWarning(ErrorEntry error) {
     return switch (error.getErrorType()) {
-      case "validationError", "noRouteError", "orderError", "orderUpdateError" -> true;
+      case VALIDATION_ERROR, NO_ROUTE_ERROR, ORDER_ERROR, ORDER_UPDATE_ERROR -> true;
       default -> false;
     };
   }

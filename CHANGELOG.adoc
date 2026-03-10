@@ -20,6 +20,9 @@ toc::[]
 
 == Unreleased
 
+* New features and enhancements:
+** Allow a rejection reported by the vehicle to be ignored for a configurable number of consecutive state messages before considering the rejection to be definitive.
+   This allows handling edge cases in which a rejection was based on a transient vehicle state.
 * Fixes:
 ** Do not send a new order to the vehicle while it is still processing a _cancelOrder_ action, which can lead to the new order being canceled.
 * Changes affecting developers:

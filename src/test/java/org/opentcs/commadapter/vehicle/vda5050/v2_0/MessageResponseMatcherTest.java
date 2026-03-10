@@ -9,6 +9,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.NO_ROUTE_ERROR;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.ORDER_ERROR;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.ORDER_UPDATE_ERROR;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.VALIDATION_ERROR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +65,8 @@ public class MessageResponseMatcherTest {
         "test",
         sendOrderCallback,
         sendInstantActionsCallback,
-        orderAcceptedCallback
+        orderAcceptedCallback,
+        0
     );
     messageResponseMatcher.onStateMessage(newState());
     dummyCommand = mock(MovementCommand.class);
@@ -128,18 +133,11 @@ public class MessageResponseMatcherTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {"validationError", "noRouteError", "orderError", "orderUpdateError"})
+  @ValueSource(strings = {VALIDATION_ERROR, NO_ROUTE_ERROR, ORDER_ERROR, ORDER_UPDATE_ERROR})
   public void suppressOrderRepetitionOnOrderRejection(String errorType) {
     Order order = new Order("some-order", 0L, List.of(), List.of());
     State state = newState();
-    state.setErrors(
-        List.of(
-            new ErrorEntry(
-                errorType,
-                ErrorLevel.WARNING
-            )
-        )
-    );
+    state.setErrors(List.of(new ErrorEntry(errorType, ErrorLevel.WARNING)));
 
     messageResponseMatcher.enqueueCommand(order, dummyCommand);
     messageResponseMatcher.onStateMessage(state);
@@ -153,19 +151,51 @@ public class MessageResponseMatcherTest {
     Order order = new Order("some-order", 0L, List.of(), List.of());
     InstantActions action = new InstantActions();
     State state = stateWithOperatingMode(OperatingMode.MANUAL);
-    state.setErrors(
-        List.of(
-            new ErrorEntry(
-                "validationError",
-                ErrorLevel.WARNING
-            )
-        )
-    );
+    state.setErrors(List.of(new ErrorEntry(VALIDATION_ERROR, ErrorLevel.WARNING)));
 
     messageResponseMatcher.onStateMessage(state);
     messageResponseMatcher.enqueueAction(action);
 
     verify(sendInstantActionsCallback, never()).accept(action);
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {0, 1, 5, 10, 20_000})
+  public void ignoreOrderRejectionsUntilMaximumIsReached(int ignoredRejectionsCount) {
+    // Initialize a new MessageResponseMatcher for this test, configuring it to ignore a specific
+    // maximum number of consecutive rejections.
+    MessageResponseMatcher ignoringMessageResponseMatcher = new MessageResponseMatcher(
+        "test",
+        sendOrderCallback,
+        sendInstantActionsCallback,
+        orderAcceptedCallback,
+        ignoredRejectionsCount
+    );
+    ignoringMessageResponseMatcher.onStateMessage(newState());
+
+    // Enqueue a single order.
+    ignoringMessageResponseMatcher.enqueueCommand(
+        new Order("some-order", 0L, List.of(), List.of()),
+        dummyCommand
+    );
+
+    // The order should have been sent once immediately.
+    verify(sendOrderCallback, times(1)).accept(any());
+
+    // The order should be resent as a reaction to each state message indicating a rejection.
+    for (int i = 0; i < ignoredRejectionsCount; i++) {
+      ignoringMessageResponseMatcher.onStateMessage(
+          newState().setErrors(List.of(new ErrorEntry(VALIDATION_ERROR, ErrorLevel.WARNING)))
+      );
+    }
+    verify(sendOrderCallback, times(ignoredRejectionsCount + 1)).accept(any());
+
+    // Once the maximum number of ignored rejections is reached, the order should not be resent
+    // any more.
+    ignoringMessageResponseMatcher.onStateMessage(
+        newState().setErrors(List.of(new ErrorEntry(VALIDATION_ERROR, ErrorLevel.WARNING)))
+    );
+    verify(sendOrderCallback, times(ignoredRejectionsCount + 1)).accept(any());
   }
 
   @Test

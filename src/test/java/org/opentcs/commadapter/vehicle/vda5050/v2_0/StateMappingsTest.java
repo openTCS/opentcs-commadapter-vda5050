@@ -9,6 +9,10 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.nullValue;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.NO_ROUTE_ERROR;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.ORDER_ERROR;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.ORDER_UPDATE_ERROR;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ErrorTypes.VALIDATION_ERROR;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -320,7 +324,7 @@ public class StateMappingsTest {
   }
 
   @ParameterizedTest()
-  @ValueSource(strings = {"validationError", "noRouteError", "orderError", "orderUpdateError"})
+  @ValueSource(strings = {VALIDATION_ERROR, NO_ROUTE_ERROR, ORDER_ERROR, ORDER_UPDATE_ERROR})
   public void recognizeOrderRejection(String errorType) {
     state.setErrors(List.of(new ErrorEntry(errorType, ErrorLevel.WARNING)));
 
