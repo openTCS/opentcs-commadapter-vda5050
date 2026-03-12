@@ -31,6 +31,7 @@ toc::[]
 ** Update AssertJ to 3.27.7.
 ** Update ApprovalTests to 29.0.0.
 ** Update Mockito to 5.23.0.
+** Update Spotless to 8.3.0.
 
 == Version 0.30 (2026-02-24)
 
