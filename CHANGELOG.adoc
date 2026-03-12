@@ -27,6 +27,10 @@ toc::[]
 ** Do not send a new order to the vehicle while it is still processing a _cancelOrder_ action, which can lead to the new order being canceled.
 * Changes affecting developers:
 ** Update Gradle wrapper to 8.14.4.
+** Update JUnit to 6.0.3.
+** Update AssertJ to 3.27.7.
+** Update ApprovalTests to 29.0.0.
+** Update Mockito to 5.23.0.
 
 == Version 0.30 (2026-02-24)
 
