@@ -89,6 +89,12 @@ public interface ObjectProperties {
   String PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION
       = "vda5050:movementCommandCompletedCondition";
   /**
+   * The key of the vehicle property indicating whether the vehicle's lastNodeId needs to be checked
+   * for movement completion, too.
+   */
+  String PROPKEY_VEHICLE_LASTNODEID_REQUIRED_FOR_MOVEMENT_COMPLETION
+      = "vda5050:lastNodeIdRequiredForMovementCompletion";
+  /**
    * The key of the vehicle property containing the distance that is added to the extended
    * deviation range of a node.
    */

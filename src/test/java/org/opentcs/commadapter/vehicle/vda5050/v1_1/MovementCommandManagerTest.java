@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.opentcs.commadapter.vehicle.vda5050.common.MovementCommandCompletedCondition.EDGE;
 import static org.opentcs.commadapter.vehicle.vda5050.common.MovementCommandCompletedCondition.EDGE_AND_NODE;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_LASTNODEID_REQUIRED_FOR_MOVEMENT_COMPLETION;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION;
 
 import java.util.ArrayList;
@@ -88,6 +89,93 @@ public class MovementCommandManagerTest {
 
   @ParameterizedTest
   @EnumSource(MovementCommandCompletedCondition.class)
+  public void finishMovementWithLastNodeIdBeingJustRight(
+      MovementCommandCompletedCondition completedCondition
+  ) {
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        false
+    )
+        .build();
+    State state = new StateBuilder(association.getOrder().getOrderId())
+        .withLastNodeId("dest-point")
+        .build();
+    manager = new MovementCommandManager(
+        vehicleWithCondition(completedCondition)
+            .withProperty(PROPKEY_VEHICLE_LASTNODEID_REQUIRED_FOR_MOVEMENT_COMPLETION, "true")
+    );
+    manager.enqueue(association);
+
+    manager.onStateMessage(state, callback);
+
+    verify(callback, times(1)).accept(association.getCommand());
+  }
+
+  @ParameterizedTest
+  @EnumSource(MovementCommandCompletedCondition.class)
+  public void finishMovementWithLastNodeIdBeingTheFollowingHop(
+      MovementCommandCompletedCondition completedCondition
+  ) {
+    OrderAssociation association1 = new OrderBuilder(
+        "some-order-id",
+        "source-point-1",
+        "dest-point-1",
+        false
+    )
+        .build();
+    OrderAssociation association2 = new OrderBuilder(
+        "some-order-id",
+        "dest-point-1",
+        "dest-point-2",
+        false
+    )
+        .build();
+    State state = new StateBuilder(association1.getOrder().getOrderId())
+        .withLastNodeId("dest-point-2")
+        .build();
+    manager = new MovementCommandManager(
+        vehicleWithCondition(completedCondition)
+            .withProperty(PROPKEY_VEHICLE_LASTNODEID_REQUIRED_FOR_MOVEMENT_COMPLETION, "true")
+    );
+    manager.enqueue(association1);
+    manager.enqueue(association2);
+
+    manager.onStateMessage(state, callback);
+
+    verify(callback, times(1)).accept(association1.getCommand());
+    verify(callback, times(1)).accept(association2.getCommand());
+  }
+
+  @ParameterizedTest
+  @EnumSource(MovementCommandCompletedCondition.class)
+  public void keepMovementWithRequiredButImplausibleLastNodeId(
+      MovementCommandCompletedCondition completedCondition
+  ) {
+    OrderAssociation association = new OrderBuilder(
+        "some-order-id",
+        "source-point",
+        "dest-point",
+        false
+    )
+        .build();
+    State state = new StateBuilder(association.getOrder().getOrderId())
+        .withLastNodeId("some-other-point")
+        .build();
+    manager = new MovementCommandManager(
+        vehicleWithCondition(completedCondition)
+            .withProperty(PROPKEY_VEHICLE_LASTNODEID_REQUIRED_FOR_MOVEMENT_COMPLETION, "true")
+    );
+    manager.enqueue(association);
+
+    manager.onStateMessage(state, callback);
+
+    verifyNoInteractions(callback);
+  }
+
+  @ParameterizedTest
+  @EnumSource(MovementCommandCompletedCondition.class)
   public void keepMovementWhenEdgeStatesAreNotEmpty(
       MovementCommandCompletedCondition completedCondition
   ) {
@@ -152,7 +240,7 @@ public class MovementCommandManagerTest {
 
   @ParameterizedTest
   @EnumSource(MovementCommandCompletedCondition.class)
-  public void keepFinalMovementWhenEdgeStatsAreNotEmpty(
+  public void keepFinalMovementWhenEdgeStatesAreNotEmpty(
       MovementCommandCompletedCondition condition
   ) {
     OrderAssociation association = new OrderBuilder(
@@ -164,7 +252,7 @@ public class MovementCommandManagerTest {
     State state = new StateBuilder(association.getOrder().getOrderId())
         .withEdgeStatesFrom(association.getOrder())
         .build();
-    // A final movement command can only be finished if both edge and node stats are empty
+    // A final movement command can only be finished if both edge and node states are empty
     // regardless of the completion condition
     manager = new MovementCommandManager(vehicleWithCondition(condition));
     manager.enqueue(association);
@@ -174,7 +262,7 @@ public class MovementCommandManagerTest {
 
   @ParameterizedTest
   @EnumSource(MovementCommandCompletedCondition.class)
-  public void keepFinalMovementWhenNodeStatsAreNotEmpty(
+  public void keepFinalMovementWhenNodeStatesAreNotEmpty(
       MovementCommandCompletedCondition condition
   ) {
     OrderAssociation association = new OrderBuilder(
@@ -186,7 +274,7 @@ public class MovementCommandManagerTest {
     State state = new StateBuilder(association.getOrder().getOrderId())
         .withNodeStatesFrom(association.getOrder())
         .build();
-    // A final movement command can only be finished if both edge and node stats are empty
+    // A final movement command can only be finished if both edge and node states are empty
     // regardless of the completion condition
     manager = new MovementCommandManager(vehicleWithCondition(condition));
     manager.enqueue(association);
@@ -268,7 +356,7 @@ public class MovementCommandManagerTest {
     State state = new StateBuilder(association.getOrder().getOrderId())
         .withActionStatesFrom(association.getOrder(), actionStatus)
         .build();
-    // For non final movement commands, the state of related actions should not block
+    // For non-final movement commands, the state of related actions should not block
     // the movement command from completing.
     manager.enqueue(association);
     manager.onStateMessage(state, callback);
@@ -362,14 +450,16 @@ public class MovementCommandManagerTest {
                 .setActionType("some-action-type")
         )
         .build();
-    // Unrelated actions dont block a movement command from completing. Even for final movements.
+    // Unrelated actions don't block a movement command from completing. Even for final movements.
     manager.enqueue(association);
     manager.onStateMessage(state, callback);
 
     verify(callback, times(1)).accept(association.getCommand());
   }
 
-  private Vehicle vehicleWithCondition(MovementCommandCompletedCondition completedCondition) {
+  private static Vehicle vehicleWithCondition(
+      MovementCommandCompletedCondition completedCondition
+  ) {
     return new Vehicle("vehicle-001")
         .withProperty(
             PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION,
@@ -377,7 +467,9 @@ public class MovementCommandManagerTest {
         );
   }
 
-  private MovementCommand createMovementCommand(Point source, Point dest, boolean finalMovement) {
+  private static MovementCommand createMovementCommand(
+      Point source, Point dest, boolean finalMovement
+  ) {
     Path path = null;
     if (source != null && dest != null) {
       path = new Path("Path-0001", source.getReference(), dest.getReference());
@@ -406,7 +498,7 @@ public class MovementCommandManagerTest {
     );
   }
 
-  private class OrderBuilder {
+  private static class OrderBuilder {
 
     private String orderId;
     private MovementCommand command;
@@ -452,7 +544,7 @@ public class MovementCommandManagerTest {
     }
   }
 
-  private class StateBuilder {
+  private static class StateBuilder {
 
     private State state;
 
@@ -512,6 +604,11 @@ public class MovementCommandManagerTest {
 
     public StateBuilder withActionState(ActionState actionState) {
       state.getActionStates().add(actionState);
+      return this;
+    }
+
+    public StateBuilder withLastNodeId(String lastNodeId) {
+      state.setLastNodeId(lastNodeId);
       return this;
     }
 

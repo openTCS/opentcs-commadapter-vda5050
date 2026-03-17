@@ -3,6 +3,7 @@
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
 import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_LASTNODEID_REQUIRED_FOR_MOVEMENT_COMPLETION;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION;
 
 import com.google.inject.assistedinject.Assisted;
@@ -42,6 +43,10 @@ public class MovementCommandManager {
    * The movement command completed condition.
    */
   private final MovementCommandCompletedCondition completedCondition;
+  /**
+   * Whether lastNodeId should be considered for determining whether a movement command is complete.
+   */
+  private final boolean lastNodeIdRequiredForMovementCompletion;
 
   /**
    * Construct a new MovementCommandManager.
@@ -57,6 +62,9 @@ public class MovementCommandManager {
     this.completedCondition = PropertyExtractions.getMovementCommandCompletedCondition(
         PROPKEY_VEHICLE_MOVEMENT_COMMAND_COMPLETED_CONDITION, vehicle
     ).orElse(MovementCommandCompletedCondition.EDGE_AND_NODE);
+    this.lastNodeIdRequiredForMovementCompletion = PropertyExtractions.getPropertyBoolean(
+        PROPKEY_VEHICLE_LASTNODEID_REQUIRED_FOR_MOVEMENT_COMPLETION, vehicle
+    ).orElse(false);
   }
 
   /**
@@ -127,6 +135,10 @@ public class MovementCommandManager {
   }
 
   private boolean movementComplete(OrderAssociation association, State state) {
+    if (!lastNodeIdPlausibleForMovementCompletion(state)) {
+      return false;
+    }
+
     if (association.getCommand().isFinalMovement()) {
       return edgesComplete(association.getOrder(), state)
           && nodesComplete(association.getOrder(), state);
@@ -139,6 +151,22 @@ public class MovementCommandManager {
         return edgesComplete(association.getOrder(), state)
             && nodesComplete(association.getOrder(), state);
     }
+  }
+
+  private boolean lastNodeIdPlausibleForMovementCompletion(State state) {
+    if (!lastNodeIdRequiredForMovementCompletion) {
+      return true;
+    }
+
+    // lastNodeId is acceptable if it matches the name of any remaining destination point on the
+    // route that has already been released to the vehicle.
+    return trackedOrders.stream()
+        .anyMatch(
+            association -> Objects.equals(
+                association.getCommand().getStep().getDestinationPoint().getName(),
+                state.getLastNodeId()
+            )
+        );
   }
 
   private boolean edgesComplete(Order order, State state) {

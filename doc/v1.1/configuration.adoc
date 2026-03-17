@@ -75,5 +75,8 @@ The property value contains the support status for the optional field, which can
 `vda5050:maxIgnoredRejections` (optional)::
 The property value contains the maximum number of consecutive state messages indicating an order rejection before the driver considers the rejection to be permanent and stop retrying.
 (Default value: `0`.)
+`vda5050:lastNodeIdRequiredForMovementCompletion` (optional)::
+The property value contains a boolean value that indicates whether the driver should not only consider `edgeStates` and `nodeStates` for deciding whether a vehicle has completed a movement to a node on its route, but also require the vehicle's reported `lastNodeId` to reflect that node or one beyond it.
+(Default value: `false`.)
 
 NOTE: If any of the required properties are not set or contain unusable data, the driver may fail to be instantiated for / attached to the vehicle.

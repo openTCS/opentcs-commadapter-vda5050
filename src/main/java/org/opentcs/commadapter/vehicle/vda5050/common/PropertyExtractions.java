@@ -44,6 +44,21 @@ public class PropertyExtractions {
   }
 
   /**
+   * Searches objects for a property and tries to parse it as a boolean.
+   *
+   * @param key The property key to search for.
+   * @param objects The objects to search through.
+   * @return The value of the first occurrence of the property, or {@link Optional#EMPTY}, if no
+   * property with the given key is found.
+   */
+  public static Optional<Boolean> getPropertyBoolean(String key, TCSObject<?>... objects) {
+    return Stream.of(objects)
+        .filter(object -> object.getProperties().containsKey(key))
+        .map(object -> Boolean.valueOf(object.getProperty(key)))
+        .findFirst();
+  }
+
+  /**
    * Searches objects for a property and tries to parse it as an integer.
    *
    * @param key The property key to search for
