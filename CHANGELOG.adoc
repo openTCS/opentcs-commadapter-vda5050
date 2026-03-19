@@ -18,7 +18,7 @@ toc::[]
 
 = Changelog
 
-== Unreleased
+== Version 0.31 (2026-03-19)
 
 * New features and enhancements:
 ** Allow a rejection reported by the vehicle to be ignored for a configurable number of consecutive state messages before considering the rejection to be definitive.
