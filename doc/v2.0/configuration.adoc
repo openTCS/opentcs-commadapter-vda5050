@@ -23,12 +23,63 @@ It reads the properties with the following keys:
 
 `vda5050:version` (required)::
 Must be set to `2.0`.
-`vda5050:interfaceName` (required)::
+`vda5050:topicPrefix` (required, if `vda5050:interfaceName` is not set)::
+The property value contains a string to be used as the prefix for all MQTT topics, e.g. `myprefix`.
+If this is not set, the topic prefix is derived from the `vda5050:interfaceName`, `vda5050:manufacturer`, and `vda5050:serialNumber` properties as follows: `<interfaceName>/v2/<manufacturer>/<serialNumber>`.
+`vda5050:interfaceName` (required, if `vda5050:topicPrefix` is not set)::
 The property value contains the interface name to be used as part of the MQTT topic, e.g. `uagv`.
 `vda5050:manufacturer` (required)::
-The property value contains the manufacturer string to be used as part of the MQTT topic, e.g. `Some_Company`.
+The property value contains the manufacturer string to be included in message headers, e.g. `Some_Company`.
 `vda5050:serialNumber` (required)::
-The property value contains the vehicle's unique(!) serial number to be used as part of the MQTT topic, e.g. `AGV-XY-1234`.
+The property value contains the vehicle's serial number to be included in message headers, e.g. `AGV-XY-1234`.
+`vda5050:topicConnectionName` (optional)::
+The property value contains the name of the topic to subscribe to for receiving connection messages from the vehicle.
+The value is appended to the vehicle's topic prefix.
+(Default value: `connection`.)
+`vda5050:topicConnectionQos` (optional)::
+The property value contains the QoS level to be used for subscribing to the connection topic.
+Possible values are `at_most_once`, `at_least_once` and `exactly_once`; the values `0`, `1`, and `2` are also accepted.
+(Default value: `at_most_once`.)
+`vda5050:topicStateName` (optional)::
+The property value contains the name of the topic to subscribe to for receiving state messages from the vehicle.
+The value is appended to the vehicle's topic prefix.
+(Default value: `state`.)
+`vda5050:topicStateQos` (optional)::
+The property value contains the QoS level to be used for subscribing to the state topic.
+Possible values are `at_most_once`, `at_least_once` and `exactly_once`; the values `0`, `1`, and `2` are also accepted.
+(Default value: `at_most_once`.)
+`vda5050:topicVisualizationName` (optional)::
+The property value contains the name of the topic to subscribe to for receiving visualization messages from the vehicle.
+The value is appended to the vehicle's topic prefix.
+(Default value: `visualization`.)
+`vda5050:topicVisualizationQos` (optional)::
+The property value contains the QoS level to be used for subscribing to the visualization topic.
+Possible values are `at_most_once`, `at_least_once` and `exactly_once`; the values `0`, `1`, and `2` are also accepted.
+(Default value: `at_most_once`.)
+`vda5050:topicFactsheetName` (optional)::
+The property value contains the name of the topic to subscribe to for receiving factsheet messages from the vehicle.
+The value is appended to the vehicle's topic prefix.
+(Default value: `factsheet`.)
+`vda5050:topicFactsheetQos` (optional)::
+The property value contains the QoS level to be used for subscribing to the factsheet topic.
+Possible values are `at_most_once`, `at_least_once` and `exactly_once`; the values `0`, `1`, and `2` are also accepted.
+(Default value: `at_most_once`.)
+`vda5050:topicOrderName` (optional)::
+The property value contains the name of the topic to publish order messages to.
+The value is appended to the vehicle's topic prefix.
+(Default value: `order`.)
+`vda5050:topicOrderQos` (optional)::
+The property value contains the QoS level to be used for publishing order messages.
+Possible values are `at_most_once`, `at_least_once` and `exactly_once`; the values `0`, `1`, and `2` are also accepted.
+(Default value: `at_most_once`.)
+`vda5050:topicInstantActionsName` (optional)::
+The property value contains the name of the topic to publish instant action messages to.
+The value is appended to the vehicle's topic prefix.
+(Default value: `instantActions`.)
+`vda5050:topicInstantActionsQos` (optional)::
+The property value contains the QoS level to be used for publishing instant action messages.
+Possible values are `at_most_once`, `at_least_once` and `exactly_once`; the values `0`, `1`, and `2` are also accepted.
+(Default value: `at_most_once`.)
 `vda5050:rechargeOperation` (optional)::
 The property value contains a string that should be used as the vehicle's recharge operation in the plant model, e.g. `Recharge`.
 (Default value: `Charge`.)

@@ -21,9 +21,10 @@ public interface CommAdapterComponentsFactory {
    * Creates a new {@link CommAdapterImpl} for the given vehicle.
    *
    * @param vehicle The vehicle.
+   * @param mqttSetting The MQTT settings for this vehicle.
    * @return A new communication adapter instance for the given vehicle.
    */
-  CommAdapterImpl createCommAdapterImpl(Vehicle vehicle);
+  CommAdapterImpl createCommAdapterImpl(Vehicle vehicle, MqttSetting mqttSetting);
 
   /**
    * Creates a new object mapper.

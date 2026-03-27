@@ -5,15 +5,14 @@ package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.util.Objects.requireNonNull;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_VERSION;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Qualifier;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.Objects;
+import java.util.Optional;
 import org.opentcs.commadapter.vehicle.vda5050.Vda5050CommAdapterFactory;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.VehicleCommAdapter;
@@ -52,27 +51,15 @@ public class CommAdapterFactory
   public boolean providesAdapterFor(Vehicle vehicle) {
     requireNonNull(vehicle, "vehicle");
 
-    if (vehicle.getProperty(PROPKEY_VEHICLE_VERSION) == null) {
-      return false;
-    }
-
-    if (!vehicle.getProperty(PROPKEY_VEHICLE_VERSION).trim().contains("2.0")) {
-      return false;
-    }
-
-    if (vehicle.getProperty(PROPKEY_VEHICLE_INTERFACE_NAME) == null) {
-      return false;
-    }
-
-    if (vehicle.getProperty(PROPKEY_VEHICLE_MANUFACTURER) == null) {
-      return false;
-    }
-
-    if (vehicle.getProperty(PROPKEY_VEHICLE_SERIAL_NUMBER) == null) {
-      return false;
-    }
-
-    return true;
+    return Objects.equals(
+        Optional.ofNullable(vehicle.getProperty(PROPKEY_VEHICLE_VERSION))
+            .map(String::strip)
+            .orElse(null),
+        "2.0"
+    )
+        && vehicle.getProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER) != null
+        && vehicle.getProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER) != null
+        && MqttSetting.hasRequiredProperties(vehicle);
   }
 
   @Override
@@ -82,6 +69,9 @@ public class CommAdapterFactory
       return null;
     }
 
-    return componentsFactory.createCommAdapterImpl(vehicle);
+    return componentsFactory.createCommAdapterImpl(
+        vehicle,
+        MqttSetting.forVehicle(vehicle).orElseThrow(IllegalStateException::new)
+    );
   }
 }

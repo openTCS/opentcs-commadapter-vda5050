@@ -6,21 +6,21 @@ import static java.util.Objects.requireNonNull;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getProperty;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyInteger;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyLong;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.MqttSetting.VERSION_MAJOR;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.MqttSetting.VERSION_MINOR;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.MqttSetting.VERSION_PATCH;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_ERRORS_FATAL;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_ERRORS_WARNING;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_INFORMATION_DEBUG;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_INFORMATION_INFO;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_LENGTH_LOADED;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_LENGTH_UNLOADED;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MAX_DISTANCE_IN_ADVANCE;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MAX_IGNORED_REJECTIONS;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MAX_STEPS_BASE;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MIN_VISU_INTERVAL;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_PAUSED;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_RECHARGE_OPERATION;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.StateMappings.toLoadHandlingDevices;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.StateMappings.toVehicleLength;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.StateMappings.toVehicleState;
@@ -29,7 +29,6 @@ import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
 import java.beans.PropertyChangeEvent;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,18 +93,6 @@ public class CommAdapterImpl
    */
   private static final Logger LOG = LoggerFactory.getLogger(CommAdapterImpl.class);
   /**
-   * Major interface version.
-   */
-  private static final int VERSION_MAJOR = 2;
-  /**
-   * Minor interface version.
-   */
-  private static final int VERSION_MINOR = 0;
-  /**
-   * Patch version.
-   */
-  private static final int VERSION_PATCH = 0;
-  /**
    * Maps movement commands from openTCS to the telegrams sent to the attached vehicle.
    */
   private OrderMapper orderMapper;
@@ -154,17 +141,9 @@ public class CommAdapterImpl
    */
   private final Map<String, Long> headerIdCounter = new HashMap<>();
   /**
-   * Serial number of the vehicle.
+   * The MQTT settings for this vehicle.
    */
-  private final String vehicleSerialNumber;
-  /**
-   * Manufacturer of the vehicle.
-   */
-  private final String vehicleManufacturer;
-  /**
-   * Interface name of the vehicle.
-   */
-  private final String vehicleInterfaceName;
+  private final MqttSetting mqttSetting;
   /**
    * Timestamp of the last visualization message.
    */
@@ -208,6 +187,8 @@ public class CommAdapterImpl
   public CommAdapterImpl(
       @Assisted
       Vehicle vehicle,
+      @Assisted
+      MqttSetting mqttSetting,
       @KernelExecutor
       ScheduledExecutorService kernelExecutor,
       CommAdapterComponentsFactory componentsFactory,
@@ -225,6 +206,7 @@ public class CommAdapterImpl
             .orElse(DestinationOperations.CHARGE),
         kernelExecutor
     );
+    this.mqttSetting = requireNonNull(mqttSetting, "mqttSetting");
     this.componentsFactory = requireNonNull(componentsFactory, "componentsFactory");
     this.minVisualizationInterval
         = getPropertyInteger(PROPKEY_VEHICLE_MIN_VISU_INTERVAL, vehicle).orElse(500);
@@ -258,16 +240,7 @@ public class CommAdapterImpl
         getPropertyInteger(PROPKEY_VEHICLE_MAX_IGNORED_REJECTIONS, vehicle).orElse(0)
     );
 
-    vehicleSerialNumber = vehicle.getProperty(PROPKEY_VEHICLE_SERIAL_NUMBER);
-    vehicleManufacturer = vehicle.getProperty(PROPKEY_VEHICLE_MANUFACTURER);
-    vehicleInterfaceName = vehicle.getProperty(PROPKEY_VEHICLE_INTERFACE_NAME);
-
-    getProcessModel().setTopicPrefix(
-        vehicleInterfaceName
-            + "/" + "v" + VERSION_MAJOR
-            + "/" + vehicleManufacturer
-            + "/" + vehicleSerialNumber
-    );
+    getProcessModel().setTopicPrefix(mqttSetting.topicNamePrefix());
 
     this.isActionExecutable = new ExecutableActionsTagsPredicate(vehicle);
     this.deviationExtensionTrigger = componentsFactory.createDeviationExtensionTrigger(vehicle);
@@ -297,19 +270,17 @@ public class CommAdapterImpl
     super.enable();
 
     clientManager.registerConnectionEventListener(this);
-    // We subscribe to all topics with QoS 0 (AT_MOST_ONCE), because we always connect to the broker
-    // with a clean session, and QoS 1 or 2 do not make sense with clean sessions.
     clientManager.subscribe(
-        getProcessModel().getTopicPrefix() + "/connection", QualityOfService.AT_MOST_ONCE, this
+        mqttSetting.connectionTopicName(), mqttSetting.connectionTopicQos(), this
     );
     clientManager.subscribe(
-        getProcessModel().getTopicPrefix() + "/state", QualityOfService.AT_MOST_ONCE, this
+        mqttSetting.stateTopicName(), mqttSetting.stateTopicQos(), this
     );
     clientManager.subscribe(
-        getProcessModel().getTopicPrefix() + "/visualization", QualityOfService.AT_MOST_ONCE, this
+        mqttSetting.visualizationTopicName(), mqttSetting.visualizationTopicQos(), this
     );
     clientManager.subscribe(
-        getProcessModel().getTopicPrefix() + "/factsheet", QualityOfService.AT_MOST_ONCE, this
+        mqttSetting.factsheetTopicName(), mqttSetting.factsheetTopicQos(), this
     );
 
     // The client manager may have already been connected to the broker prior to this adapter
@@ -328,10 +299,10 @@ public class CommAdapterImpl
       return;
     }
 
-    clientManager.unsubscribe(getProcessModel().getTopicPrefix() + "/connection", this);
-    clientManager.unsubscribe(getProcessModel().getTopicPrefix() + "/state", this);
-    clientManager.unsubscribe(getProcessModel().getTopicPrefix() + "/visualization", this);
-    clientManager.unsubscribe(getProcessModel().getTopicPrefix() + "/factsheet", this);
+    clientManager.unsubscribe(mqttSetting.connectionTopicName(), this);
+    clientManager.unsubscribe(mqttSetting.stateTopicName(), this);
+    clientManager.unsubscribe(mqttSetting.visualizationTopicName(), this);
+    clientManager.unsubscribe(mqttSetting.factsheetTopicName(), this);
     clientManager.unregisterConnectionEventListener(this);
 
     // With unregistering from the client manager, we will no longer receive any update regarding
@@ -523,7 +494,7 @@ public class CommAdapterImpl
   public synchronized void onIncomingMessage(IncomingMessage message) {
     requireNonNull(message, "message");
 
-    if (message.getTopic().endsWith("/connection")) {
+    if (Objects.equals(message.getTopic(), mqttSetting.connectionTopicName())) {
       try {
         messageValidator.validate(message.getMessage(), Connection.class);
         Connection connectionMessage = jsonBinder.fromJson(message.getMessage(), Connection.class);
@@ -533,7 +504,7 @@ public class CommAdapterImpl
         LOG.warn("Cannot parse connection message: {}", message.getMessage(), ex);
       }
     }
-    else if (message.getTopic().endsWith("/state")) {
+    else if (Objects.equals(message.getTopic(), mqttSetting.stateTopicName())) {
       try {
         messageValidator.validate(message.getMessage(), State.class);
         State stateMessage = jsonBinder.fromJson(message.getMessage(), State.class);
@@ -543,7 +514,7 @@ public class CommAdapterImpl
         LOG.warn("Cannot parse state message: {}", message.getMessage(), ex);
       }
     }
-    else if (message.getTopic().endsWith("/visualization")) {
+    else if (Objects.equals(message.getTopic(), mqttSetting.visualizationTopicName())) {
       try {
         messageValidator.validate(message.getMessage(), Visualization.class);
         Visualization vis = jsonBinder.fromJson(message.getMessage(), Visualization.class);
@@ -553,7 +524,7 @@ public class CommAdapterImpl
         LOG.warn("Cannot parse visualization message: {}", message.getMessage(), ex);
       }
     }
-    else if (message.getTopic().endsWith("/factsheet")) {
+    else if (Objects.equals(message.getTopic(), mqttSetting.factsheetTopicName())) {
       LOG.info("Received factsheet from vehicle, ignoring it.");
     }
     else {
@@ -573,7 +544,7 @@ public class CommAdapterImpl
         BlockingType.NONE
     );
     InstantActions instantAction = new InstantActions();
-    instantAction.setActions(Arrays.asList(pauseAction));
+    instantAction.setActions(List.of(pauseAction));
     messageResponseMatcher.enqueueAction(instantAction);
   }
 
@@ -800,7 +771,7 @@ public class CommAdapterImpl
    * @param order the order to send.
    */
   public void sendOrder(Order order) {
-    sendMessage(order, "order");
+    sendMessage(order, mqttSetting.orderTopicName(), mqttSetting.orderTopicQos());
     getProcessModel().setLastOrderSent(order);
   }
 
@@ -810,11 +781,15 @@ public class CommAdapterImpl
    * @param instantActions the action to send.
    */
   public void sendInstantAction(InstantActions instantActions) {
-    sendMessage(instantActions, "instantActions");
+    sendMessage(
+        instantActions,
+        mqttSetting.instantActionsTopicName(),
+        mqttSetting.instantActionsTopicQos()
+    );
     getProcessModel().setLastInstantActionsSent(instantActions);
   }
 
-  private void sendMessage(Header messageObject, String topic) {
+  private void sendMessage(Header messageObject, String topic, QualityOfService qos) {
     // increment header id for this topic
     long headerId = headerIdCounter.getOrDefault(topic, 0L);
     headerIdCounter.put(topic, headerId + 1);
@@ -823,18 +798,13 @@ public class CommAdapterImpl
     messageObject.setHeaderId(headerId);
     messageObject.setTimestamp(Instant.now());
     messageObject.setVersion(VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_PATCH);
-    messageObject.setManufacturer(vehicleManufacturer);
-    messageObject.setSerialNumber(vehicleSerialNumber);
+    messageObject.setManufacturer(mqttSetting.vehicleManufacturer());
+    messageObject.setSerialNumber(mqttSetting.vehicleSerialNumber());
     try {
       String message = jsonBinder.toJson(messageObject);
       messageValidator.validate(message, messageObject.getClass());
       LOG.debug("{}: Sending message to '{}': {}", getName(), topic, message);
-      clientManager.publish(
-          getProcessModel().getTopicPrefix() + "/" + topic,
-          QualityOfService.AT_MOST_ONCE,
-          message,
-          false
-      );
+      clientManager.publish(topic, qos, message, false);
     }
     catch (IllegalArgumentException exc) {
       LOG.error("{}: Failed to convert to JSON {}", getName(), messageObject, exc);
@@ -852,7 +822,7 @@ public class CommAdapterImpl
         BlockingType.NONE
     );
     InstantActions instantAction = new InstantActions();
-    instantAction.setActions(Arrays.asList(cancelOrderAction));
+    instantAction.setActions(List.of(cancelOrderAction));
     messageResponseMatcher.enqueueAction(instantAction);
     deviationExtensionTrigger.onCancelOrderEnqueued();
   }

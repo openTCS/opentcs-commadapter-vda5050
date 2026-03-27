@@ -20,7 +20,9 @@ toc::[]
 
 == Unreleased
 
-...
+* New features and enhancements:
+** Allow configuration of names and QoS levels for all MQTT topics used for communication with the vehicle.
+   While the topic names and QoS levels are given in the VDA5050 specification, users may still want to be able to deviate from these for their own use cases.
 
 == Version 0.31 (2026-03-19)
 

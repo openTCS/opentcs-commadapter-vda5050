@@ -28,6 +28,69 @@ public interface ObjectProperties {
    */
   String PROPKEY_VEHICLE_VERSION = "vda5050:version";
   /**
+   * The key of the property containing the MQTT topic prefix for this vehicle.
+   */
+  String PROPKEY_VEHICLE_TOPIC_PREFIX = "vda5050:topicPrefix";
+  /**
+   * The key of the property containing the name of the topic to subscribe to for receiving
+   * connection messages from the vehicle. The value is appended to the vehicle's topic prefix.
+   */
+  String PROPKEY_VEHICLE_TOPIC_CONNECTION_NAME = "vda5050:topicConnectionName";
+  /**
+   * The key of the property containing the QoS level to use for subscribing to the connection
+   * topic.
+   */
+  String PROPKEY_VEHICLE_TOPIC_CONNECTION_QOS = "vda5050:topicConnectionQos";
+  /**
+   * The key of the property containing the name of the topic to subscribe to for receiving state
+   * messages from the vehicle. The value is appended to the vehicle's topic prefix.
+   */
+  String PROPKEY_VEHICLE_TOPIC_STATE_NAME = "vda5050:topicStateName";
+  /**
+   * The key of the property containing the QoS level to use for subscribing to the state topic.
+   */
+  String PROPKEY_VEHICLE_TOPIC_STATE_QOS = "vda5050:topicStateQos";
+  /**
+   * The key of the property containing the name of the topic to subscribe to for receiving
+   * visualization messages from the vehicle. The value is appended to the vehicle's topic prefix.
+   */
+  String PROPKEY_VEHICLE_TOPIC_VISU_NAME = "vda5050:topicVisualizationName";
+  /**
+   * The key of the property containing the QoS level to use for subscribing to the visualization
+   * topic.
+   */
+  String PROPKEY_VEHICLE_TOPIC_VISU_QOS = "vda5050:topicVisualizationQos";
+  /**
+   * The key of the property containing the name of the topic to subscribe to for receiving
+   * factsheet messages from the vehicle. The value is appended to the vehicle's topic prefix.
+   */
+  String PROPKEY_VEHICLE_TOPIC_FACTSHEET_NAME = "vda5050:topicFactsheetName";
+  /**
+   * The key of the property containing the QoS level to use for subscribing to the factsheet
+   * topic.
+   */
+  String PROPKEY_VEHICLE_TOPIC_FACTSHEET_QOS = "vda5050:topicFactsheetQos";
+  /**
+   * The key of the property containing the name of the topic to publish order messages to. The
+   * value is appended to the vehicle's topic prefix.
+   */
+  String PROPKEY_VEHICLE_TOPIC_ORDER_NAME = "vda5050:topicOrderName";
+  /**
+   * The key of the property containing the QoS level to use for publishing order messages to the
+   * order topic.
+   */
+  String PROPKEY_VEHICLE_TOPIC_ORDER_QOS = "vda5050:topicOrderQos";
+  /**
+   * The key of the property containing the name of the topic to publish instant action messages to.
+   * The value is appended to the vehicle's topic prefix.
+   */
+  String PROPKEY_VEHICLE_TOPIC_INSTANT_ACTIONS_NAME = "vda5050:topicInstantActionsName";
+  /**
+   * The key of the property containing the QoS level to use for publishing instant action messages
+   * to the instant actions topic.
+   */
+  String PROPKEY_VEHICLE_TOPIC_INSTANT_ACTIONS_QOS = "vda5050:topicInstantActionsQos";
+  /**
    * Default map id for this vehicle.
    */
   String PROPKEY_VEHICLE_MAP_ID = "vda5050:mapId";
