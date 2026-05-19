@@ -10,5 +10,5 @@ public interface DestinationOperations {
   /**
    * Charging the battery at the destination.
    */
-  String CHARGE = "Charge";
+  String CHARGE = "startCharging";
 }

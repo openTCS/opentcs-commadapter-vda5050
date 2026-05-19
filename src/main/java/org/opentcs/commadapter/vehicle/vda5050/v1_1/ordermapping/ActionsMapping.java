@@ -5,7 +5,6 @@ package org.opentcs.commadapter.vehicle.vda5050.v1_1.ordermapping;
 import static java.util.Objects.requireNonNull;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_CUSTOM_ACTION_PREFIX;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_CUSTOM_DEST_ACTION_PREFIX;
-import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_RECHARGE_OPERATION;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,8 +21,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions;
-import org.opentcs.commadapter.vehicle.vda5050.v1_1.DestinationOperations;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.ActionParameter;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.BlockingType;
@@ -152,28 +149,8 @@ public class ActionsMapping {
 
     String actionId = "Order_destination_action_" + command.getStep().getRouteIndex();
 
-    PropertyAction action;
-    if (command.getOperation().equals(
-        PropertyExtractions.getProperty(PROPKEY_VEHICLE_RECHARGE_OPERATION, vehicle)
-            .orElse(DestinationOperations.CHARGE)
-    )) {
-      action = mapChargeOperation("startCharging", actionId);
-    }
-    else {
-      action = mapMovementCommandAction(command, destinationLocation, destinationType, actionId);
-    }
-
-    return Optional.of(action);
-  }
-
-  private static PropertyAction mapChargeOperation(String actionType, String actionId) {
-    return new PropertyAction(
-        actionType,
-        actionId,
-        BlockingType.SOFT,
-        List.of(),
-        EnumSet.allOf(ActionTrigger.class),
-        Set.of()
+    return Optional.of(
+        mapMovementCommandAction(command, destinationLocation, destinationType, actionId)
     );
   }
 
