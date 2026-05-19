@@ -189,11 +189,12 @@ public class CommAdapterImpl
       Vehicle vehicle,
       @Assisted
       MqttSetting mqttSetting,
+      @Assisted
+      MessageValidator messageValidator,
       @KernelExecutor
       ScheduledExecutorService kernelExecutor,
       CommAdapterComponentsFactory componentsFactory,
       MqttClientManager clientManager,
-      MessageValidator messageValidator,
       IncomingMessageFilter incomingMessageFilter,
       JsonBinder jsonBinder,
       CommAdapterConfiguration configuration,
@@ -207,6 +208,7 @@ public class CommAdapterImpl
         kernelExecutor
     );
     this.mqttSetting = requireNonNull(mqttSetting, "mqttSetting");
+    this.messageValidator = requireNonNull(messageValidator, "messageValidator");
     this.componentsFactory = requireNonNull(componentsFactory, "componentsFactory");
     this.minVisualizationInterval
         = getPropertyInteger(PROPKEY_VEHICLE_MIN_VISU_INTERVAL, vehicle).orElse(500);
@@ -215,7 +217,6 @@ public class CommAdapterImpl
     this.vehicleLengthUnloaded = getPropertyLong(PROPKEY_VEHICLE_LENGTH_UNLOADED, vehicle)
         .orElse(vehicle.getBoundingBox().getLength());
     this.clientManager = requireNonNull(clientManager, "clientManager");
-    this.messageValidator = requireNonNull(messageValidator, "messageValidator");
     this.incomingMessageFilter = requireNonNull(incomingMessageFilter, "incomingMessageFilter");
     this.jsonBinder = requireNonNull(jsonBinder, "jsonBinder");
     this.configuration = requireNonNull(configuration, "configuration");

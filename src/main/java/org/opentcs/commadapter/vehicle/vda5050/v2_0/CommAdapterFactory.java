@@ -5,6 +5,8 @@ package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.util.Objects.requireNonNull;
+import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyBoolean;
+import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_VALIDATE_INCOMING_MESSAGES;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_VERSION;
 
 import jakarta.inject.Inject;
@@ -71,7 +73,17 @@ public class CommAdapterFactory
 
     return componentsFactory.createCommAdapterImpl(
         vehicle,
-        MqttSetting.forVehicle(vehicle).orElseThrow(IllegalStateException::new)
+        MqttSetting.forVehicle(vehicle).orElseThrow(IllegalStateException::new),
+        createMessageValidator(vehicle)
     );
+  }
+
+  private MessageValidator createMessageValidator(Vehicle vehicle) {
+    if (getPropertyBoolean(PROPKEY_VEHICLE_VALIDATE_INCOMING_MESSAGES, vehicle).orElse(true)) {
+      return new MessageValidator();
+    }
+    else {
+      return MessageValidator.ACCEPTING_ALL;
+    }
   }
 }

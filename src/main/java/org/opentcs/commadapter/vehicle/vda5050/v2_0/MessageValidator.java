@@ -4,6 +4,7 @@ package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
 import java.io.InputStreamReader;
 import java.util.Map;
+import javax.annotation.Nonnull;
 import org.opentcs.commadapter.vehicle.vda5050.common.JsonValidator;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.connection.Connection;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.InstantActions;
@@ -17,6 +18,11 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.visualization.Visual
 public class MessageValidator
     extends
       JsonValidator {
+
+  /**
+   * A validator that accepts all JSON inputs, i.e. never throws.
+   */
+  public static final MessageValidator ACCEPTING_ALL = new MessageValidator.AcceptingAll();
 
   /**
    * Creates a new instance.
@@ -51,4 +57,26 @@ public class MessageValidator
     );
   }
 
+  /**
+   * A validator that accepts all JSON inputs.
+   */
+  private static class AcceptingAll
+      extends
+        MessageValidator {
+    /**
+     * Creates a new instance.
+     */
+    AcceptingAll() {
+    }
+
+    @Override
+    public void validate(
+        @Nonnull
+        String json,
+        @Nonnull
+        Class<?> clazz
+    ) {
+      // Accepts all JSON inputs, i.e. never throws.
+    }
+  }
 }

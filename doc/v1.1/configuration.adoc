@@ -70,6 +70,10 @@ The value is appended to the vehicle's topic prefix.
 The property value contains the QoS level to be used for publishing instant action messages.
 Possible values are `at_most_once`, `at_least_once` and `exactly_once`; the values `0`, `1`, and `2` are also accepted.
 (Default value: `at_most_once`.)
+`vda5050:validateIncomingMessages` (optional)::
+The property value contains a boolean value that indicates whether incoming messages should be validated against the VDA5050 JSON schemas.
+Setting this to `false` helps with integrating vehicles that include additional fields in their messages, but also means that the driver may not be able to detect malformed messages.
+(Default value: `true`.)
 `vda5050:rechargeOperation` (optional)::
 The property value contains a string that should be used as the vehicle's recharge operation in the plant model, e.g. `Recharge`.
 (Default value: `Charge`.)

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 package org.opentcs.commadapter.vehicle.vda5050.v1_1;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,15 +22,21 @@ public class MessageValidatorTest {
   }
 
   @Test
-  public void acceptValidMessage() {
-    messageValidator.validate(
-        validConnectionMessage(),
-        Connection.class
+  public void handleValidMessage() {
+    assertDoesNotThrow(
+        () -> messageValidator.validate(
+            validConnectionMessage(),
+            Connection.class
+        )
+    );
+
+    assertDoesNotThrow(
+        () -> MessageValidator.ACCEPTING_ALL.validate(validConnectionMessage(), Connection.class)
     );
   }
 
   @Test
-  public void throwOnInvalidMessage() {
+  public void handleMessageWithMissingConnectionState() {
     assertThrows(
         IllegalArgumentException.class,
         () -> messageValidator.validate(
@@ -37,10 +44,17 @@ public class MessageValidatorTest {
             Connection.class
         )
     );
+
+    assertDoesNotThrow(
+        () -> MessageValidator.ACCEPTING_ALL.validate(
+            connectionMessageWithNullConnectionState(),
+            Connection.class
+        )
+    );
   }
 
   @Test
-  public void throwOnEmptyMessage() {
+  public void handleEmptyMessage() {
     assertThrows(
         IllegalArgumentException.class,
         () -> messageValidator.validate(
@@ -48,28 +62,64 @@ public class MessageValidatorTest {
             Connection.class
         )
     );
+
+    assertDoesNotThrow(
+        () -> MessageValidator.ACCEPTING_ALL.validate("", Connection.class)
+    );
+  }
+
+  @Test
+  public void handleMessageWithExtraProperty() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> messageValidator.validate(
+            connectionMessageWithExtraProperty(),
+            Connection.class
+        )
+    );
+
+    assertDoesNotThrow(
+        () -> MessageValidator.ACCEPTING_ALL.validate(
+            connectionMessageWithExtraProperty(),
+            Connection.class
+        )
+    );
   }
 
   private static String validConnectionMessage() {
-    return "{\n"
-        + "  \"headerId\" : 0,\n"
-        + "  \"timestamp\" : \"1970-01-01T00:00:00Z\",\n"
-        + "  \"version\" : \"version\",\n"
-        + "  \"manufacturer\" : \"manufacturer\",\n"
-        + "  \"serialNumber\" : \"serial-number\",\n"
-        + "  \"connectionState\" : \"ONLINE\"\n"
-        + "}";
+    return """
+        {
+          "headerId" : 0,
+          "timestamp" : "1970-01-01T00:00:00Z",
+          "version" : "version",
+          "manufacturer" : "manufacturer",
+          "serialNumber" : "serial-number",
+          "connectionState" : "ONLINE"
+        }""";
   }
 
   private static String connectionMessageWithNullConnectionState() {
-    return "{\n"
-        + "  \"headerId\" : 0,\n"
-        + "  \"timestamp\" : \"1970-01-01T00:00:00Z\",\n"
-        + "  \"version\" : \"version\",\n"
-        + "  \"manufacturer\" : \"manufacturer\",\n"
-        + "  \"serialNumber\" : \"serial-number\",\n"
-        + "  \"connectionState\" : null\n"
-        + "}";
+    return """
+        {
+          "headerId" : 0,
+          "timestamp" : "1970-01-01T00:00:00Z",
+          "version" : "version",
+          "manufacturer" : "manufacturer",
+          "serialNumber" : "serial-number",
+          "connectionState" : null
+        }""";
   }
 
+  private static String connectionMessageWithExtraProperty() {
+    return """
+        {
+          "headerId" : 0,
+          "timestamp" : "1970-01-01T00:00:00Z",
+          "version" : "version",
+          "manufacturer" : "manufacturer",
+          "serialNumber" : "serial-number",
+          "connectionState" : "ONLINE",
+          "extraContent" : "something"
+        }""";
+  }
 }

@@ -5,6 +5,7 @@ package org.opentcs.commadapter.vehicle.vda5050.common;
 import static java.util.Objects.requireNonNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -25,6 +26,7 @@ public class JsonBinder {
   private final ObjectMapper objectMapper
       = new ObjectMapper()
           .registerModule(new JavaTimeModule())
+          .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
           .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
   private Function<JsonNode, JsonNode> filter = Function.identity();

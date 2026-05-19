@@ -77,6 +77,11 @@ public interface ObjectProperties {
    */
   String PROPKEY_VEHICLE_TOPIC_INSTANT_ACTIONS_QOS = "vda5050:topicInstantActionsQos";
   /**
+   * The key of the property indicating whether incoming messages from the vehicle should be
+   * validated against the VDA5050 schemas.
+   */
+  String PROPKEY_VEHICLE_VALIDATE_INCOMING_MESSAGES = "vda5050:validateIncomingMessages";
+  /**
    * Default map id for this vehicle.
    */
   String PROPKEY_VEHICLE_MAP_ID = "vda5050:mapId";
