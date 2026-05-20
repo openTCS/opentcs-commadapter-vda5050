@@ -12,6 +12,10 @@ import org.opentcs.drivers.vehicle.MovementCommand;
 public interface ObjectProperties {
 
   /**
+   * The supported protocol version of the vehicle.
+   */
+  String PROPKEY_VEHICLE_VERSION = "vda5050:version";
+  /**
    * Manufacturer of this vehicle.
    */
   String PROPKEY_VEHICLE_MANUFACTURER = "vda5050:manufacturer";

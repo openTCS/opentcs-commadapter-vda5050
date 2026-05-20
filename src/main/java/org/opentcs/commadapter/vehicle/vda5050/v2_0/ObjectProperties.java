@@ -12,6 +12,10 @@ import org.opentcs.drivers.vehicle.MovementCommand;
 public interface ObjectProperties {
 
   /**
+   * The supported protocol version of the vehicle.
+   */
+  String PROPKEY_VEHICLE_VERSION = "vda5050:version";
+  /**
    * Manufacturer of this vehicle.
    */
   String PROPKEY_VEHICLE_MANUFACTURER = "vda5050:manufacturer";
@@ -23,10 +27,6 @@ public interface ObjectProperties {
    * The interface name.
    */
   String PROPKEY_VEHICLE_INTERFACE_NAME = "vda5050:interfaceName";
-  /**
-   * The supported protocol version of the vehicle.
-   */
-  String PROPKEY_VEHICLE_VERSION = "vda5050:version";
   /**
    * The key of the property containing the MQTT topic prefix for this vehicle.
    */

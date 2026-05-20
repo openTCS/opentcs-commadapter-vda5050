@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER;
 import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_VERSION;
+import static org.opentcs.commadapter.vehicle.vda5050.v1_1.ObjectProperties.PROPKEY_VEHICLE_VERSION;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,11 +24,12 @@ class PositionDeviationPolicyFactoryImplTest {
   @BeforeEach
   void setUp() {
     vehicleWithRequiredProperties = new Vehicle("vehicle-1")
+        .withProperty(PROPKEY_VEHICLE_VERSION, "1.1")
         .withProperty(PROPKEY_VEHICLE_INTERFACE_NAME, "interface")
         .withProperty(PROPKEY_VEHICLE_MANUFACTURER, "manufacturer")
         .withProperty(PROPKEY_VEHICLE_SERIAL_NUMBER, "serialno");
 
-    factory = new PositionDeviationPolicyFactoryImpl();
+    factory = new PositionDeviationPolicyFactoryImpl(new VehicleHasRequiredProperties());
   }
 
   @Test

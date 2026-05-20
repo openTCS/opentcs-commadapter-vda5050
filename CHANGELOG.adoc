@@ -21,9 +21,12 @@ toc::[]
 == Unreleased
 
 * New features and enhancements:
+** For VDA5050 1.1, a vehicle property `vda5050:version` with a value of "1.1" is now required, analogous to VDA5050 2.0 / for consistency.
 ** Allow disabling of incoming message validation against VDA5050 JSON schemas, primarily to allow vehicles to include additional properties in their messages (which are then ignored by the driver).
 ** Stop forcing a vehicle's charging operation to always be mapped to `startCharging`.
    Instead, make `startCharging` the default charging operation for vehicles handled by this driver, and allow `startCharging` to take parameters like all other operations.
+* Fixes:
+** For deviation policies, do not require the `vda5050:interfaceName` property to be set if the `vda5050:topicPrefix` property is set.
 * Changes affecting developers:
 ** Update SLF4J to 2.0.18.
 ** Update Jackson to 2.21.3.

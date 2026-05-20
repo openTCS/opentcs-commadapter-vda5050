@@ -3,12 +3,8 @@
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
 import static java.util.Objects.requireNonNull;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_VERSION;
 
-import java.util.Objects;
+import jakarta.inject.Inject;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.opentcs.components.kernel.PositionDeviationPolicy;
@@ -23,9 +19,19 @@ public class PositionDeviationPolicyFactoryImpl
       PositionDeviationPolicyFactory {
 
   /**
-   * Creates a new instance.
+   * Indicates whether a vehicle has all required properties to be handled by this comm adapter.
    */
-  public PositionDeviationPolicyFactoryImpl() {
+  private final VehicleHasRequiredProperties hasRequiredProperties;
+
+  /**
+   * Creates a new instance.
+   *
+   * @param hasRequiredProperties Indicates whether a vehicle has all required properties to be
+   * handled by this comm adapter.
+   */
+  @Inject
+  public PositionDeviationPolicyFactoryImpl(VehicleHasRequiredProperties hasRequiredProperties) {
+    this.hasRequiredProperties = requireNonNull(hasRequiredProperties, "hasRequiredProperties");
   }
 
   public Optional<PositionDeviationPolicy> createPolicyFor(
@@ -35,10 +41,7 @@ public class PositionDeviationPolicyFactoryImpl
     requireNonNull(vehicle, "vehicle");
 
     return Optional.of(vehicle)
-        .filter(v -> v.getProperty(PROPKEY_VEHICLE_INTERFACE_NAME) != null)
-        .filter(v -> v.getProperty(PROPKEY_VEHICLE_MANUFACTURER) != null)
-        .filter(v -> v.getProperty(PROPKEY_VEHICLE_SERIAL_NUMBER) != null)
-        .filter(v -> Objects.equals(v.getProperty(PROPKEY_VEHICLE_VERSION), "2.0"))
+        .filter(hasRequiredProperties)
         .map(PositionDeviationPolicyImpl::new);
   }
 }

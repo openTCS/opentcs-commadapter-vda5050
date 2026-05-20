@@ -24,12 +24,12 @@ class PositionDeviationPolicyFactoryImplTest {
   @BeforeEach
   void setUp() {
     vehicleWithRequiredProperties = new Vehicle("vehicle-1")
+        .withProperty(PROPKEY_VEHICLE_VERSION, "2.0")
         .withProperty(PROPKEY_VEHICLE_INTERFACE_NAME, "interface")
         .withProperty(PROPKEY_VEHICLE_MANUFACTURER, "manufacturer")
-        .withProperty(PROPKEY_VEHICLE_SERIAL_NUMBER, "serialno")
-        .withProperty(PROPKEY_VEHICLE_VERSION, "2.0");
+        .withProperty(PROPKEY_VEHICLE_SERIAL_NUMBER, "serialno");
 
-    factory = new PositionDeviationPolicyFactoryImpl();
+    factory = new PositionDeviationPolicyFactoryImpl(new VehicleHasRequiredProperties());
   }
 
   @Test
@@ -47,10 +47,7 @@ class PositionDeviationPolicyFactoryImplTest {
   void provideEmptyForVehicleWithWrongVersionProperty() {
     assertThat(
         factory.createPolicyFor(
-            vehicleWithRequiredProperties.withProperty(
-                ObjectProperties.PROPKEY_VEHICLE_VERSION,
-                "1.1"
-            )
+            vehicleWithRequiredProperties.withProperty(PROPKEY_VEHICLE_VERSION, "1.1")
         )
     )
         .isEmpty();

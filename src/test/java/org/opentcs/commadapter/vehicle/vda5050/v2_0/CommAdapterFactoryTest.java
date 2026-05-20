@@ -2,83 +2,61 @@
 // SPDX-License-Identifier: MIT
 package org.opentcs.commadapter.vehicle.vda5050.v2_0;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opentcs.data.model.Vehicle;
 
 /**
+ * Unit tests for {@link CommAdapterFactory}.
  */
-public class CommAdapterFactoryTest {
+class CommAdapterFactoryTest {
 
+  private CommAdapterImpl commAdapter;
+  private CommAdapterComponentsFactory componentsFactory;
   private CommAdapterFactory commAdapterFactory;
 
   @BeforeEach
-  public void setUp() {
-    commAdapterFactory = new CommAdapterFactory(mock(CommAdapterComponentsFactory.class));
-  }
+  void setUp() {
+    commAdapter = mock(CommAdapterImpl.class);
 
-  @Test
-  public void provideAdapterForVehicleWithAllProperties() {
-    assertTrue(
-        commAdapterFactory.providesAdapterFor(
-            new Vehicle("Some vehicle")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME, "openTCS")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER, "iml")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER, "0001")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_VERSION, "2.0")
-        )
+    componentsFactory = mock(CommAdapterComponentsFactory.class);
+    when(componentsFactory.createCommAdapterImpl(any(), any(), any())).thenReturn(commAdapter);
+
+    commAdapterFactory = new CommAdapterFactory(
+        new VehicleHasRequiredProperties(),
+        componentsFactory
     );
   }
 
   @Test
-  public void provideAdapterForVehicleMissingInterfaceName() {
-    assertFalse(
-        commAdapterFactory.providesAdapterFor(
+  void provideAdapterForVehicleWithAllProperties() {
+    assertThat(
+        commAdapterFactory.getAdapterFor(
             new Vehicle("Some vehicle")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER, "iml")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER, "0001")
                 .withProperty(ObjectProperties.PROPKEY_VEHICLE_VERSION, "2.0")
-        )
-    );
-  }
-
-  @Test
-  public void provideAdapterForVehicleMissingManufacturer() {
-    assertFalse(
-        commAdapterFactory.providesAdapterFor(
-            new Vehicle("Some vehicle")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME, "openTCS")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER, "0001")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_VERSION, "2.0")
-        )
-    );
-  }
-
-  @Test
-  public void provideAdapterForVehicleMissingSerialNumber() {
-    assertFalse(
-        commAdapterFactory.providesAdapterFor(
-            new Vehicle("Some vehicle")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME, "openTCS")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER, "iml")
-                .withProperty(ObjectProperties.PROPKEY_VEHICLE_VERSION, "2.0")
-        )
-    );
-  }
-
-  @Test
-  public void provideAdapterForVehicleMissingVersion() {
-    assertFalse(
-        commAdapterFactory.providesAdapterFor(
-            new Vehicle("Some vehicle")
                 .withProperty(ObjectProperties.PROPKEY_VEHICLE_INTERFACE_NAME, "openTCS")
                 .withProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER, "iml")
                 .withProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER, "0001")
         )
-    );
+    )
+        .isNotNull();
+  }
+
+  @Test
+  void refuseForVehicleMissingProperties() {
+    assertThat(
+        commAdapterFactory.getAdapterFor(
+            new Vehicle("Some vehicle")
+                .withProperty(ObjectProperties.PROPKEY_VEHICLE_VERSION, "2.0")
+                .withProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER, "iml")
+                .withProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER, "0001")
+        )
+    )
+        .isNull();
   }
 }

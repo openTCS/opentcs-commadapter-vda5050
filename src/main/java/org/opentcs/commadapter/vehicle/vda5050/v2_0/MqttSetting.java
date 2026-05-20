@@ -102,22 +102,6 @@ public record MqttSetting(
   private static final Logger LOG = LoggerFactory.getLogger(MqttSetting.class);
 
   /**
-   * Checks whether the given vehicle contains all properties required for an {@link MqttSetting}.
-   *
-   * @param vehicle The vehicle
-   * @return {@code true} if, and only if, the given vehicle contains all required properties.
-   */
-  public static boolean hasRequiredProperties(
-      @Nonnull
-      Vehicle vehicle
-  ) {
-    return (vehicle.getProperty(PROPKEY_VEHICLE_TOPIC_PREFIX) != null
-        || vehicle.getProperty(PROPKEY_VEHICLE_INTERFACE_NAME) != null)
-        && vehicle.getProperty(PROPKEY_VEHICLE_MANUFACTURER) != null
-        && vehicle.getProperty(PROPKEY_VEHICLE_SERIAL_NUMBER) != null;
-  }
-
-  /**
    * Creates an {@link MqttSetting} instance using the information provided in the given vehicle.
    *
    * @param vehicle The vehicle.

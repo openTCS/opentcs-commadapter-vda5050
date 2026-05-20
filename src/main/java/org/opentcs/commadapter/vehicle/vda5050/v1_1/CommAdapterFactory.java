@@ -32,6 +32,10 @@ public class CommAdapterFactory
   }
 
   /**
+   * Indicates whether a vehicle has all required properties to be handled by this comm adapter.
+   */
+  private final VehicleHasRequiredProperties hasRequiredProperties;
+  /**
    * The components factory responsible to create all components needed for the comm adapter.
    */
   private final CommAdapterComponentsFactory componentsFactory;
@@ -39,20 +43,22 @@ public class CommAdapterFactory
   /**
    * Creates a new instance.
    *
+   * @param hasRequiredProperties Indicates whether a vehicle has all required properties to be
+   * handled by this comm adapter.
    * @param componentsFactory The factory to create components specific to the comm adapter.
    */
   @Inject
-  public CommAdapterFactory(CommAdapterComponentsFactory componentsFactory) {
+  public CommAdapterFactory(
+      VehicleHasRequiredProperties hasRequiredProperties,
+      CommAdapterComponentsFactory componentsFactory
+  ) {
+    this.hasRequiredProperties = requireNonNull(hasRequiredProperties, "hasRequiredProperties");
     this.componentsFactory = requireNonNull(componentsFactory, "componentsFactory");
   }
 
   @Override
   public boolean providesAdapterFor(Vehicle vehicle) {
-    requireNonNull(vehicle, "vehicle");
-
-    return vehicle.getProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER) != null
-        && vehicle.getProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER) != null
-        && MqttSetting.hasRequiredProperties(vehicle);
+    return hasRequiredProperties.test(vehicle);
   }
 
   @Override

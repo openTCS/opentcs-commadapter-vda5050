@@ -21,6 +21,8 @@ toc::[]
 The driver reads configuration data from properties of the vehicle element in the plant model.
 It reads the properties with the following keys:
 
+`vda5050:version` (required)::
+Must be set to `1.1`.
 `vda5050:topicPrefix` (required, if `vda5050:interfaceName` is not set)::
 The property value contains a string to be used as the prefix for all MQTT topics, e.g. `myprefix`.
 If this is not set, the topic prefix is derived from the `vda5050:interfaceName`, `vda5050:manufacturer`, and `vda5050:serialNumber` properties as follows: `<interfaceName>/v1/<manufacturer>/<serialNumber>`.

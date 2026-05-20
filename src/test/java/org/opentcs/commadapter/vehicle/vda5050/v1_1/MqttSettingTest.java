@@ -25,8 +25,7 @@ public class MqttSettingTest {
 
   @Test
   void refuseVehicleLackingProperties() {
-    assertThat(MqttSetting.hasRequiredProperties(new Vehicle("some-vehicle")))
-        .isFalse();
+    assertThat(MqttSetting.forVehicle(new Vehicle("some-vehicle"))).isEmpty();
   }
 
   @Test
@@ -35,8 +34,6 @@ public class MqttSettingTest {
         .withProperty(PROPKEY_VEHICLE_TOPIC_PREFIX, "some-prefix")
         .withProperty(PROPKEY_VEHICLE_MANUFACTURER, "some-manufacturer")
         .withProperty(PROPKEY_VEHICLE_SERIAL_NUMBER, "1234");
-
-    assertThat(MqttSetting.hasRequiredProperties(vehicle)).isTrue();
 
     assertWith(
         MqttSetting.forVehicle(vehicle),
@@ -63,8 +60,6 @@ public class MqttSettingTest {
         .withProperty(PROPKEY_VEHICLE_INTERFACE_NAME, "some-interface")
         .withProperty(PROPKEY_VEHICLE_MANUFACTURER, "some-manufacturer")
         .withProperty(PROPKEY_VEHICLE_SERIAL_NUMBER, "1234");
-
-    assertThat(MqttSetting.hasRequiredProperties(vehicle)).isTrue();
 
     assertWith(
         MqttSetting.forVehicle(vehicle),

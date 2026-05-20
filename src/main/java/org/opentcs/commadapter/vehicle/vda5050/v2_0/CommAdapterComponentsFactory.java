@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.opentcs.commadapter.vehicle.vda5050.common.DistanceInAdvanceController;
-import org.opentcs.commadapter.vehicle.vda5050.common.JsonValidator;
 import org.opentcs.commadapter.vehicle.vda5050.common.OptionalParameterSupport;
 import org.opentcs.commadapter.vehicle.vda5050.common.UnsupportedPropertiesFilter;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.ordermapping.OrderMapper;
@@ -23,13 +22,13 @@ public interface CommAdapterComponentsFactory {
    *
    * @param vehicle The vehicle.
    * @param mqttSetting The MQTT settings for this vehicle.
-   * @param jsonValidator The validator for incoming messages.
+   * @param messageValidator The validator for incoming messages.
    * @return A new communication adapter instance for the given vehicle.
    */
   CommAdapterImpl createCommAdapterImpl(
       Vehicle vehicle,
       MqttSetting mqttSetting,
-      JsonValidator jsonValidator
+      MessageValidator messageValidator
   );
 
   /**

@@ -7,14 +7,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.util.Objects.requireNonNull;
 import static org.opentcs.commadapter.vehicle.vda5050.common.PropertyExtractions.getPropertyBoolean;
 import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_VALIDATE_INCOMING_MESSAGES;
-import static org.opentcs.commadapter.vehicle.vda5050.v2_0.ObjectProperties.PROPKEY_VEHICLE_VERSION;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Qualifier;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import java.util.Objects;
-import java.util.Optional;
 import org.opentcs.commadapter.vehicle.vda5050.Vda5050CommAdapterFactory;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.VehicleCommAdapter;
@@ -35,6 +32,10 @@ public class CommAdapterFactory
   }
 
   /**
+   * Indicates whether a vehicle has all required properties to be handled by this comm adapter.
+   */
+  private final VehicleHasRequiredProperties hasRequiredProperties;
+  /**
    * The components factory responsible to create all components needed for the comm adapter.
    */
   private final CommAdapterComponentsFactory componentsFactory;
@@ -42,26 +43,22 @@ public class CommAdapterFactory
   /**
    * Creates a new instance.
    *
+   * @param hasRequiredProperties Indicates whether a vehicle has all required properties to be
+   * handled by this comm adapter.
    * @param componentsFactory The factory to create components specific to the comm adapter.
    */
   @Inject
-  public CommAdapterFactory(CommAdapterComponentsFactory componentsFactory) {
+  public CommAdapterFactory(
+      VehicleHasRequiredProperties hasRequiredProperties,
+      CommAdapterComponentsFactory componentsFactory
+  ) {
+    this.hasRequiredProperties = requireNonNull(hasRequiredProperties, "hasRequiredProperties");
     this.componentsFactory = requireNonNull(componentsFactory, "componentsFactory");
   }
 
   @Override
   public boolean providesAdapterFor(Vehicle vehicle) {
-    requireNonNull(vehicle, "vehicle");
-
-    return Objects.equals(
-        Optional.ofNullable(vehicle.getProperty(PROPKEY_VEHICLE_VERSION))
-            .map(String::strip)
-            .orElse(null),
-        "2.0"
-    )
-        && vehicle.getProperty(ObjectProperties.PROPKEY_VEHICLE_MANUFACTURER) != null
-        && vehicle.getProperty(ObjectProperties.PROPKEY_VEHICLE_SERIAL_NUMBER) != null
-        && MqttSetting.hasRequiredProperties(vehicle);
+    return hasRequiredProperties.test(vehicle);
   }
 
   @Override
