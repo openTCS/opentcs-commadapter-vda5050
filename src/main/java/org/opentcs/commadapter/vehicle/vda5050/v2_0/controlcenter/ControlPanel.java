@@ -17,6 +17,7 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.CommAdapterMessages;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.ProcessModelImpl;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.action.ActionConfigurationPanel;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Node;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Order;
@@ -696,7 +697,37 @@ public class ControlPanel
         path.getName()
     );
 
-    newOrderActionConfigurationPanel.getAction().ifPresent(action -> {
+    Optional<org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action> maybeAction
+        = newOrderActionConfigurationPanel.getAction();
+    if (maybeAction.isPresent()) {
+      org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action action = maybeAction.get();
+
+      // Validate numeric parameters for initPosition action
+      if (InitPosition.ACTION_TYPE.equals(action.getActionType())) {
+        for (org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter ap
+            : action.getActionParameters()) {
+          if (InitPosition.PARAMKEY_X.equals(ap.getKey())
+              || InitPosition.PARAMKEY_Y.equals(ap.getKey())
+              || InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
+            Object v = ap.getValue();
+            if (!(v instanceof Number)) {
+              try {
+                Double.parseDouble(String.valueOf(v));
+              }
+              catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Parameter '" + ap.getKey() + "' must be a valid floating point number.",
+                    "Invalid parameter",
+                    JOptionPane.ERROR_MESSAGE
+                );
+                return;
+              }
+            }
+          }
+        }
+      }
+
       messageParameters.put(
           CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_TYPE,
           action.getActionType()
@@ -722,7 +753,7 @@ public class ControlPanel
               actionParameter.getValue().toString()
           )
       );
-    });
+    }
 
     sendAdapterMessage(
         new VehicleCommAdapterMessage(CommAdapterMessages.SEND_ORDER_TYPE, messageParameters)
@@ -734,7 +765,37 @@ public class ControlPanel
   }//GEN-LAST:event_enableAdapterCheckBoxActionPerformed
 
   private void sendInstantActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendInstantActionButtonActionPerformed
-    instantActionConfigurationPanel.getAction().ifPresent(action -> {
+    Optional<org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action> maybeInstant
+        = instantActionConfigurationPanel.getAction();
+    if (maybeInstant.isPresent()) {
+      org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action action = maybeInstant.get();
+
+      // Validate numeric parameters for initPosition action
+      if (InitPosition.ACTION_TYPE.equals(action.getActionType())) {
+        for (org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter ap
+            : action.getActionParameters()) {
+          if (InitPosition.PARAMKEY_X.equals(ap.getKey())
+              || InitPosition.PARAMKEY_Y.equals(ap.getKey())
+              || InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
+            Object v = ap.getValue();
+            if (!(v instanceof Number)) {
+              try {
+                Double.parseDouble(String.valueOf(v));
+              }
+              catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Parameter '" + ap.getKey() + "' must be a valid floating point number.",
+                    "Invalid parameter",
+                    JOptionPane.ERROR_MESSAGE
+                );
+                return;
+              }
+            }
+          }
+        }
+      }
+
       Map<String, String> messageParameters = new HashMap<>();
 
       messageParameters.put(
@@ -768,7 +829,7 @@ public class ControlPanel
               CommAdapterMessages.SEND_INSTANT_ACTION_TYPE, messageParameters
           )
       );
-    });
+    }
   }//GEN-LAST:event_sendInstantActionButtonActionPerformed
 
   private void applyLastOrderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyLastOrderButtonActionPerformed

@@ -35,6 +35,7 @@ import org.opentcs.data.model.Point;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.VehicleCommAdapterMessage;
 import org.opentcs.util.MapValueExtractor;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition;
 
 /**
  * Provide methods for mapping {@link VehicleCommAdapterMessage}s to other types.
@@ -208,7 +209,7 @@ public class CommAdapterMessageMapper {
             .map(
                 parameterMatcher -> new ActionParameter(
                     parameterMatcher.matcher.group(1),
-                    parameterMatcher.parameter.getValue()
+                    parseParameterValue(action.getActionType(), parameterMatcher.matcher.group(1), parameterMatcher.parameter.getValue())
                 )
             )
             .toList()
