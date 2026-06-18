@@ -701,32 +701,8 @@ public class ControlPanel
     if (maybeAction.isPresent()) {
       Action action = maybeAction.get();
 
-      // Validate numeric parameters for initPosition action
-      if (InitPosition.ACTION_TYPE.equals(action.getActionType())) {
-        for (var ap : action.getActionParameters()) {
-          if (InitPosition.PARAMKEY_X.equals(ap.getKey())
-              || InitPosition.PARAMKEY_Y.equals(ap.getKey())
-              || InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
-            Object v = ap.getValue();
-            if (!(v instanceof Number)) {
-              try {
-                double parsed = Double.parseDouble(String.valueOf(v));
-                if (!Double.isFinite(parsed)) {
-                  throw new NumberFormatException("Non-finite double: " + v);
-                }
-              }
-              catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(
-                    this,
-                    "Parameter '" + ap.getKey() + "' must be a valid floating point number.",
-                    "Invalid parameter",
-                    JOptionPane.ERROR_MESSAGE
-                );
-                return;
-              }
-            }
-          }
-        }
+      if (!validateInitPositionNumericParams(action)) {
+        return;
       }
 
       messageParameters.put(
@@ -770,32 +746,8 @@ public class ControlPanel
     if (maybeInstant.isPresent()) {
       Action action = maybeInstant.get();
 
-      // Validate numeric parameters for initPosition action
-      if (InitPosition.ACTION_TYPE.equals(action.getActionType())) {
-        for (var ap : action.getActionParameters()) {
-          if (InitPosition.PARAMKEY_X.equals(ap.getKey())
-              || InitPosition.PARAMKEY_Y.equals(ap.getKey())
-              || InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
-            Object v = ap.getValue();
-            if (!(v instanceof Number)) {
-              try {
-                double parsed = Double.parseDouble(String.valueOf(v));
-                if (!Double.isFinite(parsed)) {
-                  throw new NumberFormatException("Non-finite double: " + v);
-                }
-              }
-              catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(
-                    this,
-                    "Parameter '" + ap.getKey() + "' must be a valid floating point number.",
-                    "Invalid parameter",
-                    JOptionPane.ERROR_MESSAGE
-                );
-                return;
-              }
-            }
-          }
-        }
+      if (!validateInitPositionNumericParams(action)) {
+        return;
       }
 
       Map<String, String> messageParameters = new HashMap<>();
@@ -901,6 +853,46 @@ public class ControlPanel
 
   // FORMATTER:OFF
   // CHECKSTYLE:OFF
+  /**
+   * Validates that x, y, and theta parameters of an initPosition action are valid finite numbers.
+   * Shows an error dialog and returns false if any are invalid.
+   *
+   * @return true if validation passes (or action is not initPosition), false otherwise.
+   */
+  private boolean validateInitPositionNumericParams(Action action) {
+    if (!InitPosition.ACTION_TYPE.equals(action.getActionType())) {
+      return true;
+    }
+
+    for (var ap : action.getActionParameters()) {
+      if (!InitPosition.PARAMKEY_X.equals(ap.getKey())
+          && !InitPosition.PARAMKEY_Y.equals(ap.getKey())
+          && !InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
+        continue;
+      }
+
+      Object v = ap.getValue();
+      if (v instanceof Number) {
+        continue;
+      }
+
+      try {
+        Double.parseDouble(String.valueOf(v));
+      }
+      catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Parameter '" + ap.getKey() + "' must be a valid floating point number.",
+            "Invalid parameter",
+            JOptionPane.ERROR_MESSAGE
+        );
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton applyLastInstantActionButton;
   private javax.swing.JButton applyLastOrderButton;
