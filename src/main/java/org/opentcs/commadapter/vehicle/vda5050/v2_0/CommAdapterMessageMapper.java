@@ -239,17 +239,20 @@ public class CommAdapterMessageMapper {
   private Object parseParameterValue(String actionType, String paramKey, String value) {
     // Only parse numeric parameters for well-known action types/keys. Prevent accidental
     // conversion of string fields that just look like numbers (e.g., mapId = "1.0").
-    try {
-      if (InitPosition.ACTION_TYPE.equals(actionType)) {
-        if (InitPosition.PARAMKEY_X.equals(paramKey)
+    if (InitPosition.ACTION_TYPE.equals(actionType)
+        && (InitPosition.PARAMKEY_X.equals(paramKey)
             || InitPosition.PARAMKEY_Y.equals(paramKey)
-            || InitPosition.PARAMKEY_THETA.equals(paramKey)) {
-          return Double.parseDouble(value);
+            || InitPosition.PARAMKEY_THETA.equals(paramKey))) {
+      try {
+        double parsed = Double.parseDouble(value);
+        if (!Double.isFinite(parsed)) {
+          throw new NumberFormatException("Non-finite double: " + value);
         }
+        return parsed;
       }
-    }
-    catch (NumberFormatException e) {
-      // fall through to return the original string
+      catch (NumberFormatException e) {
+        // fall through to return the original string
+      }
     }
 
     return value;
