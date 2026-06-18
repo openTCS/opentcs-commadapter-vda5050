@@ -745,7 +745,6 @@ public class ControlPanel
     Optional<Action> maybeInstant = instantActionConfigurationPanel.getAction();
     if (maybeInstant.isPresent()) {
       Action action = maybeInstant.get();
-
       if (!validateInitPositionNumericParams(action)) {
         return;
       }
@@ -851,8 +850,6 @@ public class ControlPanel
     return Optional.of(lastNode.getActions().get(0));
   }
 
-  // FORMATTER:OFF
-  // CHECKSTYLE:OFF
   /**
    * Validates that x, y, and theta parameters of an initPosition action are valid finite numbers.
    * Shows an error dialog and returns false if any are invalid.
@@ -893,6 +890,8 @@ public class ControlPanel
     return true;
   }
 
+  // FORMATTER:OFF
+  // CHECKSTYLE:OFF
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton applyLastInstantActionButton;
   private javax.swing.JButton applyLastOrderButton;
