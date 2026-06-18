@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
@@ -153,5 +154,77 @@ class CommAdapterMessageMapperTest {
                   tuple("action-param-2", "value-2")
               );
         });
+  }
+
+  @Test
+  void mapToActionInitPositionXYThetaAreDouble() {
+    VehicleCommAdapterMessage message = new VehicleCommAdapterMessage(
+        CommAdapterMessages.SEND_INSTANT_ACTION_TYPE,
+        Map.of(
+            SEND_INSTANT_ACTION_PARAM_ACTION_TYPE, InitPosition.ACTION_TYPE,
+            SEND_INSTANT_ACTION_PARAM_ACTION_ID, "1",
+            SEND_INSTANT_ACTION_PARAM_BLOCKING_TYPE, BlockingType.NONE.name(),
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_X, "2.009",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_Y, "3.367",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_THETA,
+            "3.141592653589793",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_MAP_ID, "floor1",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_LAST_NODE_ID,
+            "io-0001"
+        )
+    );
+
+    var result = mapper.toAction(message);
+
+    assertThat(result).hasValueSatisfying(action -> {
+      // Numeric keys must be parsed as Double
+      assertThat(action.getActionParameters())
+          .extracting(ActionParameter::getKey, ActionParameter::getValue)
+          .contains(
+              tuple(InitPosition.PARAMKEY_X, 2.009),
+              tuple(InitPosition.PARAMKEY_Y, 3.367),
+              tuple(InitPosition.PARAMKEY_THETA, 3.141592653589793)
+          );
+      // String parameters must NOT be converted to numbers
+      assertThat(action.getActionParameters())
+          .extracting(ActionParameter::getKey, ActionParameter::getValue)
+          .contains(
+              tuple(InitPosition.PARAMKEY_MAP_ID, "floor1"),
+              tuple(InitPosition.PARAMKEY_LAST_NODE_ID, "io-0001")
+          );
+    });
+  }
+
+  @Test
+  void mapToActionInitPositionMapIdLookingNumericStaysString() {
+    // mapId of "1.0" must not be converted to Double even though it parses as a number
+    VehicleCommAdapterMessage message = new VehicleCommAdapterMessage(
+        CommAdapterMessages.SEND_INSTANT_ACTION_TYPE,
+        Map.of(
+            SEND_INSTANT_ACTION_PARAM_ACTION_TYPE, InitPosition.ACTION_TYPE,
+            SEND_INSTANT_ACTION_PARAM_ACTION_ID, "1",
+            SEND_INSTANT_ACTION_PARAM_BLOCKING_TYPE, BlockingType.NONE.name(),
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_X, "1.0",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_Y, "2.0",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_THETA, "0.0",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_MAP_ID, "1.0",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_LAST_NODE_ID,
+            "io-0001"
+        )
+    );
+
+    var result = mapper.toAction(message);
+
+    assertThat(result).hasValueSatisfying(action -> {
+      assertThat(action.getActionParameters())
+          .extracting(ActionParameter::getKey, ActionParameter::getValue)
+          .contains(
+              tuple(InitPosition.PARAMKEY_X, 1.0),
+              tuple(InitPosition.PARAMKEY_Y, 2.0),
+              tuple(InitPosition.PARAMKEY_THETA, 0.0),
+              // "1.0" as mapId must remain a String, not become Double(1.0)
+              tuple(InitPosition.PARAMKEY_MAP_ID, "1.0")
+          );
+    });
   }
 }

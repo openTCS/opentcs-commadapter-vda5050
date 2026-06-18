@@ -697,15 +697,13 @@ public class ControlPanel
         path.getName()
     );
 
-    Optional<org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action> maybeAction
-        = newOrderActionConfigurationPanel.getAction();
+    Optional<Action> maybeAction = newOrderActionConfigurationPanel.getAction();
     if (maybeAction.isPresent()) {
-      org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action action = maybeAction.get();
+      Action action = maybeAction.get();
 
       // Validate numeric parameters for initPosition action
       if (InitPosition.ACTION_TYPE.equals(action.getActionType())) {
-        for (org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter ap : action
-            .getActionParameters()) {
+        for (var ap : action.getActionParameters()) {
           if (InitPosition.PARAMKEY_X.equals(ap.getKey())
               || InitPosition.PARAMKEY_Y.equals(ap.getKey())
               || InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
@@ -765,16 +763,13 @@ public class ControlPanel
   }//GEN-LAST:event_enableAdapterCheckBoxActionPerformed
 
   private void sendInstantActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendInstantActionButtonActionPerformed
-    Optional<org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action> maybeInstant
-        = instantActionConfigurationPanel.getAction();
+    Optional<Action> maybeInstant = instantActionConfigurationPanel.getAction();
     if (maybeInstant.isPresent()) {
-      org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action action = maybeInstant
-          .get();
+      Action action = maybeInstant.get();
 
       // Validate numeric parameters for initPosition action
       if (InitPosition.ACTION_TYPE.equals(action.getActionType())) {
-        for (org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter ap : action
-            .getActionParameters()) {
+        for (var ap : action.getActionParameters()) {
           if (InitPosition.PARAMKEY_X.equals(ap.getKey())
               || InitPosition.PARAMKEY_Y.equals(ap.getKey())
               || InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
