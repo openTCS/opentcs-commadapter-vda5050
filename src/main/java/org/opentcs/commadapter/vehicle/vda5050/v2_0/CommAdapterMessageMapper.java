@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.BlockingType;
@@ -35,7 +36,6 @@ import org.opentcs.data.model.Point;
 import org.opentcs.data.model.Vehicle;
 import org.opentcs.drivers.vehicle.VehicleCommAdapterMessage;
 import org.opentcs.util.MapValueExtractor;
-import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition;
 
 /**
  * Provide methods for mapping {@link VehicleCommAdapterMessage}s to other types.
@@ -209,7 +209,10 @@ public class CommAdapterMessageMapper {
             .map(
                 parameterMatcher -> new ActionParameter(
                     parameterMatcher.matcher.group(1),
-                    parseParameterValue(action.getActionType(), parameterMatcher.matcher.group(1), parameterMatcher.parameter.getValue())
+                    parseParameterValue(
+                        action.getActionType(), parameterMatcher.matcher.group(1),
+                        parameterMatcher.parameter.getValue()
+                    )
                 )
             )
             .toList()
@@ -232,6 +235,7 @@ public class CommAdapterMessageMapper {
         )
     );
   }
+
   private Object parseParameterValue(String actionType, String paramKey, String value) {
     // Only parse numeric parameters for well-known action types/keys. Prevent accidental
     // conversion of string fields that just look like numbers (e.g., mapId = "1.0").

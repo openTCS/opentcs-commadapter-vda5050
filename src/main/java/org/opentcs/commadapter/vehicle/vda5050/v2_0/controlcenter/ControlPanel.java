@@ -15,9 +15,9 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.CommAdapterMessages;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.ProcessModelImpl;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.action.ActionConfigurationPanel;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
-import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Node;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Order;
@@ -704,8 +704,8 @@ public class ControlPanel
 
       // Validate numeric parameters for initPosition action
       if (InitPosition.ACTION_TYPE.equals(action.getActionType())) {
-        for (org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter ap
-            : action.getActionParameters()) {
+        for (org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter ap : action
+            .getActionParameters()) {
           if (InitPosition.PARAMKEY_X.equals(ap.getKey())
               || InitPosition.PARAMKEY_Y.equals(ap.getKey())
               || InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
@@ -768,12 +768,13 @@ public class ControlPanel
     Optional<org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action> maybeInstant
         = instantActionConfigurationPanel.getAction();
     if (maybeInstant.isPresent()) {
-      org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action action = maybeInstant.get();
+      org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action action = maybeInstant
+          .get();
 
       // Validate numeric parameters for initPosition action
       if (InitPosition.ACTION_TYPE.equals(action.getActionType())) {
-        for (org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter ap
-            : action.getActionParameters()) {
+        for (org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter ap : action
+            .getActionParameters()) {
           if (InitPosition.PARAMKEY_X.equals(ap.getKey())
               || InitPosition.PARAMKEY_Y.equals(ap.getKey())
               || InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
