@@ -710,7 +710,10 @@ public class ControlPanel
             Object v = ap.getValue();
             if (!(v instanceof Number)) {
               try {
-                Double.parseDouble(String.valueOf(v));
+                double parsed = Double.parseDouble(String.valueOf(v));
+                if (!Double.isFinite(parsed)) {
+                  throw new NumberFormatException("Non-finite double: " + v);
+                }
               }
               catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(
@@ -776,7 +779,10 @@ public class ControlPanel
             Object v = ap.getValue();
             if (!(v instanceof Number)) {
               try {
-                Double.parseDouble(String.valueOf(v));
+                double parsed = Double.parseDouble(String.valueOf(v));
+                if (!Double.isFinite(parsed)) {
+                  throw new NumberFormatException("Non-finite double: " + v);
+                }
               }
               catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(
