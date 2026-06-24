@@ -20,6 +20,9 @@ toc::[]
 
 == Unreleased
 
+* New features and enhancements:
+** For VDA5050 2.0, stop resending a `cancelOrder` instant action once the vehicle reflects it in its `actionStates` (with any `actionStatus`, including a non-terminal one such as `RUNNING`).
+   The driver still waits for the action to reach `FINISHED`/`FAILED` before sending further messages.
 * Changes affecting developers:
 ** Update Gradle wrapper to 9.5.1.
 

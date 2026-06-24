@@ -151,7 +151,7 @@ public class MessageResponseMatcher {
       return;
     }
 
-    if (requestAcknowledged(currentRequest, state)) {
+    if (requestComplete(currentRequest, state)) {
       requests.poll();
       if (currentRequest instanceof OrderAssociation) {
         OrderAssociation order = (OrderAssociation) currentRequest;
@@ -164,17 +164,44 @@ public class MessageResponseMatcher {
       }
       sendNextOrder();
     }
+    else if (requestAccepted(currentRequest, state)) {
+      // The vehicle reflects the request in its state but has not completed it yet (e.g. a
+      // cancelOrder that is still being processed). Stop resending the request, but keep it at the
+      // head of the queue so that subsequent requests remain blocked until it completes.
+      LOG.debug(
+          "{}: Request accepted but not yet completed. Waiting without resending: {}",
+          commAdapterName,
+          currentRequest
+      );
+    }
     else {
       sendNextOrder();
     }
   }
 
-  private boolean requestAcknowledged(Object request, State state) {
+  private boolean requestComplete(Object request, State state) {
     if (request instanceof OrderAssociation) {
       return orderAccepted(((OrderAssociation) request).getOrder(), state);
     }
     else if (request instanceof InstantActions) {
-      return instantActionsAcknowledged((InstantActions) request, state);
+      return instantActionsCompleted((InstantActions) request, state);
+    }
+    else {
+      LOG.warn(
+          "{}: Unrecognized request of type {}.",
+          commAdapterName,
+          request.getClass().getName()
+      );
+      return false;
+    }
+  }
+
+  private boolean requestAccepted(Object request, State state) {
+    if (request instanceof OrderAssociation) {
+      return orderAccepted(((OrderAssociation) request).getOrder(), state);
+    }
+    else if (request instanceof InstantActions) {
+      return instantActionsAccepted((InstantActions) request, state);
     }
     else {
       LOG.warn(
@@ -222,7 +249,7 @@ public class MessageResponseMatcher {
         && Objects.equals(state.getOrderUpdateId(), order.getOrderUpdateId());
   }
 
-  private boolean instantActionsAcknowledged(InstantActions instantAction, State state) {
+  private boolean instantActionsCompleted(InstantActions instantAction, State state) {
     return instantAction.getActions().stream()
         .allMatch(action -> {
           // In case of a cancelOrder action, we actually wait for the vehicle to accept AND
@@ -236,6 +263,19 @@ public class MessageResponseMatcher {
             return actionAccepted(action, state);
           }
         });
+  }
+
+  /**
+   * Checks whether the vehicle reflects all actions of the given instant actions message in its
+   * state, regardless of their (possibly non-terminal) action status.
+   *
+   * @param instantAction The instant actions message.
+   * @param state The vehicle's state.
+   * @return {@code true} if every action is present in the vehicle's {@code actionStates}.
+   */
+  private boolean instantActionsAccepted(InstantActions instantAction, State state) {
+    return instantAction.getActions().stream()
+        .allMatch(action -> actionAccepted(action, state));
   }
 
   private boolean actionAccepted(Action action, State state) {
