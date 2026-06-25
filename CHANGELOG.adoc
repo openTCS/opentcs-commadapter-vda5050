@@ -20,6 +20,9 @@ toc::[]
 
 == Unreleased
 
+* New features and enhancements:
+** For VDA5050 2.0, in Kernel Control Center, the `initPosition` instant action now sends the `x`, `y`, and `theta` parameters as JSON numbers (floats) instead of strings.
+   These parameters are parsed as `Double` during message mapping, and the UI validates that they are provided as valid numeric values before sending.
 * Changes affecting developers:
 ** Update Gradle wrapper to 9.5.1.
 
