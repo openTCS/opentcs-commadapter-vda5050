@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.CommAdapterMessages;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.ProcessModelImpl;
+import org.opentcs.commadapter.vehicle.vda5050.v1_1.action.InitPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.controlcenter.action.ActionConfigurationPanel;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.common.Action;
 import org.opentcs.commadapter.vehicle.vda5050.v1_1.message.instantactions.InstantActions;
@@ -689,7 +690,14 @@ public class ControlPanel
         path.getName()
     );
 
-    newOrderActionConfigurationPanel.getAction().ifPresent(action -> {
+    Optional<Action> maybeAction = newOrderActionConfigurationPanel.getAction();
+    if (maybeAction.isPresent()) {
+      Action action = maybeAction.get();
+
+      if (!validateInitPositionNumericParams(action)) {
+        return;
+      }
+
       messageParameters.put(
           CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_TYPE,
           action.getActionType()
@@ -715,7 +723,7 @@ public class ControlPanel
               actionParameter.getValue().toString()
           )
       );
-    });
+    }
 
     sendAdapterMessage(
         new VehicleCommAdapterMessage(CommAdapterMessages.SEND_ORDER_TYPE, messageParameters)
@@ -727,7 +735,13 @@ public class ControlPanel
   }//GEN-LAST:event_enableAdapterCheckBoxActionPerformed
 
   private void sendInstantActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendInstantActionButtonActionPerformed
-    instantActionConfigurationPanel.getAction().ifPresent(action -> {
+    Optional<Action> maybeInstant = instantActionConfigurationPanel.getAction();
+    if (maybeInstant.isPresent()) {
+      Action action = maybeInstant.get();
+      if (!validateInitPositionNumericParams(action)) {
+        return;
+      }
+
       Map<String, String> messageParameters = new HashMap<>();
 
       messageParameters.put(
@@ -761,7 +775,7 @@ public class ControlPanel
               CommAdapterMessages.SEND_INSTANT_ACTION_TYPE, messageParameters
           )
       );
-    });
+    }
   }//GEN-LAST:event_sendInstantActionButtonActionPerformed
 
   private void applyLastOrderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyLastOrderButtonActionPerformed
@@ -827,6 +841,49 @@ public class ControlPanel
       return Optional.empty();
     }
     return Optional.of(lastNode.getActions().get(0));
+  }
+
+  /**
+   * Validates that x, y, and theta parameters of an initPosition action are valid finite numbers.
+   * Shows an error dialog and returns false if any are invalid.
+   *
+   * @return true if validation passes (or action is not initPosition), false otherwise.
+   */
+  private boolean validateInitPositionNumericParams(Action action) {
+    if (!InitPosition.ACTION_TYPE.equals(action.getActionType())) {
+      return true;
+    }
+
+    for (var ap : action.getActionParameters()) {
+      if (!InitPosition.PARAMKEY_X.equals(ap.getKey())
+          && !InitPosition.PARAMKEY_Y.equals(ap.getKey())
+          && !InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
+        continue;
+      }
+
+      Object v = ap.getValue();
+      if (v instanceof Number) {
+        continue;
+      }
+
+      try {
+        double parsed = Double.parseDouble(String.valueOf(v));
+        if (!Double.isFinite(parsed)) {
+          throw new NumberFormatException("Non-finite value: " + v);
+        }
+      }
+      catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Parameter '" + ap.getKey() + "' must be a valid floating point number.",
+            "Invalid parameter",
+            JOptionPane.ERROR_MESSAGE
+        );
+        return false;
+      }
+    }
+
+    return true;
   }
 
   // FORMATTER:OFF
