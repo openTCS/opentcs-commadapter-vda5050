@@ -874,7 +874,10 @@ public class ControlPanel
       }
 
       try {
-        Double.parseDouble(String.valueOf(v));
+        double parsed = Double.parseDouble(String.valueOf(v));
+        if (!Double.isFinite(parsed)) {
+          throw new NumberFormatException("Non-finite value: " + v);
+        }
       }
       catch (NumberFormatException ex) {
         JOptionPane.showMessageDialog(
