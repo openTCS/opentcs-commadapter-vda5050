@@ -17,6 +17,7 @@ import static org.opentcs.commadapter.vehicle.vda5050.v2_0.CommAdapterMessages.S
 
 import com.google.inject.assistedinject.Assisted;
 import jakarta.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -110,16 +111,22 @@ public class CommAdapterMessageMapper {
         destinationNodeName.get(),
         1
     );
-    toAction(
+    boolean actionRequested = mapValueExtractor.extractString(
+        SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_TYPE,
+        message.getParameters()
+    ).isPresent();
+    Optional<Action> action = toAction(
         message.getParameters(),
         SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_TYPE,
         SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_ID,
         SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_DESCRIPTION,
         SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_BLOCKING_TYPE,
         SEND_ORDER_PARAM_PARAMETER_PATTERN
-    ).ifPresent(action -> {
-      destinationNode.setActions(List.of(action));
-    });
+    );
+    if (actionRequested && action.isEmpty()) {
+      return Optional.empty();
+    }
+    action.ifPresent(a -> destinationNode.setActions(List.of(a)));
 
     Edge edge = createEdge(
         edgeName.get(),
@@ -196,27 +203,24 @@ public class CommAdapterMessageMapper {
     );
 
     actionDescription.ifPresent(action::setActionDescription);
-    record ParameterMatcher(Map.Entry<String, String> parameter, Matcher matcher) {}
-    action.setActionParameters(
-        messageParameters.entrySet().stream()
-            .map(
-                entry -> new ParameterMatcher(
-                    entry,
-                    actionParameterPattern.matcher(entry.getKey())
-                )
-            )
-            .filter(parameterMatcher -> parameterMatcher.matcher.matches())
-            .map(
-                parameterMatcher -> new ActionParameter(
-                    parameterMatcher.matcher.group(1),
-                    parseParameterValue(
-                        action.getActionType(), parameterMatcher.matcher.group(1),
-                        parameterMatcher.parameter.getValue()
-                    )
-                )
-            )
-            .toList()
-    );
+
+    List<ActionParameter> actionParameters = new ArrayList<>();
+    for (Map.Entry<String, String> entry : messageParameters.entrySet()) {
+      Matcher matcher = actionParameterPattern.matcher(entry.getKey());
+      if (!matcher.matches()) {
+        continue;
+      }
+
+      String paramKey = matcher.group(1);
+      Optional<Object> parsedValue = parseParameterValue(
+          action.getActionType(), paramKey, entry.getValue()
+      );
+      if (parsedValue.isEmpty()) {
+        return Optional.empty();
+      }
+      actionParameters.add(new ActionParameter(paramKey, parsedValue.get()));
+    }
+    action.setActionParameters(actionParameters);
 
     return Optional.of(action);
   }
@@ -236,7 +240,7 @@ public class CommAdapterMessageMapper {
     );
   }
 
-  private Object parseParameterValue(String actionType, String paramKey, String value) {
+  private Optional<Object> parseParameterValue(String actionType, String paramKey, String value) {
     // Only parse numeric parameters for well-known action types/keys. Prevent accidental
     // conversion of string fields that just look like numbers (e.g., mapId = "1.0").
     if (InitPosition.ACTION_TYPE.equals(actionType)
@@ -246,16 +250,16 @@ public class CommAdapterMessageMapper {
       try {
         double parsed = Double.parseDouble(value);
         if (!Double.isFinite(parsed)) {
-          throw new NumberFormatException("Non-finite double: " + value);
+          return Optional.empty();
         }
-        return parsed;
+        return Optional.of(parsed);
       }
       catch (NumberFormatException e) {
-        // fall through to return the original string
+        return Optional.empty();
       }
     }
 
-    return value;
+    return Optional.of(value);
   }
 
   private Edge createEdge(String pathName, String startNodeId, String endNodeId) {

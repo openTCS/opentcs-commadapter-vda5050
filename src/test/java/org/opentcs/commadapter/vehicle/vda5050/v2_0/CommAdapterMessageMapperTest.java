@@ -227,4 +227,69 @@ class CommAdapterMessageMapperTest {
           );
     });
   }
+
+  @Test
+  void mapToActionInitPositionWithInvalidNumericIsNotMapped() {
+    VehicleCommAdapterMessage message = new VehicleCommAdapterMessage(
+        CommAdapterMessages.SEND_INSTANT_ACTION_TYPE,
+        Map.of(
+            SEND_INSTANT_ACTION_PARAM_ACTION_TYPE, InitPosition.ACTION_TYPE,
+            SEND_INSTANT_ACTION_PARAM_ACTION_ID, "1",
+            SEND_INSTANT_ACTION_PARAM_BLOCKING_TYPE, BlockingType.NONE.name(),
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_X, "not-a-number",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_Y, "3.367",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_THETA, "0.0"
+        )
+    );
+
+    assertThat(mapper.toAction(message)).isEmpty();
+  }
+
+  @Test
+  void mapToActionInitPositionWithNonFiniteNumericIsNotMapped() {
+    VehicleCommAdapterMessage message = new VehicleCommAdapterMessage(
+        CommAdapterMessages.SEND_INSTANT_ACTION_TYPE,
+        Map.of(
+            SEND_INSTANT_ACTION_PARAM_ACTION_TYPE, InitPosition.ACTION_TYPE,
+            SEND_INSTANT_ACTION_PARAM_ACTION_ID, "1",
+            SEND_INSTANT_ACTION_PARAM_BLOCKING_TYPE, BlockingType.NONE.name(),
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_X, "Infinity",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_Y, "3.367",
+            SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX + InitPosition.PARAMKEY_THETA, "0.0"
+        )
+    );
+
+    assertThat(mapper.toAction(message)).isEmpty();
+  }
+
+  @Test
+  void mapToOrderWithInvalidInitPositionNumericIsNotMapped() {
+    VehicleCommAdapterMessage message = new VehicleCommAdapterMessage(
+        CommAdapterMessages.SEND_ORDER_TYPE,
+        Map.ofEntries(
+            Map.entry(SEND_ORDER_PARAM_ORDER_ID, "order-id"),
+            Map.entry(SEND_ORDER_PARAM_ORDER_UPDATE_ID, "7"),
+            Map.entry(SEND_ORDER_PARAM_SOURCE_NODE, "source-node"),
+            Map.entry(SEND_ORDER_PARAM_DESTINATION_NODE, "destination-node"),
+            Map.entry(SEND_ORDER_PARAM_EDGE, "edge"),
+            Map.entry(SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_TYPE, InitPosition.ACTION_TYPE),
+            Map.entry(SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_ID, "action-id"),
+            Map.entry(
+                SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_BLOCKING_TYPE,
+                BlockingType.NONE.name()
+            ),
+            Map.entry(
+                SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_PARAMETER_PREFIX + InitPosition.PARAMKEY_X,
+                "not-a-number"
+            )
+        )
+    );
+
+    when(objectService.fetch(Point.class, "source-node"))
+        .thenReturn(Optional.of(new Point("source-node")));
+    when(objectService.fetch(Point.class, "destination-node"))
+        .thenReturn(Optional.of(new Point("destination-node")));
+
+    assertThat(mapper.toOrder(message)).isEmpty();
+  }
 }
