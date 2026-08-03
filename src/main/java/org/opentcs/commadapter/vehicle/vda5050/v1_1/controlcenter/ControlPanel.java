@@ -919,7 +919,8 @@ public class ControlPanel
    * Indicates an invalid action parameter.
    */
   private static class InvalidActionParameterException
-      extends RuntimeException {
+      extends
+        RuntimeException {
     public InvalidActionParameterException(String message) {
       super(message);
     }

@@ -892,9 +892,10 @@ public class ControlPanel
     }
 
     Optional<ActionParameter> mistypedParameter = action.getActionParameters().stream()
-        .filter(parameter -> Objects.equals(parameter.getKey(), InitPosition.PARAMKEY_X)
-            || Objects.equals(parameter.getKey(), InitPosition.PARAMKEY_Y)
-            || Objects.equals(parameter.getKey(), InitPosition.PARAMKEY_THETA)
+        .filter(
+            parameter -> Objects.equals(parameter.getKey(), InitPosition.PARAMKEY_X)
+                || Objects.equals(parameter.getKey(), InitPosition.PARAMKEY_Y)
+                || Objects.equals(parameter.getKey(), InitPosition.PARAMKEY_THETA)
         )
         .filter(parameter -> parameter.getValue() instanceof String)
         .filter(parameter -> {
@@ -955,7 +956,8 @@ public class ControlPanel
    * Indicates an invalid action parameter.
    */
   private static class InvalidActionParameterException
-      extends RuntimeException {
+      extends
+        RuntimeException {
     public InvalidActionParameterException(String message) {
       super(message);
     }
