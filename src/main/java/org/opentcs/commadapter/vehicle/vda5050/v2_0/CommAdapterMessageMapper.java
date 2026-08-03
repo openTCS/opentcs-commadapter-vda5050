@@ -240,6 +240,17 @@ public class CommAdapterMessageMapper {
     );
   }
 
+  private Edge createEdge(String pathName, String startNodeId, String endNodeId) {
+    return new Edge(
+        pathName,
+        0L,
+        true,
+        startNodeId,
+        endNodeId,
+        List.of()
+    );
+  }
+
   private Optional<Object> parseParameterValue(String actionType, String paramKey, String value) {
     // Only parse numeric parameters for well-known action types/keys. Prevent accidental
     // conversion of string fields that just look like numbers (e.g., mapId = "1.0").
@@ -260,16 +271,5 @@ public class CommAdapterMessageMapper {
     }
 
     return Optional.of(value);
-  }
-
-  private Edge createEdge(String pathName, String startNodeId, String endNodeId) {
-    return new Edge(
-        pathName,
-        0L,
-        true,
-        startNodeId,
-        endNodeId,
-        List.of()
-    );
   }
 }

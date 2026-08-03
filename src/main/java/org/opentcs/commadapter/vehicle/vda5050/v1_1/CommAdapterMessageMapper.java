@@ -225,28 +225,6 @@ public class CommAdapterMessageMapper {
     return Optional.of(action);
   }
 
-  private Optional<Object> parseParameterValue(String actionType, String paramKey, String value) {
-    // Only parse numeric parameters for well-known action types/keys. Prevent accidental
-    // conversion of string fields that just look like numbers (e.g., mapId = "1.0").
-    if (Objects.equals(actionType, InitPosition.ACTION_TYPE)
-        && (Objects.equals(paramKey, InitPosition.PARAMKEY_X)
-            || Objects.equals(paramKey, InitPosition.PARAMKEY_Y)
-            || Objects.equals(paramKey, InitPosition.PARAMKEY_THETA))) {
-      try {
-        double parsed = Double.parseDouble(value);
-        if (!Double.isFinite(parsed)) {
-          return Optional.empty();
-        }
-        return Optional.of(parsed);
-      }
-      catch (NumberFormatException e) {
-        return Optional.empty();
-      }
-    }
-
-    return Optional.of(value);
-  }
-
   private Node createNode(String pointName, long sequenceId) {
     return new Node(
         pointName,
@@ -271,5 +249,27 @@ public class CommAdapterMessageMapper {
         endNodeId,
         List.of()
     );
+  }
+
+  private Optional<Object> parseParameterValue(String actionType, String paramKey, String value) {
+    // Only parse numeric parameters for well-known action types/keys. Prevent accidental
+    // conversion of string fields that just look like numbers (e.g., mapId = "1.0").
+    if (Objects.equals(actionType, InitPosition.ACTION_TYPE)
+        && (Objects.equals(paramKey, InitPosition.PARAMKEY_X)
+            || Objects.equals(paramKey, InitPosition.PARAMKEY_Y)
+            || Objects.equals(paramKey, InitPosition.PARAMKEY_THETA))) {
+      try {
+        double parsed = Double.parseDouble(value);
+        if (!Double.isFinite(parsed)) {
+          return Optional.empty();
+        }
+        return Optional.of(parsed);
+      }
+      catch (NumberFormatException e) {
+        return Optional.empty();
+      }
+    }
+
+    return Optional.of(value);
   }
 }
