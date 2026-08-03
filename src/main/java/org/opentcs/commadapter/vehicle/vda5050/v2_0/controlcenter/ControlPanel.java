@@ -18,6 +18,7 @@ import org.opentcs.commadapter.vehicle.vda5050.v2_0.ProcessModelImpl;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.action.InitPosition;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.controlcenter.action.ActionConfigurationPanel;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.Action;
+import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.common.ActionParameter;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.instantactions.InstantActions;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Node;
 import org.opentcs.commadapter.vehicle.vda5050.v2_0.message.order.Order;
@@ -697,44 +698,52 @@ public class ControlPanel
         path.getName()
     );
 
-    Optional<Action> maybeAction = newOrderActionConfigurationPanel.getAction();
-    if (maybeAction.isPresent()) {
-      Action action = maybeAction.get();
+    try {
+      Optional<Action> maybeAction = newOrderActionConfigurationPanel.getAction();
+      if (maybeAction.isPresent()) {
+        Action action = maybeAction.get();
 
-      if (!validateInitPositionNumericParams(action)) {
-        return;
+        validateParameters(action);
+
+        messageParameters.put(
+            CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_TYPE,
+            action.getActionType()
+        );
+        messageParameters.put(
+            CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_ID,
+            action.getActionId()
+        );
+        messageParameters.put(
+            CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_BLOCKING_TYPE,
+            action.getBlockingType().name()
+        );
+        messageParameters.put(
+            CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_DESCRIPTION,
+            action.getActionDescription()
+        );
+
+
+        action.getActionParameters().forEach(
+            actionParameter -> messageParameters.put(
+                CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_PARAMETER_PREFIX
+                    + actionParameter.getKey(),
+                actionParameter.getValue().toString()
+            )
+        );
       }
 
-      messageParameters.put(
-          CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_TYPE,
-          action.getActionType()
-      );
-      messageParameters.put(
-          CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_ID,
-          action.getActionId()
-      );
-      messageParameters.put(
-          CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_BLOCKING_TYPE,
-          action.getBlockingType().name()
-      );
-      messageParameters.put(
-          CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_DESCRIPTION,
-          action.getActionDescription()
-      );
-
-
-      action.getActionParameters().forEach(
-          actionParameter -> messageParameters.put(
-              CommAdapterMessages.SEND_ORDER_PARAM_DESTINATION_NODE_ACTION_PARAMETER_PREFIX
-                  + actionParameter.getKey(),
-              actionParameter.getValue().toString()
-          )
+      sendAdapterMessage(
+          new VehicleCommAdapterMessage(CommAdapterMessages.SEND_ORDER_TYPE, messageParameters)
       );
     }
-
-    sendAdapterMessage(
-        new VehicleCommAdapterMessage(CommAdapterMessages.SEND_ORDER_TYPE, messageParameters)
-    );
+    catch (InvalidActionParameterException ex) {
+      JOptionPane.showMessageDialog(
+          this,
+          ex.getMessage(),
+          "Invalid parameter",
+          JOptionPane.ERROR_MESSAGE
+      );
+    }
   }//GEN-LAST:event_sendOrderButtonActionPerformed
 
   private void enableAdapterCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableAdapterCheckBoxActionPerformed
@@ -742,45 +751,53 @@ public class ControlPanel
   }//GEN-LAST:event_enableAdapterCheckBoxActionPerformed
 
   private void sendInstantActionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendInstantActionButtonActionPerformed
-    Optional<Action> maybeInstant = instantActionConfigurationPanel.getAction();
-    if (maybeInstant.isPresent()) {
-      Action action = maybeInstant.get();
-      if (!validateInitPositionNumericParams(action)) {
-        return;
+    try {
+      Optional<Action> maybeInstant = instantActionConfigurationPanel.getAction();
+      if (maybeInstant.isPresent()) {
+        Action action = maybeInstant.get();
+        validateParameters(action);
+
+        Map<String, String> messageParameters = new HashMap<>();
+
+        messageParameters.put(
+            CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_TYPE,
+            action.getActionType()
+        );
+        messageParameters.put(
+            CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_ID,
+            action.getActionId()
+        );
+        messageParameters.put(
+            CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_BLOCKING_TYPE,
+            action.getBlockingType().name()
+        );
+        messageParameters.put(
+            CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_DESCRIPTION,
+            action.getActionDescription()
+        );
+
+        action.getActionParameters()
+            .forEach(
+                actionParameter -> messageParameters.put(
+                    CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX
+                        + actionParameter.getKey(),
+                    actionParameter.getValue().toString()
+                )
+            );
+
+        sendAdapterMessage(
+            new VehicleCommAdapterMessage(
+                CommAdapterMessages.SEND_INSTANT_ACTION_TYPE, messageParameters
+            )
+        );
       }
-
-      Map<String, String> messageParameters = new HashMap<>();
-
-      messageParameters.put(
-          CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_TYPE,
-          action.getActionType()
-      );
-      messageParameters.put(
-          CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_ID,
-          action.getActionId()
-      );
-      messageParameters.put(
-          CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_BLOCKING_TYPE,
-          action.getBlockingType().name()
-      );
-      messageParameters.put(
-          CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_ACTION_DESCRIPTION,
-          action.getActionDescription()
-      );
-
-      action.getActionParameters()
-          .forEach(
-              actionParameter -> messageParameters.put(
-                  CommAdapterMessages.SEND_INSTANT_ACTION_PARAM_PARAMETER_PREFIX
-                      + actionParameter.getKey(),
-                  actionParameter.getValue().toString()
-              )
-          );
-
-      sendAdapterMessage(
-          new VehicleCommAdapterMessage(
-              CommAdapterMessages.SEND_INSTANT_ACTION_TYPE, messageParameters
-          )
+    }
+    catch (InvalidActionParameterException ex) {
+      JOptionPane.showMessageDialog(
+          this,
+          ex.getMessage(),
+          "Invalid action parameter",
+          JOptionPane.ERROR_MESSAGE
       );
     }
   }//GEN-LAST:event_sendInstantActionButtonActionPerformed
@@ -851,46 +868,97 @@ public class ControlPanel
   }
 
   /**
-   * Validates that x, y, and theta parameters of an initPosition action are valid finite numbers.
-   * Shows an error dialog and returns false if any are invalid.
+   * Validates the parameters of the given action.
    *
-   * @return true if validation passes (or action is not initPosition), false otherwise.
+   * @param action The action
+   * @throws InvalidActionParameterException If any parameters of the given action are not valid.
    */
-  private boolean validateInitPositionNumericParams(Action action) {
-    if (!InitPosition.ACTION_TYPE.equals(action.getActionType())) {
-      return true;
+  private void validateParameters(Action action)
+      throws InvalidActionParameterException {
+    if (Objects.equals(action.getActionType(), InitPosition.ACTION_TYPE)) {
+      validateInitPositionNumericParams(action);
+    }
+  }
+
+  /**
+   * Validates that x, y, and theta parameters of an initPosition action are valid finite numbers.
+   *
+   * @param action The action.
+   * @throws InvalidActionParameterException If any parameter is not a valid finite number.
+   */
+  private void validateInitPositionNumericParams(Action action) {
+    if (!Objects.equals(action.getActionType(), InitPosition.ACTION_TYPE)) {
+      return;
     }
 
-    for (var ap : action.getActionParameters()) {
-      if (!InitPosition.PARAMKEY_X.equals(ap.getKey())
-          && !InitPosition.PARAMKEY_Y.equals(ap.getKey())
-          && !InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
-        continue;
-      }
+    Optional<ActionParameter> mistypedParameter = action.getActionParameters().stream()
+        .filter(parameter -> Objects.equals(parameter.getKey(), InitPosition.PARAMKEY_X)
+            || Objects.equals(parameter.getKey(), InitPosition.PARAMKEY_Y)
+            || Objects.equals(parameter.getKey(), InitPosition.PARAMKEY_THETA)
+        )
+        .filter(parameter -> parameter.getValue() instanceof String)
+        .filter(parameter -> {
+          try {
+            return !Double.isFinite(Double.parseDouble((String) parameter.getValue()));
+          }
+          catch (NumberFormatException e) {
+            return true;
+          }
+        })
+        .findAny();
 
-      Object v = ap.getValue();
-      if (v instanceof Number) {
-        continue;
-      }
-
-      try {
-        double parsed = Double.parseDouble(String.valueOf(v));
-        if (!Double.isFinite(parsed)) {
-          throw new NumberFormatException("Non-finite value: " + v);
-        }
-      }
-      catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(
-            this,
-            "Parameter '" + ap.getKey() + "' must be a valid floating point number.",
-            "Invalid parameter",
-            JOptionPane.ERROR_MESSAGE
-        );
-        return false;
-      }
+    if (mistypedParameter.isPresent()) {
+      ActionParameter parameter = mistypedParameter.get();
+      throw new InvalidActionParameterException(
+          "Parameter '%s': value '%s' is not a floating-point number"
+              .formatted(
+                  parameter.getKey(),
+                  parameter.getValue()
+              )
+      );
     }
+//
+//    for (ActionParameter ap : action.getActionParameters()) {
+//      if (!InitPosition.PARAMKEY_X.equals(ap.getKey())
+//          && !InitPosition.PARAMKEY_Y.equals(ap.getKey())
+//          && !InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
+//        continue;
+//      }
+//
+//      Object v = ap.getValue();
+//      if (v instanceof Number) {
+//        continue;
+//      }
+//
+//      try {
+//        double parsed = Double.parseDouble(String.valueOf(v));
+//        if (!Double.isFinite(parsed)) {
+//          throw new NumberFormatException("Non-finite value: " + v);
+//        }
+//      }
+//      catch (NumberFormatException ex) {
+//        JOptionPane.showMessageDialog(
+//            this,
+//            "Parameter '" + ap.getKey() + "' must be a valid floating point number.",
+//            "Invalid parameter",
+//            JOptionPane.ERROR_MESSAGE
+//        );
+//        return false;
+//      }
+//    }
+//
+//    return true;
+  }
 
-    return true;
+
+  /**
+   * Indicates an invalid action parameter.
+   */
+  private static class InvalidActionParameterException
+      extends RuntimeException {
+    public InvalidActionParameterException(String message) {
+      super(message);
+    }
   }
 
   // FORMATTER:OFF
