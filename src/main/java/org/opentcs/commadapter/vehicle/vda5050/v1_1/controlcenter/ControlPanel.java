@@ -921,7 +921,7 @@ public class ControlPanel
   private static class InvalidActionParameterException
       extends
         RuntimeException {
-    public InvalidActionParameterException(String message) {
+    InvalidActionParameterException(String message) {
       super(message);
     }
   }

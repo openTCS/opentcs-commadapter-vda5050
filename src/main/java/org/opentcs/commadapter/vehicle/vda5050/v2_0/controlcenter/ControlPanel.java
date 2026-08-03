@@ -918,37 +918,6 @@ public class ControlPanel
               )
       );
     }
-//
-//    for (ActionParameter ap : action.getActionParameters()) {
-//      if (!InitPosition.PARAMKEY_X.equals(ap.getKey())
-//          && !InitPosition.PARAMKEY_Y.equals(ap.getKey())
-//          && !InitPosition.PARAMKEY_THETA.equals(ap.getKey())) {
-//        continue;
-//      }
-//
-//      Object v = ap.getValue();
-//      if (v instanceof Number) {
-//        continue;
-//      }
-//
-//      try {
-//        double parsed = Double.parseDouble(String.valueOf(v));
-//        if (!Double.isFinite(parsed)) {
-//          throw new NumberFormatException("Non-finite value: " + v);
-//        }
-//      }
-//      catch (NumberFormatException ex) {
-//        JOptionPane.showMessageDialog(
-//            this,
-//            "Parameter '" + ap.getKey() + "' must be a valid floating point number.",
-//            "Invalid parameter",
-//            JOptionPane.ERROR_MESSAGE
-//        );
-//        return false;
-//      }
-//    }
-//
-//    return true;
   }
 
 
@@ -958,7 +927,7 @@ public class ControlPanel
   private static class InvalidActionParameterException
       extends
         RuntimeException {
-    public InvalidActionParameterException(String message) {
+    InvalidActionParameterException(String message) {
       super(message);
     }
   }
