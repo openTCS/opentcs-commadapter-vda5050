@@ -905,7 +905,7 @@ public class ControlPanel
 
     if (mistypedParameter.isPresent()) {
       ActionParameter parameter = mistypedParameter.get();
-      throw new IllegalArgumentException(
+      throw new InvalidActionParameterException(
           "Parameter '%s': value '%s' is not a floating-point number"
               .formatted(
                   parameter.getKey(),
