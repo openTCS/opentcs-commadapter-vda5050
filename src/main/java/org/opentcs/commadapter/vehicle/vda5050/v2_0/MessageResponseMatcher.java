@@ -139,35 +139,35 @@ public class MessageResponseMatcher {
       return;
     }
 
-    if (StateMappings.vehicleRejectsOrder(state)) {
-      consecutiveRejectionsCount++;
-    }
-    else {
-      consecutiveRejectionsCount = 0;
-    }
-    if (consecutiveRejectionsCount > maxIgnoredRejectionsCount) {
+    boolean rejected = updateRejectionState(state);
+    boolean accepted = !rejected && requestAccepted(currentRequest, state);
+    boolean complete = accepted && requestComplete(currentRequest, state);
+
+    if (rejected) {
       // Don't do anything - the vehicle cannot continue processing the drive order. We will wait
       // for this to be resolved via order withdrawal and a new initial order message.
-      return;
+      LOG.debug(
+          "{}: Vehicle rejected request. Waiting for resolution: {}",
+          commAdapterName,
+          currentRequest
+      );
     }
-
-    if (requestComplete(currentRequest, state)) {
+    else if (complete) {
       requests.poll();
-      if (currentRequest instanceof OrderAssociation) {
-        OrderAssociation order = (OrderAssociation) currentRequest;
-        LOG.debug("{}: Vehicle acknowledged order: {}", commAdapterName, order);
-        orderAcceptedCallback.accept(order);
+      if (currentRequest instanceof OrderAssociation orderAssociation) {
+        LOG.debug("{}: Vehicle acknowledged order: {}", commAdapterName, orderAssociation);
+        orderAcceptedCallback.accept(orderAssociation);
       }
-      else if (currentRequest instanceof InstantActions) {
-        InstantActions actions = (InstantActions) currentRequest;
+      else if (currentRequest instanceof InstantActions actions) {
         LOG.debug("{}: Vehicle acknowledged instant actions: {}", commAdapterName, actions);
       }
+      // Send the next order, if any.
       sendNextOrder();
     }
-    else if (requestAccepted(currentRequest, state)) {
+    else if (accepted) {
       // The vehicle reflects the request in its state but has not completed it yet (e.g. a
-      // cancelOrder that is still being processed). Stop resending the request, but keep it at the
-      // head of the queue so that subsequent requests remain blocked until it completes.
+      // cancelOrder that is still being processed). We do not resend the request, but keep it at
+      // the head of the queue so that subsequent requests remain blocked until it completes.
       LOG.debug(
           "{}: Request accepted but not yet completed. Waiting without resending: {}",
           commAdapterName,
@@ -175,16 +175,28 @@ public class MessageResponseMatcher {
       );
     }
     else {
+      // The vehicle neither rejected nor accepted the current request - resend it.
       sendNextOrder();
     }
   }
 
-  private boolean requestComplete(Object request, State state) {
-    if (request instanceof OrderAssociation) {
-      return orderAccepted(((OrderAssociation) request).getOrder(), state);
+  private boolean updateRejectionState(State state) {
+    if (StateMappings.vehicleRejectsOrder(state)) {
+      consecutiveRejectionsCount++;
     }
-    else if (request instanceof InstantActions) {
-      return instantActionsCompleted((InstantActions) request, state);
+    else {
+      consecutiveRejectionsCount = 0;
+    }
+
+    return consecutiveRejectionsCount > maxIgnoredRejectionsCount;
+  }
+
+  private boolean requestAccepted(Object request, State state) {
+    if (request instanceof OrderAssociation orderAssociation) {
+      return orderAccepted(orderAssociation.getOrder(), state);
+    }
+    else if (request instanceof InstantActions actions) {
+      return instantActionsAccepted(actions, state);
     }
     else {
       LOG.warn(
@@ -196,12 +208,12 @@ public class MessageResponseMatcher {
     }
   }
 
-  private boolean requestAccepted(Object request, State state) {
-    if (request instanceof OrderAssociation) {
-      return orderAccepted(((OrderAssociation) request).getOrder(), state);
+  private boolean requestComplete(Object request, State state) {
+    if (request instanceof OrderAssociation orderAssociation) {
+      return orderAccepted(orderAssociation.getOrder(), state);
     }
-    else if (request instanceof InstantActions) {
-      return instantActionsAccepted((InstantActions) request, state);
+    else if (request instanceof InstantActions actions) {
+      return instantActionsCompleted(actions, state);
     }
     else {
       LOG.warn(
