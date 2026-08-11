@@ -212,8 +212,8 @@ public class MessageResponseMatcher {
     if (request instanceof OrderAssociation orderAssociation) {
       return orderAccepted(orderAssociation.getOrder(), state);
     }
-    else if (request instanceof InstantActions) {
-      return instantActionsCompleted((InstantActions) request, state);
+    else if (request instanceof InstantActions actions) {
+      return instantActionsCompleted(actions, state);
     }
     else {
       LOG.warn(
