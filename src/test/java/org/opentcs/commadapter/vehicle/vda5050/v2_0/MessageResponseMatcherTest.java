@@ -269,7 +269,7 @@ public class MessageResponseMatcherTest {
 
     messageResponseMatcher.onStateMessage(stateAcceptingInstantAction(action1));
 
-    // The cancelOrder is no longer resent once the vehicle reflects it in its state, even though it
+    // The cancelOrder is not repeated once the vehicle reflects it in its state, even though it
     // has not completed it yet. The next request stays blocked until the cancelOrder completes.
     verify(sendInstantActionsCallback, times(2)).accept(action1);
     verify(sendInstantActionsCallback, never()).accept(action2);
